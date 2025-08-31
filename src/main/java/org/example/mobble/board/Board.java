@@ -2,6 +2,7 @@ package org.example.mobble.board;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.example.mobble.user.User;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -21,7 +22,8 @@ public class Board {
     private String content;
 
     // 글 쓴 사람
-    private Integer userId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private User user;
 
     // 조회수
     private Integer views;
@@ -38,11 +40,11 @@ public class Board {
     private Timestamp updatedAt;
 
     @Builder
-    public Board(Integer id, String title, String content, Integer userId, Integer views, Integer categoryId, Timestamp createdAt, Timestamp updatedAt) {
+    public Board(Integer id, String title, String content, User user, Integer views, Integer categoryId, Timestamp createdAt, Timestamp updatedAt) {
         this.id = id;
         this.title = title;
         this.content = content;
-        this.userId = userId;
+        this.user = user;
         this.views = views;
         this.categoryId = categoryId;
         this.createdAt = createdAt;
