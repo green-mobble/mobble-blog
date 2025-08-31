@@ -19,24 +19,34 @@ public class BoardRepositoryTest {
 
         boards.forEach(board -> {
             System.out.println("ID: " + board.getId());
+            System.out.println("UserId: " + board.getUser().getId());
+            System.out.println("Username: " + board.getUser().getUsername());
             System.out.println("Title: " + board.getTitle());
-            System.out.println("UserID: " + board.getUser().getId());
             System.out.println("Content: " + board.getContent());
             System.out.println("CreatedAt: " + board.getCreatedAt());
+            System.out.println("Views: " + board.getViews());
+            System.out.println("Bookmark: " + board.getBookmark());
+            System.out.println("CategoryId: " + board.getCategoryId());
             System.out.println("-------------------------");
         });
     }
 
     @Test
     public void findById_test(){
-        int id = 1;
+        int id = 2;
 
         Board board = boardRepository.findById(id);
 
         System.out.println("lazy start");
         System.out.println("ID: " + board.getId());
-        System.out.println("Title: " + board.getTitle());
+        System.out.println("UserId: " + board.getUser().getId());
         System.out.println("Username: " + board.getUser().getUsername());
+        System.out.println("Title: " + board.getTitle());
+        System.out.println("Content: " + board.getContent());
+        System.out.println("CreatedAt: " + board.getCreatedAt());
+        System.out.println("Views: " + board.getViews());
+        System.out.println("Bookmark: " + board.getBookmark());
+        System.out.println("CategoryId: " + board.getCategoryId());
     }
 
 

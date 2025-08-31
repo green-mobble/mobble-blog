@@ -28,6 +28,9 @@ public class Board {
     // 조회수
     private Integer views;
 
+    //북마크 수
+    private Integer bookmark;
+
     // 카테고리
     private Integer categoryId;
     
@@ -40,12 +43,13 @@ public class Board {
     private Timestamp updatedAt;
 
     @Builder
-    public Board(Integer id, String title, String content, User user, Integer views, Integer categoryId, Timestamp createdAt, Timestamp updatedAt) {
+    public Board(Integer id, String title, String content, User user, Integer views,Integer bookmark, Integer categoryId, Timestamp createdAt, Timestamp updatedAt) {
         this.id = id;
         this.title = title;
         this.content = content;
         this.user = user;
         this.views = views;
+        this.bookmark = bookmark;
         this.categoryId = categoryId;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;

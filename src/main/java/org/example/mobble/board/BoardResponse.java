@@ -11,22 +11,26 @@ public class BoardResponse {
     @Data
     public static class BoardResponseDTO{
         private Integer id;
+        private Integer userId;
+        private String username;
         private String title;
         private String content;
-        private Integer userId;
+        private Timestamp createAt;
         private Integer views;
+        private Integer bookmark;
         private Integer categoryId;
-        private Timestamp createdAt;
         private Timestamp updatedAt;
 
         public BoardResponseDTO(Board board) {
             this.id = board.getId();
+            this.userId = board.getUser().getId();
+            this.username = board.getUser().getUsername();
             this.title = board.getTitle();
             this.content = board.getContent();
-            this.userId = board.getUser().getId();
+            this.createAt =board.getCreatedAt();
             this.views = board.getViews();
+            this.bookmark = board.getBookmark();
             this.categoryId = board.getCategoryId();
-            this.createdAt = board.getCreatedAt();
             this.updatedAt = board.getUpdatedAt();
         }
     }
@@ -42,20 +46,28 @@ public class BoardResponse {
 
     @Data
     public static class BoardDetailDTO {
+        private Integer id;
         private Integer userId;
+        private String username;
         private String title;
         private String content;
         private Timestamp createAt;
         private Integer views;
+        private Integer bookmark;
         private Integer categoryId;
+        private Timestamp updatedAt;
 
         public BoardDetailDTO(Board board) {
+            this.id = board.getId();
             this.userId = board.getUser().getId();
+            this.username = board.getUser().getUsername();
             this.title = board.getTitle();
             this.content = board.getContent();
             this.createAt =board.getCreatedAt();
             this.views = board.getViews();
+            this.bookmark = board.getBookmark();
             this.categoryId = board.getCategoryId();
+            this.updatedAt = board.getUpdatedAt();
         }
     }
 
