@@ -21,4 +21,9 @@ public class BoardRepository {
     public Board findById(Integer id) {
         return em.find(Board.class, id);
     }
+
+    public void viewsIncrease(Integer id) {
+        Board board = em.find(Board.class, id);
+        board.setViews(board.getViews() + 1);
+    }
 }

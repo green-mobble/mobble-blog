@@ -29,4 +29,5 @@ public class BoardController {
         request.setAttribute("model", respDTO);
         return "board/detail-page";
     }
+
 }
