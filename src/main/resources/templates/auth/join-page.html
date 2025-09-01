@@ -1,10 +1,24 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Title</title>
-</head>
-<body>
+{{> layout/header}}
 
+<div class="container p-5">
+
+  <div class="card">
+    <div class="card-header"><b>회원가입 페이지</b></div>
+    <div class="card-body">
+      <form action="/join" method="post" enctype="application/x-www-form-urlencoded">
+        <div class="mb-3">
+          <input type="text" class="form-control" placeholder="Enter username" name="username">
+        </div>
+        <div class="mb-3">
+          <input type="password" class="form-control" placeholder="Enter password" name="password">
+        </div>
+        <div class="mb-3">
+          <input type="password" class="form-control" placeholder="Enter password" name="password">
+        </div>
+        <button class="btn btn-secondary form-control">회원가입</button>
+      </form>
+    </div>
+  </div>
+</div>
 </body>
 </html>
