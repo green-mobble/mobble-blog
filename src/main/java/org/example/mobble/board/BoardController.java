@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.List;
 
@@ -18,7 +19,7 @@ public class BoardController {
 
     @GetMapping("/boards")
     public String list(HttpServletRequest request) {
-        List<BoardResponse.BoardListDTO> boards = boardService.게시글목록();
+        List<BoardResponse.BoardDTO> boards = boardService.게시글목록();
         request.setAttribute("models", boards);
         return "board/list-page";
     }
@@ -35,9 +36,21 @@ public class BoardController {
         return "board/save-page";
     }
 
-    @GetMapping("/boards/1/update-form")
+    @GetMapping("/boards/update-form/1")
     public String updateForm() {
         return "board/update-page";
+    }
+
+    @PostMapping("/boards/save")
+    public String save(BoardRequest.BoardSaveDTO requestDTO) {
+        boardService.게시글추가(requestDTO);
+        return "redirect:/boards";
+    }
+
+    @PostMapping("/boards/{id}/delete")
+    public String deleteById(@PathVariable Integer id){
+        boardService.게시글삭제(id);
+        return "redirect:/boards";
     }
 
 }
