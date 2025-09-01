@@ -1,0 +1,37 @@
+package org.example.mobble.board.dto;
+
+import lombok.Builder;
+import lombok.Data;
+import org.example.mobble.board.domain.Board;
+
+import java.sql.Timestamp;
+
+public class BoardResponse {
+    @Data
+    public static class DTO {
+        Integer id;
+        String title;
+        String content;
+        String imageUrl;
+        Integer views;
+        Boolean isBookmark;
+        Integer categoryId;
+        Integer userId;
+        Timestamp createAt;
+        Timestamp updateAt;
+
+        @Builder
+        public DTO(Board board, Boolean isBookmark, String imageUrl) {
+            this.id = board.getId();
+            this.title = board.getTitle();
+            this.content = board.getContent();
+            this.imageUrl = imageUrl;
+            this.views = board.getViews();
+            this.isBookmark = isBookmark;
+            this.categoryId = board.getCategoryId();
+            this.userId = board.getUserId();
+            this.createAt = board.getCreatedAt();
+            this.updateAt = board.getUpdatedAt();
+        }
+    }
+}

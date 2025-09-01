@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>New Post</title>
+
+    <!-- Summernote (간단 WYSIWYG) -->
+    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.20/dist/summernote-lite.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.20/dist/summernote-lite.min.js"></script>
+
+    <style>
+        :root {
+            --black: #111;
+            --gray: #bcbcbc;
+            --soft: #f7f7f7;
+            --radius: 14px;
+        }
+
+        * {
+            box-sizing: border-box
+        }
+
+        body {
+            margin: 0;
+            background: #fff;
+            color: #111;
+            font: 16px/1.6 "Inter", system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        .wrap {
+            max-width: 980px;
+            margin: 28px auto 80px;
+            padding: 0 18px;
+        }
+
+        /* 상단 바 */
+        .topbar {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            background: #fff;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 18px;
+            margin: -28px -18px 28px;
+        }
+
+        .left, .right {
+            display: flex;
+            gap: 10px;
+            align-items: center
+        }
+
+        .btn {
+            background: #111;
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            padding: 10px 14px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .btn.ghost {
+            background: #fff;
+            color: #111;
+            border: 1px solid #ddd
+        }
+
+        .btn.circle {
+            width: 36px;
+            height: 36px;
+            border-radius: 999px;
+            display: flex;
+            align-items: center;
+            justify-content: center
+        }
+
+        .logo-square {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            background: #000;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800
+        }
+
+        .logo-btn {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            background: #fff;
+            cursor: pointer
+        }
+
+        .publish {
+            padding: 10px 16px;
+            border-radius: 10px
+        }
+
+        /* 폼 */
+        .title {
+            width: 100%;
+            border: none;
+            outline: none;
+            font-size: 44px;
+            font-weight: 800;
+            margin: 8px 0;
+        }
+
+        .title::placeholder {
+            color: #e0e0e0
+        }
+
+        .desc {
+            width: 100%;
+            border: none;
+            outline: none;
+            font-size: 18px;
+            color: #888;
+            margin: 2px 0 18px;
+        }
+
+        .cat-line {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 8px 0 18px;
+        }
+
+        .chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #111;
+            color: #fff;
+            font-weight: 700;
+            padding: 8px 10px;
+            border-radius: 8px;
+            margin-right: 6px;
+        }
+
+        .chip .del {
+            background: #fff;
+            color: #111;
+            width: 14px;
+            height: 14px;
+            border-radius: 3px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            cursor: pointer
+        }
+
+        .note-editor.note-frame {
+            border-radius: 10px;
+            border: 1px solid #eee
+        }
+
+        .note-toolbar {
+            border-bottom: 1px solid #eee
+        }
+
+        .footer-space {
+            height: 30px
+        }
+    </style>
+</head>
+<body>
+<div class="wrap">
+
+    <!-- 상단 바 -->
+    <div class="topbar">
+        <div class="left">
+            <div class="logo-square">N</div>
+            <button type="button" class="logo-btn">Logo Area</button>
+        </div>
+        <div class="right">
+            <button id="publishBtn" class="btn publish">Publish</button>
+            <button class="btn circle">P</button>
+        </div>
+    </div>
+
+    <!-- 제목/설명 -->
+    <input class="title" type="text" id="title" name="title" placeholder="Post title &lt;h1&gt;">
+    <input class="desc" type="text" id="description" name="description" placeholder="Description">
+
+    <!-- 카테고리 -->
+    <div class="cat-line">
+        <button type="button" id="addCatBtn" class="btn ghost">Add Category ▪</button>
+        <div id="chips">
+        </div>
+    </div>
+
+    <!-- 본문 에디터 -->
+    <textarea id="editor" name="content"></textarea>
+
+    <div class="footer-space"></div>
+</div>
+
+<script>
+    // Summernote init
+    $('#editor').summernote({
+        placeholder: 'Start writing...',
+        height: 380,
+        toolbar: [
+            ['style', ['style']],
+            ['font', ['bold', 'italic', 'underline', 'clear']],
+            ['fontname', ['fontname']],
+            ['color', ['color']],
+            ['para', ['ul', 'ol', 'paragraph']],
+            ['insert', ['link', 'picture', 'video', 'table', 'codeview']],
+            ['view', ['help']]
+        ]
+    });
+    const catLine = document.querySelector('.cat-line');
+    const chips = document.getElementById('chips');
+    var addCatBtn = document.getElementById('addCatBtn');
+    addCatBtn.addEventListener('click', () => {
+        const name = prompt('Add category');
+        if (!name) return;
+        if ([...chips.querySelectorAll('.chip')].some(c => c.dataset.name === name)) return;
+        const span = document.createElement('span');
+        span.className = 'chip';
+        span.dataset.name = name;
+        span.innerHTML = `${name} <span class="del">×</span>`;
+        chips.appendChild(span);
+        addCatBtn.remove();
+    });
+    chips.addEventListener('click', (e) => {
+        if (e.target.classList.contains('del')) {
+            catLine.appendChild(addCatBtn);
+            e.target.closest('.chip').remove();
+        }
+    });
+
+    document.getElementById('publishBtn').addEventListener('click', async () => {
+        const payload = {
+            title: document.getElementById('title').value?.trim(),
+            description: document.getElementById('description').value?.trim(),
+            categories: document.querySelector('.chip'),
+            content: $('#editor').summernote('code')
+        };
+        try {
+            const response = await fetch('/boards/save', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            });
+
+            if (response.ok) {
+                alert("게시글이 저장되었습니다.");
+                // 저장 후 이동할 페이지 지정 가능
+                // window.location.href = "/";
+            } else {
+                const text = await response.text();
+                alert("에러 발생: " + text);
+            }
+        } catch (e) {
+            alert("요청 실패: " + e.message);
+        }
+    });
+</script>
+</body>
+</html>
