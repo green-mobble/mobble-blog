@@ -8,6 +8,6 @@ public class HealthController {
 
     @GetMapping("/")
     public String health() {
-        return "main";
+        return "auth/login-page";
     }
 }
