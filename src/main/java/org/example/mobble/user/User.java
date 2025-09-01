@@ -34,5 +34,15 @@ public class User {
         this.password = password;
         this.email = email;
     }
+
+    public void updatePassword(UserRequest.UserPasswordUpdateDTO reqDTO) {
+        this.password = reqDTO.getPassword();
+    }
+
+    public void updateProfile(UserRequest.UserProfileUpdateDTO reqDTO) {
+        //TODO  테이블 이동 혹은 칼럼 변경및 추가
+
+        // this.profileImage = reqDTO.getProfileImage()
+    }
 }
 

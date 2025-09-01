@@ -18,8 +18,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.hamcrest.Matchers.notNullValue;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -89,7 +88,7 @@ public class BoardControllerTest {
     }
 
     @Test
-    void detailBoard_test() throws Exception {
+    void detail_test() throws Exception {
         // when
         ResultActions actions = mvc.perform(
                 get("/boards/" + 1)
@@ -99,6 +98,53 @@ public class BoardControllerTest {
         // then
         actions.andExpect(status().isOk())
                 .andExpect(model().attributeExists("resDTO")) // 모델에 resDTO 있는지 확인
+                .andDo(print());
+    }
+
+    @Test
+    void save_test() throws Exception {
+        // when
+        ResultActions actions = mvc.perform(
+                post("/boards")
+                        .session(session)
+                        .param("title", "새 제목")
+                        .param("content", "새 내용")
+                        .param("category", "공지사항")
+        );
+
+        // then
+        actions.andExpect(status().is3xxRedirection()) // redirect
+                .andExpect(redirectedUrlPattern("/boards/*")) // 저장 후 리다이렉트
+                .andDo(print());
+    }
+
+    @Test
+    void update_test() throws Exception {
+        // when
+        ResultActions actions = mvc.perform(
+                put("/boards/" + 1)
+                        .session(session)
+                        .param("title", "수정된 제목")
+                        .param("content", "수정된 내용")
+        );
+
+        // then
+        actions.andExpect(status().is3xxRedirection()) // redirect
+                .andExpect(redirectedUrlPattern("/boards/*")) // 저장 후 리다이렉트
+                .andDo(print());
+    }
+
+    @Test
+    void delete_test() throws Exception {
+        // when
+        ResultActions actions = mvc.perform(
+                delete("/boards/" + 2)
+                        .session(session)
+        );
+
+        // then
+        actions.andExpect(status().is3xxRedirection()) // 삭제 후 리다이렉트
+                .andExpect(redirectedUrl("/boards"))
                 .andDo(print());
     }
 }

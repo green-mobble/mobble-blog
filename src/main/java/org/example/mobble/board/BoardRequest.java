@@ -6,16 +6,16 @@ public class BoardRequest {
 
     @Data
     public class BoardSaveDTO {
-    String title;
-    String content;
-    String category;
+    private String title;
+    private String content;
+    private String category;
     }
+
     @Data
     public class BoardUpdateDTO{
-        Integer id;
-        String title;
-        String content;
-        Integer categoryId;
+        private String title;
+        private String content;
+        private Integer categoryId;
     }
 
 }

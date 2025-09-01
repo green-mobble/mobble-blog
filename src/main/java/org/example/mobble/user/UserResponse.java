@@ -30,4 +30,16 @@ public class UserResponse {
 
         }
     }
+
+    @Data
+    public static class UserDetailDTO{
+        private Integer id;
+        private String  username;
+        private byte[] profileImage;
+
+        public UserDetailDTO(User user) {
+            this.id = user.getId();
+            this.username = user.getUsername();
+        }
+    }
 }

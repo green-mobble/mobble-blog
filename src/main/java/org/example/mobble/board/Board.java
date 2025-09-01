@@ -52,4 +52,10 @@ public class Board {
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
+
+    public void updateInfo(BoardRequest.BoardUpdateDTO reqDTO) {
+        this.title = reqDTO.getTitle();
+        this.content = reqDTO.getContent();
+
+    }
 }

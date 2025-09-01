@@ -6,15 +6,13 @@ import lombok.RequiredArgsConstructor;
 import org.example.mobble.user.UserResponse;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RequiredArgsConstructor
 @Controller
+
 public class BoardController {
     private final BoardService boardService;
     private final HttpSession session;
@@ -44,33 +42,67 @@ public class BoardController {
 
     //글 쓰기
     @PostMapping ("/boards")
-    public String save(BoardRequest.BoardSaveDTO reqDTO, Model model){
+    public String save(BoardRequest.BoardSaveDTO reqDTO){
 
         //세션 유저 (북마크 여부를 위해)
         UserResponse.LoginDTO sessionUser = (UserResponse.LoginDTO) session.getAttribute("sessionUser");
-        //저장 (상태확인을 위해 값을 리턴 받음)
+        //저장 (반환은 상태확인 / 리다이렉트 id 용)
         BoardResponse.DTO resDTO = boardService.save(reqDTO,sessionUser.getId());
 
-        //model.addAttribute("resDTO", resDTO);
-        return "board/detail-page";
+        return "redirect:/boards/"+resDTO.getId();
     }
 
     //글 수정하기
     @PutMapping  ("/boards/{id}")
-    public String update(BoardRequest.BoardUpdateDTO reqDTO, Model model){
+    public String update(@PathVariable("id")  Integer boardId, BoardRequest.BoardUpdateDTO reqDTO){
 
-        //세션 유저 (북마크 여부를 위해)
+        //세션 유저 검증용
         UserResponse.LoginDTO sessionUser = (UserResponse.LoginDTO) session.getAttribute("sessionUser");
-        //저장 (상태확인을 위해 값을 리턴 받음)
-        BoardResponse.DTO resDTO = boardService.save(reqDTO,sessionUser.getId());
+        //수정 (반환은 상태확인 / 리다이렉트 id 용)
+        BoardResponse.DTO resDTO = boardService.update(reqDTO,sessionUser.getId(),boardId);
 
-        model.addAttribute("resDTO", resDTO);
-        return "board/detail-page";
+        return "redirect:/boards/"+resDTO.getId();
     }
 
     //글 신고하기
+    @DeleteMapping("/boards/{id}")
+    public String delete(@PathVariable("id")  Integer boardId){
 
-    //신고화면, 삭제화면,신고하기화면
+        //세션 유저 검증용
+        UserResponse.LoginDTO sessionUser = (UserResponse.LoginDTO) session.getAttribute("sessionUser");
+        //삭제
+        boardService.delete(boardId,sessionUser.getId());
+
+        return "redirect:/boards";
+    }
+
+    //게시판 쓰기 화면
+    @GetMapping("/boards/save-form")
+    public String saveForm(){
+
+        //카테고리 리스트를 내려줄 필요가 있는지? 존재하는 카테고리를 빠르게 선택할 수 있게
+
+        return "board/save-page";
+    }
+
+    //게시판수정화면
+    @GetMapping("/boards/{id}/update-form")
+    public String updateForm(@PathVariable("id")  Integer boardId, Model model ){
+
+        //board 정보 내리기
+//        boardService.updateForm();
+        //model.addAttribute("resDTO", resDTO);
+        return "board/list-page";
+    }
+
+
+    //신고화면
+    @GetMapping("/boards/{id}/report-form")
+    public String reportForm(@PathVariable("id")  Integer boardId,Model model ){
+
+        //model.addAttribute("resDTO", resDTO);
+        return "board/list-page";  //신고화면으로 연결
+    }
 
 
 

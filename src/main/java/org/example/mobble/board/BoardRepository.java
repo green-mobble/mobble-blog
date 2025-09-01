@@ -3,6 +3,7 @@ package org.example.mobble.board;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
 import lombok.RequiredArgsConstructor;
+import org.example.mobble.user.User;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -66,5 +67,13 @@ public class BoardRepository {
 
     public void save(Board board) {
         em.persist(board);
+    }
+
+    public Optional<Board> findById(Integer boardId) {
+        return  Optional.ofNullable(em.find(Board.class, boardId));
+    }
+
+    public void delete(Board boardPS) {
+        em.remove(boardPS);
     }
 }

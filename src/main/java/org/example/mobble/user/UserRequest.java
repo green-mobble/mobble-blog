@@ -20,4 +20,19 @@ public class UserRequest {
         private String email;
 
     }
+    @Data
+    public class UserPasswordUpdateDTO {
+       // private Integer userId;
+        private String password;
+
+    }
+    @Data
+    public class UserProfileUpdateDTO {
+      //  private Integer userId;
+        private String password;
+        private byte[] profileImage;
+
+    }
+
+
 }
