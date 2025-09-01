@@ -1,13 +1,13 @@
-INSERT INTO user_tb (id, username, password, email) VALUES
-(1, 'ssar', '1234', 'ssar@example.com'),
-(2, 'cos', '1234', 'cos@example.com');
+INSERT INTO user_tb (username, password, email) VALUES
+('ssar', '1234', 'ssar@example.com'),
+('cos', '1234', 'cos@example.com');
 
-INSERT INTO category_tb (id, user_id, category) VALUES
-(1, 1, 'IT'),
-(2, 1, 'Daily'),
-(3, 2, 'Study'),
-(4, 2, 'Hobby'),
-(5, 1, 'Project');
+INSERT INTO category_tb (user_id, category) VALUES
+(1, 'IT'),
+(1, 'Daily'),
+(2, 'Study'),
+(2, 'Hobby'),
+(1, 'Project');
 
 INSERT INTO board_tb (title, content, user_id, views, bookmark,category_id, created_at, updated_at) VALUES
 ('첫 번째 글', '안녕하세요. 게시판 첫 글입니다!', 1, 10, 1,1, '2025-01-10 09:30:00', '2025-01-10 09:30:00'),
