@@ -7,10 +7,10 @@ public class UserResponse {
     @Data
     public static class LoginDTO{
         private String username;
-        private String password;
+        private Integer id;
 
         public LoginDTO(User user) {
-            this.password = user.getPassword();
+            this.id = user.getId();
             this.username = user.getUsername();
         }
     }
