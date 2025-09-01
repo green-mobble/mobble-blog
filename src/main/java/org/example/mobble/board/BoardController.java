@@ -24,9 +24,9 @@ public class BoardController {
         return "board/list-page";
     }
 
-    @GetMapping("/boards/{boardId}")
-    public String detail(HttpServletRequest request, @PathVariable Integer boardId) {
-        BoardResponse.BoardDetailDTO board = boardService.게시글상세(boardId);
+    @GetMapping("/boards/{id}")
+    public String detail(HttpServletRequest request, @PathVariable Integer id) {
+        BoardResponse.BoardDetailDTO board = boardService.게시글상세(id);
         request.setAttribute("model", board);
         return "board/detail-page";
     }
@@ -36,8 +36,10 @@ public class BoardController {
         return "board/save-page";
     }
 
-    @GetMapping("/boards/update-form/1")
-    public String updateForm() {
+    @GetMapping("/boards/update-form/{id}")
+    public String updateForm(HttpServletRequest request, @PathVariable Integer id) {
+        BoardResponse.BoardDTO board = boardService.게시글수정폼(id);
+        request.setAttribute("model", board);
         return "board/update-page";
     }
 
@@ -50,6 +52,12 @@ public class BoardController {
     @PostMapping("/boards/{id}/delete")
     public String deleteById(@PathVariable Integer id){
         boardService.게시글삭제(id);
+        return "redirect:/boards";
+    }
+
+    @PostMapping("/boards/{id}")
+    public String updateById(@PathVariable Integer id, BoardRequest.BoardUpdateDTO requestDTO) {
+        boardService.게시글수정(id, requestDTO);
         return "redirect:/boards";
     }
 

@@ -37,4 +37,18 @@ public class BoardService {
     public void 게시글삭제(Integer id){
         boardRepository.deleteById(id);
     }
+
+    public BoardResponse.BoardDTO 게시글수정폼(Integer id) {
+        Board board = boardRepository.findById(id).get();
+        BoardResponse.BoardDTO boardDTO = new BoardResponse.BoardDTO(board);
+        return boardDTO;
+    }
+
+    @Transactional
+    public void 게시글수정(Integer id, BoardRequest.BoardUpdateDTO requestDTO) {
+        Board board = boardRepository.findById(id).get();
+        // 더티 체킹
+        board.setTitle(requestDTO.getTitle());
+        board.setContent(requestDTO.getContent());
+    }
 }

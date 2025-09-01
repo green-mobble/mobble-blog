@@ -15,4 +15,10 @@ public class BoardRequest {
             return Board.builder().title(title).content(content).build();
         }
     }
+
+    @Data
+    public static class BoardUpdateDTO {
+        private String title;
+        private String content;
+    }
 }
