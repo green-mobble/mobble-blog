@@ -10,12 +10,13 @@ public class BoardResponse {
     public static class BoardListDTO {
         private Integer id;
         private String title;
+        private String content;
         private Integer views;
         private Timestamp createdAt;
         public BoardListDTO(Board b) {
             this.id = b.getId();
             this.title = b.getTitle();
-            this.views = b.getViews();
+            this.content = b.getContent();
         }
     }
 

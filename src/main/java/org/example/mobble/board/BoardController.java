@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 
@@ -22,8 +23,10 @@ public class BoardController {
         return "board/list-page";
     }
 
-    @GetMapping("/boards/1")
-    public String detail() {
+    @GetMapping("/boards/{boardId}")
+    public String detail(HttpServletRequest request, @PathVariable Integer boardId) {
+        BoardResponse.BoardDetailDTO board = boardService.게시글상세(boardId);
+        request.setAttribute("model", board);
         return "board/detail-page";
     }
 
