@@ -46,6 +46,9 @@ public class Board {
     @UpdateTimestamp
     private Timestamp updatedAt;
 
+    @Transient
+    private boolean isBookmark;
+
     @Builder
     public Board(Integer id, String title, String content, User user, Integer views, Integer bookmark, Timestamp createdAt, Timestamp updatedAt, Category category) {
         this.id = id;
