@@ -1,4 +1,15 @@
 package org.example.mobble.board;
 
+import lombok.Data;
+import org.example.mobble.category.Category;
+
+@Data
 public class BoardRequest {
+
+    @Data
+    public class BoardSaveDTO {
+        private String title;
+        private String content;
+        private Integer categoryId;
+    }
 }

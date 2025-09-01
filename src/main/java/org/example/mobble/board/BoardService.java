@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.example.mobble.user.User;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -28,5 +29,22 @@ public class BoardService {
         boardRepository.viewsIncrease(id);
 
         return new BoardResponse.BoardDetailDTO(findById);
+    }
+
+    @Transactional
+    public void boardSave(BoardRequest.BoardSaveDTO boardSaveDTO, User sessionUser) {
+        Timestamp now = new Timestamp(System.currentTimeMillis());
+        Board board = Board.builder()
+                .id(null)
+                .title(boardSaveDTO.getTitle())
+                .content(boardSaveDTO.getContent())
+                .user(sessionUser)
+                .views(0)
+                .bookmark(0)
+                .createdAt(now)
+                .updatedAt(now)
+                .categoryId(boardSaveDTO.getCategoryId())
+                .build();
+        boardRepository.boardSave(board);
     }
 }

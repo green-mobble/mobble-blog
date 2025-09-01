@@ -26,4 +26,8 @@ public class BoardRepository {
         Board board = em.find(Board.class, id);
         board.setViews(board.getViews() + 1);
     }
+
+    public void boardSave(Board board) {
+        em.persist(board);
+    }
 }

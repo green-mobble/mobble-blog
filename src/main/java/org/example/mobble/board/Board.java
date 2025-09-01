@@ -8,8 +8,6 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -35,8 +33,7 @@ public class Board {
     private Integer bookmark;
 
     // 카테고리
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Category category;
+    private Integer categoryId;
     
     // 글 작성 시간
     @CreationTimestamp
@@ -50,7 +47,7 @@ public class Board {
     private boolean isBookmark;
 
     @Builder
-    public Board(Integer id, String title, String content, User user, Integer views, Integer bookmark, Timestamp createdAt, Timestamp updatedAt, Category category) {
+    public Board(Integer id, String title, String content, User user, Integer views, Integer bookmark, Timestamp createdAt, Timestamp updatedAt, Integer categoryId) {
         this.id = id;
         this.title = title;
         this.content = content;
@@ -59,6 +56,6 @@ public class Board {
         this.bookmark = bookmark;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
-        this.category = category;
+        this.categoryId = categoryId;
     }
 }

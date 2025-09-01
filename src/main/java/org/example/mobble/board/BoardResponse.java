@@ -19,7 +19,6 @@ public class BoardResponse {
         private Integer views;
         private Integer bookmark;
         private Integer categoryId;
-        private String categoryName;
         private Timestamp updatedAt;
 
         public BoardResponseDTO(Board board) {
@@ -31,8 +30,7 @@ public class BoardResponse {
             this.createAt =board.getCreatedAt();
             this.views = board.getViews();
             this.bookmark = board.getBookmark();
-            this.categoryId = board.getCategory().getId();
-            this.categoryName = board.getCategory().getCategory();
+            this.categoryId = board.getCategoryId();
             this.updatedAt = board.getUpdatedAt();
         }
     }
@@ -69,8 +67,7 @@ public class BoardResponse {
             this.createAt =board.getCreatedAt();
             this.views = board.getViews();
             this.bookmark = board.getBookmark();
-            this.categoryId = board.getCategory().getId();
-            this.categoryName = board.getCategory().getCategory();
+            this.categoryId = board.getCategoryId();
             this.updatedAt = board.getUpdatedAt();
         }
     }
