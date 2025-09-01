@@ -1,5 +1,6 @@
 package org.example.mobble.user;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -35,6 +36,11 @@ public class UserController {
         return "redirect:/boards";
     }
 
+    @GetMapping("/logout")
+    public String logout() {
+        session.invalidate();
+        return "redirect:/boards";
+    }
 
 
 
