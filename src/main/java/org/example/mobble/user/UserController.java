@@ -29,7 +29,9 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public String login(){
+    public String login(UserRequest.UserLoginDTO userLoginDTO){
+        User sessionUser = userService.userFindUsername(userLoginDTO);
+        session.setAttribute("sessionUser", sessionUser);
         return "redirect:/boards";
     }
 

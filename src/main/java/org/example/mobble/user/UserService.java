@@ -15,7 +15,7 @@ public class UserService {
         //1. 회원이 존재하는지 확인
         User findUsername = userRepository.findUsername(userJoinDTO.getUsername());
         if (findUsername != null) {
-            throw new Exception400("username이 이미 존재합니다" + userJoinDTO.getUsername());
+            throw new Exception400("username이 이미 존재합니다 : " + userJoinDTO.getUsername());
         }
 
         // 2. 없으면 insert
@@ -25,5 +25,16 @@ public class UserService {
                 .email(userJoinDTO.getEmail())
                 .build();
         userRepository.userSave(user);
+    }
+
+    public User userFindUsername(UserRequest.UserLoginDTO userLoginDTO) {
+        User findUser = userRepository.findUsername(userLoginDTO.getUsername());
+        if (findUser.getUsername() == null) {
+            throw new Exception400("username이 존재하지 않습니다 : " +  userLoginDTO.getUsername());
+        }
+        if(!findUser.getPassword().equals(userLoginDTO.getPassword())){
+            throw new Exception400("password가 틀렸습니다. :  " + userLoginDTO.getPassword());
+        }
+        return findUser;
     }
 }
