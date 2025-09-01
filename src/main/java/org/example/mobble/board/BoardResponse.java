@@ -40,6 +40,30 @@ public class BoardResponse {
         private Timestamp updatedAt;
     }
 
+    @Data
+    public static class DTO {
+        private Integer id;
+        private String title;
+        private String content;
+        private Integer userId;       // user 엔티티 대신 userId만
+        private Integer views;
+        private Integer categoryId;   // category 엔티티 대신 categoryId만
+        private Timestamp createdAt;
+        private Timestamp updatedAt;
+
+        public DTO(Board board) {
+            this.updatedAt = board.getUpdatedAt();
+            this.createdAt = board.getCreatedAt();
+            this.categoryId = board.getCategory().getId();
+            this.views = board.getViews();
+            this.userId = board.getUser().getId();
+            this.content = board.getContent();
+            this.title = board.getTitle();
+            this.id = board.getId();
+        }
+
+    }
+
 
 
 }

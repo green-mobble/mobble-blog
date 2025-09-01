@@ -64,4 +64,7 @@ public class BoardRepository {
                     .getSingleResult());
     }
 
+    public void save(Board board) {
+        em.persist(board);
+    }
 }

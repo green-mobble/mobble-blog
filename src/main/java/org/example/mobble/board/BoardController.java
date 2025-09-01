@@ -8,6 +8,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 
 import java.util.List;
 
@@ -23,7 +25,6 @@ public class BoardController {
 
         //기본 전체 리스트
         List<BoardResponse.BoardDTO> resDTO = boardService.list();
-
         model.addAttribute("resDTO", resDTO);
         return "board/list-page";
     }
@@ -42,8 +43,30 @@ public class BoardController {
     }
 
     //글 쓰기
+    @PostMapping ("/boards")
+    public String save(BoardRequest.BoardSaveDTO reqDTO, Model model){
+
+        //세션 유저 (북마크 여부를 위해)
+        UserResponse.LoginDTO sessionUser = (UserResponse.LoginDTO) session.getAttribute("sessionUser");
+        //저장 (상태확인을 위해 값을 리턴 받음)
+        BoardResponse.DTO resDTO = boardService.save(reqDTO,sessionUser.getId());
+
+        //model.addAttribute("resDTO", resDTO);
+        return "board/detail-page";
+    }
 
     //글 수정하기
+    @PutMapping  ("/boards/{id}")
+    public String update(BoardRequest.BoardUpdateDTO reqDTO, Model model){
+
+        //세션 유저 (북마크 여부를 위해)
+        UserResponse.LoginDTO sessionUser = (UserResponse.LoginDTO) session.getAttribute("sessionUser");
+        //저장 (상태확인을 위해 값을 리턴 받음)
+        BoardResponse.DTO resDTO = boardService.save(reqDTO,sessionUser.getId());
+
+        model.addAttribute("resDTO", resDTO);
+        return "board/detail-page";
+    }
 
     //글 신고하기
 
