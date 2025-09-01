@@ -26,7 +26,7 @@ public class BoardRepositoryTest {
             System.out.println("CreatedAt: " + board.getCreatedAt());
             System.out.println("Views: " + board.getViews());
             System.out.println("Bookmark: " + board.getBookmark());
-            System.out.println("CategoryId: " + board.getCategoryId());
+            System.out.println("CategoryId: " + board.getCategory().getId());
             System.out.println("-------------------------");
         });
     }
@@ -46,7 +46,8 @@ public class BoardRepositoryTest {
         System.out.println("CreatedAt: " + board.getCreatedAt());
         System.out.println("Views: " + board.getViews());
         System.out.println("Bookmark: " + board.getBookmark());
-        System.out.println("CategoryId: " + board.getCategoryId());
+        System.out.println("CategoryId: " + board.getCategory().getId());
+        System.out.println("Categoryname: " + board.getCategory().getCategory());
     }
 
 

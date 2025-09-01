@@ -2,11 +2,14 @@ package org.example.mobble.board;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.example.mobble.category.Category;
 import org.example.mobble.user.User;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -32,7 +35,8 @@ public class Board {
     private Integer bookmark;
 
     // 카테고리
-    private Integer categoryId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Category category;
     
     // 글 작성 시간
     @CreationTimestamp
@@ -43,15 +47,15 @@ public class Board {
     private Timestamp updatedAt;
 
     @Builder
-    public Board(Integer id, String title, String content, User user, Integer views,Integer bookmark, Integer categoryId, Timestamp createdAt, Timestamp updatedAt) {
+    public Board(Integer id, String title, String content, User user, Integer views, Integer bookmark, Timestamp createdAt, Timestamp updatedAt, Category category) {
         this.id = id;
         this.title = title;
         this.content = content;
         this.user = user;
         this.views = views;
         this.bookmark = bookmark;
-        this.categoryId = categoryId;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
+        this.category = category;
     }
 }
