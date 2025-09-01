@@ -1,7 +1,6 @@
 package org.example.mobble.board.service;
 
 
-import jdk.jfr.Category;
 import lombok.RequiredArgsConstructor;
 import org.example.mobble.board.domain.Board;
 import org.example.mobble.board.domain.BoardRepository;
@@ -12,7 +11,6 @@ import org.example.mobble.bookmark.domain.BookmarkRepository;
 import org.example.mobble.user.domain.User;
 import org.springframework.stereotype.Service;
 
-import javax.xml.catalog.Catalog;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -37,6 +35,6 @@ public class BoardService {
     }
 
     public void save(BoardRequest.BoardSaveDTO reqDTO, User user) {
-        Board board = new Board(reqDTO.;
+        Board board = new Board(reqDTO, user, 1);
     }
 }

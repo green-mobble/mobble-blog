@@ -1,5 +1,6 @@
 package org.example.mobble.user.controller;
 
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.example.mobble.user.service.UserService;
 import org.springframework.stereotype.Controller;
@@ -10,6 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/users")
 public class UserController {
     private final UserService userService;
-
+    private final HttpSession session;
 
 }
