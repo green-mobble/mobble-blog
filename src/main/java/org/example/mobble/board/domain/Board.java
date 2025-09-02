@@ -5,7 +5,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.example.mobble.board.dto.BoardRequest;
-import org.example.mobble.user.domain.User;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -53,12 +52,18 @@ public class Board {
         this.updatedAt = updatedAt;
     }
 
-    public Board(BoardRequest.BoardSaveDTO reqDTO, User user, Integer categoryId) {
+    public Board(BoardRequest.BoardSaveDTO reqDTO, Integer userId, Integer categoryId) {
         this.title = reqDTO.getTitle();
         this.content = reqDTO.getContent();
-        this.userId = user.getId();
+        this.userId = userId;
         this.categoryId = categoryId;
         this.views = 0;
         this.createdAt = new Timestamp(System.currentTimeMillis());
+    }
+
+    public void update(BoardRequest.BoardUpdateDTO reqDTO) {
+        this.title = reqDTO.getTitle();
+        this.content = reqDTO.getContent();
+        this.updatedAt = new Timestamp(System.currentTimeMillis());
     }
 }

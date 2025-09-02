@@ -20,4 +20,26 @@ public class UserRepository {
             return Optional.empty();
         }
     }
+
+    public void save(User user) {
+        em.persist(user);
+    }
+
+    public boolean existsByNickname(String username) {
+        return em.createQuery("select count(u) from User u where u.username = :username", Long.class)
+                .setParameter("username", username)
+                .getSingleResult() > 0;
+    }
+
+    public Optional<User> findById(Integer userId) {
+        try {
+            return Optional.ofNullable(em.find(User.class, userId));
+        } catch (Exception e) {
+            return Optional.empty();
+        }
+    }
+
+    public void delete(User user) {
+        em.remove(user);
+    }
 }

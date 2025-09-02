@@ -26,15 +26,19 @@ public class User {
     // 이메일 인증도 추가할 건지?
     private String email;
 
+    private String profileImageUrl;
+
     // reCAPTCHA 추가? : 봇 생성 방지용
 
 
     @Builder
-    public User(Integer id, String username, String password, String email) {
+    public User(Integer id, String username, String password, String email, String profileImageUrl) {
         this.id = id;
         this.username = username;
         this.password = password;
         this.email = email;
+        this.profileImageUrl = profileImageUrl;
     }
+
 }
 

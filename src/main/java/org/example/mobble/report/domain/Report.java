@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.example.mobble.board.dto.BoardRequest;
+import org.example.mobble.user.domain.User;
 
 @Data
 @NoArgsConstructor
@@ -39,6 +41,19 @@ public class Report {
         this.result = result;
         this.resultEtc = resultEtc;
         this.content = content;
+    }
+
+    public Report(User user, Integer boardId, BoardRequest.BoardReportDTO reqDTO) {
+        this.boardId = boardId;
+        this.userId = user.getId();
+        try {
+            this.result = ReportCase.valueOf(reqDTO.getResult());
+        } catch (IllegalArgumentException e) {
+            this.result = ReportCase.ETC;
+            this.resultEtc = reqDTO.getResult();
+        }
+        this.content = reqDTO.getContent();
+
     }
 }
 

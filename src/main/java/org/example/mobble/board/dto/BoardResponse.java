@@ -14,20 +14,20 @@ public class BoardResponse {
         String content;
         String imageUrl;
         Integer views;
-        Boolean isBookmark;
+        Integer bookmarkCount;
         Integer categoryId;
         Integer userId;
         Timestamp createAt;
         Timestamp updateAt;
 
         @Builder
-        public DTO(Board board, Boolean isBookmark, String imageUrl) {
+        public DTO(Board board, Integer bookmarkCount, String imageUrl) {
             this.id = board.getId();
             this.title = board.getTitle();
             this.content = board.getContent();
             this.imageUrl = imageUrl;
             this.views = board.getViews();
-            this.isBookmark = isBookmark;
+            this.bookmarkCount = bookmarkCount;
             this.categoryId = board.getCategoryId();
             this.userId = board.getUserId();
             this.createAt = board.getCreatedAt();

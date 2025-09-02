@@ -2,15 +2,91 @@ package org.example.mobble.user.controller;
 
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.example.mobble._util.error.ex.Exception401;
+import org.example.mobble.user.domain.User;
+import org.example.mobble.user.dto.UserRequest;
+import org.example.mobble.user.dto.UserResponse;
 import org.example.mobble.user.service.UserService;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.Map;
 
 @RequiredArgsConstructor
 @Controller
-@RequestMapping("/users")
 public class UserController {
-    private final UserService userService;
     private final HttpSession session;
+    private final UserService userService;
 
+    /*                      Auth part
+     *  ------------------------------------------------------------------
+     */
+    @GetMapping("/login-form")
+    public String loginForm(UserRequest.JoinDTO reqDTO) {
+        userService.save(reqDTO);
+        return "auth/login-page";
+    }
+
+    @GetMapping("/join-form")
+    public String joinForm() {
+        return "auth/join-page";
+    }
+
+    @PostMapping("/login")
+    public String login(@RequestBody UserRequest.LoginDTO reqDTO) {
+        User user = userService.findByUser(reqDTO);
+        session.setAttribute("model", user);
+        return "redirect:/boards";
+    }
+
+    @PutMapping("/logout")
+    public String logout() {
+        session.invalidate();
+        return "redirect:/";
+    }
+
+    /*                      User part
+     *  ------------------------------------------------------------------
+     */
+    @GetMapping("/users")
+    public String getUsers() {
+        User user = getLoginUser();
+        session.setAttribute("model", new UserResponse.UserDetailDTO(user));
+        return "mypage/main";
+    }
+
+    @PutMapping("/users/{id}/profile")
+    public String getUsers(@PathVariable(name = "id") Integer userId, @RequestParam MultipartFile profileImage) {
+        User user = getLoginUser();
+        userService.changeProfile(user, userId, profileImage);
+        return "redirect:/users";
+    }
+
+    @PutMapping("/users/{id}/password")
+    public String updateUsersPassword(@PathVariable(name = "id") Integer userId, @RequestParam String password) {
+        User user = getLoginUser();
+        userService.changePassword(user, userId, password);
+        return "redirect:/users";
+    }
+
+    @DeleteMapping("/users/{id}")
+    public String deleteUsers(@PathVariable(name = "id") Integer userId) {
+        User user = getLoginUser();
+        userService.delete(user, userId);
+        return "redirect:/";
+    }
+
+
+    @PostMapping("/users/check-nickname")
+    @ResponseBody
+    public Map<String, Boolean> checkNickname(@RequestParam String username) {
+        return Map.of("duplicate", userService.isNicknameDuplicate(username));
+    }
+
+    private User getLoginUser() {
+        User user = (User) session.getAttribute("user");
+        if (user == null) throw new Exception401("로그인 후 이용부탁드립니다.");
+        return user;
+    }
 }
