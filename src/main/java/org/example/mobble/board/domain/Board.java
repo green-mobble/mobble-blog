@@ -52,15 +52,6 @@ public class Board {
         this.updatedAt = updatedAt;
     }
 
-    public Board(BoardRequest.BoardSaveDTO reqDTO, Integer userId, Integer categoryId) {
-        this.title = reqDTO.getTitle();
-        this.content = reqDTO.getContent();
-        this.userId = userId;
-        this.categoryId = categoryId;
-        this.views = 0;
-        this.createdAt = new Timestamp(System.currentTimeMillis());
-    }
-
     public void update(BoardRequest.BoardUpdateDTO reqDTO) {
         this.title = reqDTO.getTitle();
         this.content = reqDTO.getContent();

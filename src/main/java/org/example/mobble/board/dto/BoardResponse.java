@@ -7,6 +7,8 @@ import org.example.mobble.board.domain.Board;
 import java.sql.Timestamp;
 
 public class BoardResponse {
+
+    // 팀원 간 컨벤션 토의
     @Data
     public static class DTO {
         Integer id;

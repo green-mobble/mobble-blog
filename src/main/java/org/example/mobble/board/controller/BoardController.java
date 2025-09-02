@@ -85,7 +85,7 @@ public class BoardController {
     private User getLoginUser() {
         User user = (User) session.getAttribute("user");
         if (user == null) {
-            throw new Exception401("로그인 후 이용 부탁드립니다.");
+            throw new Exception401("로그인 후 이용 부탁드립니다."); // 에러 코드, 에러 메시지 컨벤션
         }
         return user;
     }

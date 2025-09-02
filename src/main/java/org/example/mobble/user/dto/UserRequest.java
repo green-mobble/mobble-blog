@@ -17,6 +17,26 @@ public class UserRequest {
     }
 
     @Data
+    public static class PasswordUpdateDTO {
+        private String password;
+
+        @Builder
+        public PasswordUpdateDTO(String password) {
+            this.password = password;
+        }
+    }
+
+    @Data
+    public static class ProfileUpdateDTO {
+        private String profileImage;
+
+        @Builder
+        public ProfileUpdateDTO(String profileImage) {
+            this.profileImage = profileImage;
+        }
+    }
+
+    @Data
     public static class JoinDTO {
         private String email;
         private String username;

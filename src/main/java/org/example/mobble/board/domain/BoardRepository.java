@@ -43,6 +43,7 @@ public class BoardRepository {
 
     public Optional<Board> findById(Integer boardId) {
         try {
+            // 이 줄만
             return Optional.ofNullable(em.find(Board.class, boardId));
         } catch (Exception e) {
             return Optional.empty();
@@ -50,6 +51,6 @@ public class BoardRepository {
     }
 
     public void delete(Board boardPS) {
-        em.remove(boardPS);
+        em.remove(boardPS.getId());
     }
 }

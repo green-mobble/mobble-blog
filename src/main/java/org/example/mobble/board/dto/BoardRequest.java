@@ -38,11 +38,13 @@ public class BoardRequest {
     public static class BoardReportDTO {
         String result;
         String content;
+        String resultEtc;
 
         @Builder
-        public BoardReportDTO(Integer id, String result, String content) {
+        public BoardReportDTO(String result, String content, String resultEtc) {
             this.result = result;
             this.content = content;
+            this.resultEtc = resultEtc;
         }
     }
 }

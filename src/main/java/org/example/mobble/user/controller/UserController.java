@@ -9,7 +9,6 @@ import org.example.mobble.user.dto.UserResponse;
 import org.example.mobble.user.service.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Map;
 
@@ -40,10 +39,10 @@ public class UserController {
         return "redirect:/boards";
     }
 
-    @PutMapping("/logout")
+    @GetMapping("/logout")
     public String logout() {
         session.invalidate();
-        return "redirect:/";
+        return "redirect:/login-form"; // login-form
     }
 
     /*                      User part
@@ -56,17 +55,18 @@ public class UserController {
         return "mypage/main";
     }
 
+    // 이미지 변경
     @PutMapping("/users/{id}/profile")
-    public String getUsers(@PathVariable(name = "id") Integer userId, @RequestParam MultipartFile profileImage) {
+    public String updateUsersProfile(@PathVariable(name = "id") Integer userId, @RequestBody UserRequest.ProfileUpdateDTO reqDTO) {
         User user = getLoginUser();
-        userService.changeProfile(user, userId, profileImage);
+        userService.changeProfile(user, userId, reqDTO);
         return "redirect:/users";
     }
 
     @PutMapping("/users/{id}/password")
-    public String updateUsersPassword(@PathVariable(name = "id") Integer userId, @RequestParam String password) {
+    public String updateUsersPassword(@PathVariable(name = "id") Integer userId, @RequestBody UserRequest.PasswordUpdateDTO reqDTO) {
         User user = getLoginUser();
-        userService.changePassword(user, userId, password);
+        userService.changePassword(user, userId, reqDTO);
         return "redirect:/users";
     }
 
@@ -76,7 +76,6 @@ public class UserController {
         userService.delete(user, userId);
         return "redirect:/";
     }
-
 
     @PostMapping("/users/check-nickname")
     @ResponseBody
