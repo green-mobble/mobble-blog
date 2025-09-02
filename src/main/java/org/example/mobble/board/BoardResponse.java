@@ -8,6 +8,7 @@ import java.util.List;
 @Data
 public class BoardResponse {
 
+    // TODO : 통일하거나, 데이터 갯수를 줄여서 차이 만들기 (헷갈림)
     @Data
     public static class BoardResponseDTO{
         private Integer id;
@@ -72,6 +73,7 @@ public class BoardResponse {
         }
     }
 
+    // 생성, 수정용
     @Data
     public static class DTO {
         private Integer id;

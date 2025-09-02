@@ -39,7 +39,7 @@ public class UserController {
     @GetMapping("/logout")
     public String logout() {
         session.invalidate();
-        return "redirect:/boards";
+        return "redirect:/boards"; // TODO : 로그인으로 이동
     }
 
 

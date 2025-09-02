@@ -11,6 +11,7 @@ public class UserRepository {
     private final EntityManager em;
 
     public User findUsername(String username) {
+        // try - catch => Optional로 처리
         try {
             Query query = em.createQuery("select u from User u where u.username=:username");
             query.setParameter("username", username);

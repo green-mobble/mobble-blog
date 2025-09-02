@@ -28,6 +28,7 @@ public class BoardService {
         Board findBoard = boardRepository.findById(id);
 
         // 조회수 증가
+        // TODO : 조회수 증가는 Board 객체에서 더티체킹 하면 됨
         boardRepository.viewsIncrease(id);
 
         return new BoardResponse.BoardDetailDTO(findBoard);
@@ -37,7 +38,6 @@ public class BoardService {
     public BoardResponse.DTO boardSave(BoardRequest.BoardSaveDTO boardSaveDTO, User sessionUser) {
         Timestamp now = new Timestamp(System.currentTimeMillis());
         Board board = Board.builder()
-                .id(null)
                 .title(boardSaveDTO.getTitle())
                 .content(boardSaveDTO.getContent())
                 .user(sessionUser)
@@ -45,7 +45,7 @@ public class BoardService {
                 .bookmark(0)
                 .createdAt(now)
                 .updatedAt(now)
-                .categoryId(boardSaveDTO.getCategoryId())
+                .categoryId(boardSaveDTO.getCategoryId()) // TODO : category name으로 변경
                 .build();
         Board boardsave = boardRepository.boardSave(board);
         return new  BoardResponse.DTO(boardsave) ;
@@ -57,7 +57,7 @@ public class BoardService {
         Board findBoard = boardRepository.findById(id);
 
         if (findBoard == null) {
-            throw new Exception404("게시물을 찾을 수 없습니다 : " + id);
+            throw new Exception404("게시물을 찾을 수 없습니다 : " + id); // TODO : 에러 메시지도 컨벤션 정하기
         }
         if(findBoard.getUser().getId() != sessionUser.getId()) {
             throw new Exception401("권한 없습니다.");
@@ -76,6 +76,8 @@ public class BoardService {
         if(findBoard.getUser().getId() != sessionUser.getId()) {
             throw new Exception401("권한 없습니다.");
         }
+
+        // 더티체킹은 update 함수 만들어서
         findBoard.setTitle(boardSaveDTO.getTitle());
         findBoard.setContent(boardSaveDTO.getContent());
         findBoard.setCategoryId(boardSaveDTO.getCategoryId());

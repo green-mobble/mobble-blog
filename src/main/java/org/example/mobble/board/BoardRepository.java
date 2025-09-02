@@ -24,6 +24,7 @@ public class BoardRepository {
 
     public void viewsIncrease(Integer id) {
         Board board = em.find(Board.class, id);
+        // 세터를 이름 바꿔서 하면 좋을 것 같음
         board.setViews(board.getViews() + 1);
     }
 
