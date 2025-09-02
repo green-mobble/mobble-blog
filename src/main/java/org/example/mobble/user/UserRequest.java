@@ -8,9 +8,11 @@ public class UserRequest {
     public static class JoinDTO {
         private String username;
         private String password;
+        // TODO: 이메일 추가
 
-        // 객체 생성
+        // TODO: 객체 생성
         public User toEntity(){
+            // TODO: 이메일 추가
             return User.builder()
                     .username(username)
                     .password(password)

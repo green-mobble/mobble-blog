@@ -63,7 +63,7 @@ public class BoardController {
         return "redirect:/boards";
     }
 
-    @PostMapping("/boards/{id}/delete")
+    @PostMapping("/boards/{id}/delete") // update, delete -> put, delete
     public String deleteById(@PathVariable Integer id) {
         User sessionUser = (User) session.getAttribute("session");
         if(sessionUser == null){
