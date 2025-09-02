@@ -18,9 +18,11 @@ public class User {
     // 테이블 설정 후 추가
 
     // 아이디
+    @Column(nullable = false, length = 30)
     private String username;
 
     // 비밀번호
+    @Column(nullable = false, length = 100)
     private String password;
 
     // 이메일
