@@ -63,4 +63,10 @@ public class Board {
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
+
+    // 더티 체킹용 update 함수 예시
+    void update (String title, String content) {
+        this.title = title;
+        this.content = content;
+    }
 }

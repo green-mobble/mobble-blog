@@ -13,6 +13,7 @@ public class BoardRequest {
         private String content;
         private User user;
 
+
         public Board toEntity(User user) {
             return Board.builder()
                     .title(title)

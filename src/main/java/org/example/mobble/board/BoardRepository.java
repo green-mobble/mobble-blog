@@ -32,6 +32,7 @@ public class BoardRepository {
                 .executeUpdate();
     }
 
+    // TODO: 파라미터 확실히 알 수 있게 boardId로 수정
     public Optional<Board> findByIdJoinUser(int id) {
         Optional<Board> board = em.createQuery("select b from Board b join fetch b.user where b.id = :id", Board.class)
                 .setParameter("id", id)

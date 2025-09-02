@@ -26,6 +26,7 @@ public class BoardService {
     }
 
     public BoardResponse.BoardDetailDTO 게시글상세(Integer id) {
+        // TODO: 상세보기용 쿼리 함수 하나 만들기
         Board board = boardRepository.findByIdJoinUser(id).orElseThrow(() -> new Exception404("게시글을 찾을 수 없습니다."));
         BoardResponse.BoardDetailDTO responseDTO = new BoardResponse.BoardDetailDTO(board);
         return responseDTO;
@@ -61,7 +62,7 @@ public class BoardService {
         if(board.getUser().getId() != sessionUserId){
             throw new Exception403("게시글을 수정할 권한이 없습니다.");
         }
-        // 더티 체킹
+        // TODO: 더티 체킹 -> board 클래스에서 update 함수 만들기
         board.setTitle(requestDTO.getTitle());
         board.setContent(requestDTO.getContent());
     }

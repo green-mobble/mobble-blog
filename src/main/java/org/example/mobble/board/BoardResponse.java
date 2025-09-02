@@ -18,6 +18,7 @@ public class BoardResponse {
             this.id = board.getId();
             this.title = board.getTitle();
             this.content = board.getContent();
+            // TODO: 조회수 추가
         }
     }
 
@@ -31,6 +32,7 @@ public class BoardResponse {
         private Timestamp updatedAt;
         private Integer userId;
         private String username;
+        // TODO: 카테고리 추가
 
         public BoardDetailDTO(Board board) {
             this.id = board.getId();
@@ -39,6 +41,7 @@ public class BoardResponse {
             this.views = board.getViews();
             this.userId = board.getUser().getId();
             this.username = board.getUser().getUsername();
+            // TODO: 카테고리 추가
         }
     }
 }

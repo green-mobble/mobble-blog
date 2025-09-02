@@ -38,6 +38,6 @@ public class UserController {
     @GetMapping("/logout")
     public String logout() {
         session.invalidate();
-        return "redirect:/boards";
+        return "redirect:/boards"; // TODO: 로그인 후에 기능 이용가능 -> 로그인 화면
     }
 }

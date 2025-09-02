@@ -28,7 +28,7 @@ public class UserService {
                 .orElseThrow(() -> new Exception404("유저네임을 찾을 수 없습니다"));
         // 비밀번호 확인
         if(!user.getPassword().equals(requestDTO.getPassword())) {
-            throw new Exception401("비밀번호가 일치하지 않습니다.");
+            throw new Exception401("비밀번호가 일치하지 않습니다."); // TODO: 에러 처리는 400 / 401으로 하면 됨
         }
         return user;
     }
