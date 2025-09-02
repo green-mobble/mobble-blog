@@ -25,16 +25,16 @@ public class BoardService {
     @Transactional
     public BoardResponse.BoardDetailDTO boardfindById(Integer id) {
         // 상세보기
-        Board findById = boardRepository.findById(id);
+        Board findBoard = boardRepository.findById(id);
 
         // 조회수 증가
         boardRepository.viewsIncrease(id);
 
-        return new BoardResponse.BoardDetailDTO(findById);
+        return new BoardResponse.BoardDetailDTO(findBoard);
     }
 
     @Transactional
-    public void boardSave(BoardRequest.BoardSaveDTO boardSaveDTO, User sessionUser) {
+    public BoardResponse.DTO boardSave(BoardRequest.BoardSaveDTO boardSaveDTO, User sessionUser) {
         Timestamp now = new Timestamp(System.currentTimeMillis());
         Board board = Board.builder()
                 .id(null)
@@ -47,21 +47,38 @@ public class BoardService {
                 .updatedAt(now)
                 .categoryId(boardSaveDTO.getCategoryId())
                 .build();
-        boardRepository.boardSave(board);
+        Board boardsave = boardRepository.boardSave(board);
+        return new  BoardResponse.DTO(boardsave) ;
     }
 
     @Transactional
     public void boardDelete(Integer id, User sessionUser) {
 
-        Board findById = boardRepository.findById(id);
+        Board findBoard = boardRepository.findById(id);
 
-        if (findById == null) {
+        if (findBoard == null) {
             throw new Exception404("게시물을 찾을 수 없습니다 : " + id);
         }
-        if(findById.getUser().getId() != sessionUser.getId()) {
+        if(findBoard.getUser().getId() != sessionUser.getId()) {
             throw new Exception401("권한 없습니다.");
         }
 
         boardRepository.boardDelete(id);
+    }
+
+    @Transactional
+    public BoardResponse.DTO boardUpdate(Integer id, BoardRequest.BoardSaveDTO boardSaveDTO, User sessionUser) {
+
+        Board findBoard = boardRepository.findById(id);
+        if (findBoard == null) {
+            throw new Exception404("게시물 찾을수 없어요");
+        }
+        if(findBoard.getUser().getId() != sessionUser.getId()) {
+            throw new Exception401("권한 없습니다.");
+        }
+        findBoard.setTitle(boardSaveDTO.getTitle());
+        findBoard.setContent(boardSaveDTO.getContent());
+        findBoard.setCategoryId(boardSaveDTO.getCategoryId());
+        return new BoardResponse.DTO(findBoard) ;
     }
 }

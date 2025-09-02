@@ -46,18 +46,18 @@ public class BoardController {
 
     // 글쓰기
     @PostMapping("/boards")
-    public String Save(BoardRequest.BoardSaveDTO boardSaveDTO){
+    public String boardSave(BoardRequest.BoardSaveDTO boardSaveDTO){
 
         User sessionUser = (User) session.getAttribute("sessionUser");
         if(sessionUser == null){
             throw new Exception401("로그인 하세요");
         }
-        boardService.boardSave(boardSaveDTO,sessionUser);
+        BoardResponse.DTO respDTO = boardService.boardSave(boardSaveDTO,sessionUser);
         return "redirect:/boards";
     }
     // 글 삭제
     @PostMapping("/boards/{id}/delete")
-    public String delete(@PathVariable("id")Integer id){
+    public String boardDelete(@PathVariable("id")Integer id){
         User sessionUser = (User) session.getAttribute("sessionUser");
         if(sessionUser == null){
             throw new Exception401("로그인 하세요");
@@ -66,6 +66,27 @@ public class BoardController {
         return "redirect:/boards";
     }
 
+    // 글 수정 폼
+    @PostMapping("/boards/{id}/update-form")
+    public String updateForm(@PathVariable("id")Integer id,HttpServletRequest request){
 
+        User sessionUser = (User) session.getAttribute("sessionUser");
+        if(sessionUser == null){
+            throw new Exception401("로그인 하세요");
+        }
+
+        BoardResponse.BoardDetailDTO respDTO = boardService.boardfindById(id);
+        request.setAttribute("model", respDTO);
+
+        return "board/update-page";
+    }
+
+    // 글 수정
+    @PostMapping("/boards/{id}/update")
+    public String boardUpdate(@PathVariable("id") Integer id,BoardRequest.BoardSaveDTO boardSaveDTO){
+        User sessionUser = (User) session.getAttribute("sessionUser");
+        BoardResponse.DTO respDTO = boardService.boardUpdate(id,boardSaveDTO,sessionUser);
+        return "redirect:/boards/" + id;
+    }
 
 }

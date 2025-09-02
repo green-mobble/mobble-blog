@@ -72,4 +72,18 @@ public class BoardResponse {
         }
     }
 
+    @Data
+    public static class DTO {
+        private Integer id;
+        private String title;
+        private String content;
+        private Integer categoryId;
+
+        public DTO(Board board) {
+            this.id = board.getId();
+            this.title = board.getTitle();
+            this.content = board.getContent();
+            this.categoryId = board.getCategoryId();
+        }
+    }
 }

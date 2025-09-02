@@ -58,4 +58,10 @@ public class Board {
         this.updatedAt = updatedAt;
         this.categoryId = categoryId;
     }
+
+    public void update(String title, String content, Integer categoryId) {
+        this.title = title;
+        this.content = content;
+        this.categoryId = categoryId;
+    }
 }

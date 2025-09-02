@@ -27,8 +27,9 @@ public class BoardRepository {
         board.setViews(board.getViews() + 1);
     }
 
-    public void boardSave(Board board) {
+    public Board boardSave(Board board) {
         em.persist(board);
+        return board;
     }
 
     public void boardDelete(Integer id) {
