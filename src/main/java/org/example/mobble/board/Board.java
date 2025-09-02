@@ -18,14 +18,18 @@ public class Board {
     private Integer id;
     // 테이블 설정 후 추가
 
+    @Column(nullable = false)
     private String title;
+
+    // HTML 본문: 대용량 텍스트 + 지연 로딩
+    @Lob
+    @Basic(fetch = FetchType.LAZY)
+    @Column(columnDefinition = "LONGTEXT", nullable = false)
     private String content;
 
-    // 글 쓴 사람
-//    private Integer userId;
-
-    // 조회수
-    private Integer views;
+    // 조회수: 기본값 0, NOT NULL
+    @Column(nullable = false)
+    private Integer views = 0;
 
     // 카테고리
     private Integer categoryId;
@@ -38,9 +42,15 @@ public class Board {
     @UpdateTimestamp
     private Timestamp updatedAt;
 
+    // 작성자
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
+    @PrePersist
+    void prePersist() {
+        if (views == null) views = 0;
+    }
 
     @Builder
     public Board(Integer id, String title, String content, User user, Integer views, Integer categoryId, Timestamp createdAt, Timestamp updatedAt) {
@@ -48,7 +58,7 @@ public class Board {
         this.title = title;
         this.content = content;
         this.user = user;
-        this.views = views;
+        this.views = (views == null) ? 0 : views;
         this.categoryId = categoryId;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
