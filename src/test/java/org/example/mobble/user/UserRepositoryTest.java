@@ -13,14 +13,14 @@ public class UserRepositoryTest {
     private UserRepository userRepository;
 
     @Test
-    public void save_test(){
+    public void join_test(){
         //given
         User user = User.builder()
                 .username("user1")
                 .password("1234")
                 .build();
         //when
-        userRepository.save(user);
+        userRepository.join(user);
         //eye
         System.out.println("=======================");
         System.out.println("id : " + user.getId());

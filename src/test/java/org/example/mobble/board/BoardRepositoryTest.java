@@ -72,4 +72,16 @@ public class BoardRepositoryTest {
         System.out.println("Board count : " + boards.size());
     }
 
+    @Test
+    public void findByIdJoinUser_test(){
+        //given
+        int id = 1;
+        //when
+        Board board = boardRepository.findByIdJoinUser(id).get();
+        //eye
+        System.out.println("=======================");
+        System.out.println("Board ID : " + board.getId());
+        System.out.println("username : " + board.getUser().getUsername());
+    }
+
 }

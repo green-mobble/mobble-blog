@@ -38,7 +38,7 @@ public class Board {
     @UpdateTimestamp
     private Timestamp updatedAt;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
