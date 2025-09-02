@@ -5,7 +5,10 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.example.mobble._util.error.ex.Exception401;
 import org.example.mobble._util.error.ex.Exception404;
+import org.example.mobble.category.Category;
+import org.example.mobble.category.CategoryRepository;
 import org.example.mobble.user.User;
+import org.example.mobble.user.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
@@ -15,6 +18,8 @@ import java.util.List;
 @Service
 public class BoardService {
     private final BoardRepository boardRepository;
+    private final CategoryRepository categoryRepository;
+    private final UserRepository userRepository;
 
     public BoardResponse.BoardListDTO boardList() {
         // 전체리스트
@@ -29,14 +34,30 @@ public class BoardService {
 
         // 조회수 증가
         // TODO : 조회수 증가는 Board 객체에서 더티체킹 하면 됨
-        boardRepository.viewsIncrease(id);
+        findBoard.viewUP(findBoard.getViews());
 
         return new BoardResponse.BoardDetailDTO(findBoard);
     }
 
+
     @Transactional
     public BoardResponse.DTO boardSave(BoardRequest.BoardSaveDTO boardSaveDTO, User sessionUser) {
         Timestamp now = new Timestamp(System.currentTimeMillis());
+
+        Category category = categoryRepository.findByUserIdAndCategory(
+                sessionUser.getId(),
+                boardSaveDTO.getCategory()
+        ).orElse(null);
+
+        if (category == null) {
+            category = categoryRepository.save(
+                    Category.builder()
+                            .userId(sessionUser.getId())
+                            .category(boardSaveDTO.getCategory())
+                            .build()
+            );
+        }
+
         Board board = Board.builder()
                 .title(boardSaveDTO.getTitle())
                 .content(boardSaveDTO.getContent())
@@ -45,10 +66,11 @@ public class BoardService {
                 .bookmark(0)
                 .createdAt(now)
                 .updatedAt(now)
-                .categoryId(boardSaveDTO.getCategoryId()) // TODO : category name으로 변경
+                .category(category) // TODO : category 객체로 연결
                 .build();
+
         Board boardsave = boardRepository.boardSave(board);
-        return new  BoardResponse.DTO(boardsave) ;
+        return new BoardResponse.DTO(boardsave);
     }
 
     @Transactional
@@ -78,9 +100,7 @@ public class BoardService {
         }
 
         // 더티체킹은 update 함수 만들어서
-        findBoard.setTitle(boardSaveDTO.getTitle());
-        findBoard.setContent(boardSaveDTO.getContent());
-        findBoard.setCategoryId(boardSaveDTO.getCategoryId());
+        findBoard.update(boardSaveDTO.getTitle(),boardSaveDTO.getContent());
         return new BoardResponse.DTO(findBoard) ;
     }
 }

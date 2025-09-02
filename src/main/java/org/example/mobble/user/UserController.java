@@ -20,7 +20,7 @@ public class UserController {
 
     @PostMapping("/join")
     public String join(UserRequest.UserJoinDTO userJoinDTO){
-        userService.userSave(userJoinDTO);
+        UserResponse.userDTO respDTO = userService.userSave(userJoinDTO);
         return "redirect:/login-form";
     }
 
@@ -39,7 +39,7 @@ public class UserController {
     @GetMapping("/logout")
     public String logout() {
         session.invalidate();
-        return "redirect:/boards"; // TODO : 로그인으로 이동
+        return "redirect:/login-form"; // TODO : 로그인으로 이동
     }
 
 

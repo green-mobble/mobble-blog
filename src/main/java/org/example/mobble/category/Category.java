@@ -15,19 +15,15 @@ public class Category {
     private Integer id;
 
     // 만든 사람
-    @ManyToOne(fetch = FetchType.LAZY)
-    private User user;
+    private Integer userId;
 
     // 카테고리명
     private String category;
 
-
-
     @Builder
-    public Category(Integer id, User user, String category) {
+    public Category(Integer id, Integer userId, String category) {
         this.id = id;
-        this.user = user;
+        this.userId = userId;
         this.category = category;
-
     }
 }
