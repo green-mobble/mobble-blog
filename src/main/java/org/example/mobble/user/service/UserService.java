@@ -45,6 +45,7 @@ public class UserService {
         return userRepository.existsByNickname(username);
     }
 
+    @Transactional
     public void changeProfile(User user, Integer userId, MultipartFile profileImage) {
         checkPermissions(user, userId);
         User userPS = getUser(user.getId());
@@ -94,6 +95,7 @@ public class UserService {
         userPS.setProfileImageUrl(targetPath.toString());
     }
 
+    @Transactional
     public void changePassword(User user, Integer userId, String password) {
         if (password == null || password.isEmpty()) throw new Exception400("비밀번호가 입력되지 않았습니다.");
         checkPermissions(user, userId);
@@ -107,6 +109,7 @@ public class UserService {
         );
     }
 
+    @Transactional
     public void delete(User user, Integer userId) {
         checkPermissions(user, userId);
         userRepository.delete(user);
