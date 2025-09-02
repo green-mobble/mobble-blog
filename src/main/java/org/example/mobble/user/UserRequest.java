@@ -1,6 +1,9 @@
 package org.example.mobble.user;
 
 import lombok.Data;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.File;
 
 public class UserRequest {
 
@@ -29,8 +32,7 @@ public class UserRequest {
     @Data
     public class UserProfileUpdateDTO {
       //  private Integer userId;
-        private String password;
-        private byte[] profileImage;
+        private MultipartFile profileImage;
 
     }
 

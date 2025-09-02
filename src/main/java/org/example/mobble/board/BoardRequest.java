@@ -15,7 +15,7 @@ public class BoardRequest {
     public class BoardUpdateDTO{
         private String title;
         private String content;
-        private Integer categoryId;
+        private String category;
     }
 
 }

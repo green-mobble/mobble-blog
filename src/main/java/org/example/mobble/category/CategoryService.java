@@ -22,13 +22,13 @@ public class CategoryService {
         Optional<Category> categoryPS = categoryRepository.findByCategoryAndUserId(reqDTO.getCategory(),user.getId());
 
         // 있으면 그 값 리턴
-        if (categoryPS.isPresent()) { return categoryPS.get(); }
+        if (categoryPS.isPresent()) {   return categoryPS.get();}
 
         //없으면 저장 후 리턴
         else{
             Category newCategory = Category.builder()
                     .category(reqDTO.getCategory())
-                    .userId(user.getId())
+                    .user(user)
                     .build();
 
             return categoryRepository.save(newCategory);

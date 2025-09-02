@@ -58,13 +58,13 @@ public class BoardController {
 
         //세션 유저 검증용
         UserResponse.LoginDTO sessionUser = (UserResponse.LoginDTO) session.getAttribute("sessionUser");
-        //수정 (반환은 상태확인 / 리다이렉트 id 용)
+        //수정 (반환은 상태확인)
         BoardResponse.DTO resDTO = boardService.update(reqDTO,sessionUser.getId(),boardId);
 
         return "redirect:/boards/"+resDTO.getId();
     }
 
-    //글 신고하기
+    //글 삭제하기
     @DeleteMapping("/boards/{id}")
     public String delete(@PathVariable("id")  Integer boardId){
 
@@ -75,6 +75,13 @@ public class BoardController {
 
         return "redirect:/boards";
     }
+
+    //신고하기 // 못함 TODO
+    @PostMapping ("/boards/{id}/report")
+    public String saveReport(){
+        return null;
+    }
+
 
     //게시판 쓰기 화면
     @GetMapping("/boards/save-form")
@@ -89,9 +96,11 @@ public class BoardController {
     @GetMapping("/boards/{id}/update-form")
     public String updateForm(@PathVariable("id")  Integer boardId, Model model ){
 
-        //board 정보 내리기
-//        boardService.updateForm();
-        //model.addAttribute("resDTO", resDTO);
+      //세션 유저 (북마크 여부를 위해)
+      UserResponse.LoginDTO sessionUser = (UserResponse.LoginDTO) session.getAttribute("sessionUser");
+      //상세페이지 조회 ( 어떤걸 내릴지 따로 정한 게 없음)
+      BoardResponse.BoardDetailDTO resDTO = boardService.detail(boardId,sessionUser.getId());
+      model.addAttribute("resDTO", resDTO);
         return "board/list-page";
     }
 

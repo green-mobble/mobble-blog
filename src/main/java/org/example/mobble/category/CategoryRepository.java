@@ -16,7 +16,7 @@ public class CategoryRepository {
     public Optional<Category> findByCategoryAndUserId(String category, Integer userId) {
         try {
             Category result = em.createQuery(
-                            "select c from Category c where c.category=:category and c.userId=:userId",
+                            "select c from Category c where c.category=:category and c.user.id=:userId",
                             Category.class)
                     .setParameter("category", category)
                     .setParameter("userId", userId)

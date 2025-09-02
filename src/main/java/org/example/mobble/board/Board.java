@@ -53,9 +53,9 @@ public class Board {
         this.updatedAt = updatedAt;
     }
 
-    public void updateInfo(BoardRequest.BoardUpdateDTO reqDTO) {
+    public void updateInfo(BoardRequest.BoardUpdateDTO reqDTO,Category category) {
         this.title = reqDTO.getTitle();
         this.content = reqDTO.getContent();
-
+        this.category = category;
     }
 }

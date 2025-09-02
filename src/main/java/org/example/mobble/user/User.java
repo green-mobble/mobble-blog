@@ -25,23 +25,24 @@ public class User {
     private String email;
 
     // reCAPTCHA 추가? : 봇 생성 방지용
-
+    private String profileUrl;
 
     @Builder
-    public User(Integer id, String username, String password, String email) {
+    public User(Integer id, String username, String password, String email, String profileUrl) {
         this.id = id;
         this.username = username;
         this.password = password;
         this.email = email;
+        this.profileUrl = profileUrl;
     }
 
     public void updatePassword(UserRequest.UserPasswordUpdateDTO reqDTO) {
         this.password = reqDTO.getPassword();
     }
 
-    public void updateProfile(UserRequest.UserProfileUpdateDTO reqDTO) {
+    public void updateProfileUrl(String filePath) {
         //TODO  테이블 이동 혹은 칼럼 변경및 추가
-
+        this.profileUrl = filePath;
         // this.profileImage = reqDTO.getProfileImage()
     }
 }

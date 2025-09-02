@@ -109,7 +109,7 @@ public class BoardControllerTest {
                         .session(session)
                         .param("title", "새 제목")
                         .param("content", "새 내용")
-                        .param("category", "공지사항")
+                        .param("category", "java")
         );
 
         // then
@@ -120,15 +120,16 @@ public class BoardControllerTest {
 
     @Test
     void update_test() throws Exception {
-        // when
+        //when
         ResultActions actions = mvc.perform(
                 put("/boards/" + 1)
                         .session(session)
                         .param("title", "수정된 제목")
                         .param("content", "수정된 내용")
+                        .param("category", "공지사항")
         );
 
-        // then
+        //then
         actions.andExpect(status().is3xxRedirection()) // redirect
                 .andExpect(redirectedUrlPattern("/boards/*")) // 저장 후 리다이렉트
                 .andDo(print());
