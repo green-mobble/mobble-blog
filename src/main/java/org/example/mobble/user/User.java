@@ -2,6 +2,9 @@ package org.example.mobble.user;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+
+import java.sql.Timestamp;
 
 @Data
 @NoArgsConstructor
@@ -23,6 +26,9 @@ public class User {
     // 이메일
     // 이메일 인증도 추가할 건지?
     private String email;
+
+    @CreationTimestamp
+    private Timestamp createdAt;
 
     // reCAPTCHA 추가? : 봇 생성 방지용
 

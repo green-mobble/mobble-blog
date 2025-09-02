@@ -31,4 +31,12 @@ public class BoardRepository {
                 .setParameter("id", id)
                 .executeUpdate();
     }
+
+    public Optional<Board> findByIdJoinUser(int id) {
+        Optional<Board> board = em.createQuery("select b from Board b join fetch b.user where b.id = :id", Board.class)
+                .setParameter("id", id)
+                .getResultStream()
+                .findFirst();
+        return board;
+    }
 }
