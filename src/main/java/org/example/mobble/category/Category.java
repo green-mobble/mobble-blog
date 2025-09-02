@@ -2,6 +2,8 @@ package org.example.mobble.category;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.example.mobble.board.Board;
+import org.example.mobble.user.User;
 
 @Data
 @NoArgsConstructor
@@ -13,15 +15,19 @@ public class Category {
     private Integer id;
 
     // 만든 사람
-    private Integer userId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private User user;
 
     // 카테고리명
     private String category;
 
+
+
     @Builder
-    public Category(Integer id, Integer userId, String category) {
+    public Category(Integer id, User user, String category) {
         this.id = id;
-        this.userId = userId;
+        this.user = user;
         this.category = category;
+
     }
 }
