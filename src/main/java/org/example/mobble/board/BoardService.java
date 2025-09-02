@@ -6,7 +6,9 @@ import org.example.mobble._util.error.ex.Exception403;
 import org.example.mobble._util.error.ex.Exception404;
 import org.example.mobble._util.error.ex.ExceptionApi403;
 import org.example.mobble._util.error.ex.ExceptionApi404;
+import org.example.mobble.bookmark.BookmarkRepository;
 import org.example.mobble.category.Category;
+import org.example.mobble.category.CategoryRepository;
 import org.example.mobble.category.CategoryRequest;
 import org.example.mobble.category.CategoryService;
 import org.example.mobble.user.User;
@@ -15,6 +17,7 @@ import org.example.mobble.user.UserResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,11 +27,24 @@ public class BoardService {
     private final BoardRepository boardRepository;
     private final UserRepository userRepository;
     private final CategoryService categoryService;
+    private final CategoryRepository categoryRepository;
+    private final BookmarkRepository bookmarkRepository;
+
+
 
     //전체 조회
     public List<BoardResponse.BoardDTO> list() {
         //리스트 받기
-        List<BoardResponse.BoardDTO> resDTO = boardRepository.findAll();
+
+        List<BoardResponse.BoardDTO> resDTO = new ArrayList<>();
+
+        List<Board> boardList = boardRepository.findAll();
+        for (Board board : boardList) {
+            Category categoryPS = categoryRepository.findById(board.getCategory().getId());
+            Long BookmarkCount =  bookmarkRepository.countByBoardId(board.getId());
+            resDTO.add(new BoardResponse.BoardDTO(board,categoryPS,BookmarkCount));
+        }
+
         return resDTO;
     }
 
@@ -114,4 +130,6 @@ public class BoardService {
 
 
     }
+
+
 }

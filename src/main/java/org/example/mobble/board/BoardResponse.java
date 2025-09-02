@@ -2,6 +2,8 @@ package org.example.mobble.board;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import org.example.mobble.category.Category;
+
 import java.sql.Timestamp;
 
 public class BoardResponse {
@@ -20,6 +22,19 @@ public class BoardResponse {
 
         private Long bookmarkCount;
         private String image; // base64
+
+        public BoardDTO(Board board, Category categoryPS, Long bookmarkCount) {
+            this.bookmarkCount = bookmarkCount;
+            this.updatedAt = board.getUpdatedAt();
+            this.createdAt = board.getCreatedAt();
+            this.category = board.getCategory().getCategory();
+            this.views = board.getViews();
+            this.userId = board.getUser().getId();
+            this.content = board.getContent();
+            this.title = board.getTitle();
+            this.id = board.getId();
+        }
+
     }
 
     @Data

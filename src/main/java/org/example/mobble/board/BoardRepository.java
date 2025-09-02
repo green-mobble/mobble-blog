@@ -14,29 +14,40 @@ import java.util.Optional;
 public class BoardRepository {
     private final EntityManager em;
 
-    // JPA로 변경
-    public List<BoardResponse.BoardDTO> findAll() {
-        return em.createQuery(
-                        "select new org.example.mobble.board.BoardResponse$BoardDTO(" +
-                                "   b.id, " +
-                                "   b.title, " +
-                                "   b.content, " +
-                                "   u.id, " +
-                                "   b.views, " +
-                                "   c.category, " +
-                                "   b.createdAt, " +
-                                "   b.updatedAt, " +
-                                "   (select count(m.id) from Bookmark m where m.boardId = b.id), " +
-                                "   null) " +
-                                "from Board b " +
-                                "join b.user u " +
-                                "left join b.category c " ,
-                        BoardResponse.BoardDTO.class
-                )
-                .getResultList();
 
+    public List<Board> findAll() {
+        String jpql = "select b from Board b order by b.id desc";
+        return em.createQuery(jpql, Board.class)
+                .getResultList();
     }
 
+
+
+
+
+//    // JPA로 변경
+//    public List<BoardResponse.BoardDTO> findAll() {
+//        return em.createQuery(
+//                        "select new org.example.mobble.board.BoardResponse$BoardDTO(" +
+//                                "   b.id, " +
+//                                "   b.title, " +
+//                                "   b.content, " +
+//                                "   u.id, " +
+//                                "   b.views, " +
+//                                "   c.category, " +
+//                                "   b.createdAt, " +
+//                                "   b.updatedAt, " +
+//                                "   (select count(m.id) from Bookmark m where m.boardId = b.id), " +
+//                                "   null) " +
+//                                "from Board b " +
+//                                "join b.user u " +
+//                                "left join b.category c " ,
+//                        BoardResponse.BoardDTO.class
+//                )
+//                .getResultList();
+//
+//    }
+//
     // JPA 변경
     public Optional<BoardResponse.BoardDetailDTO> findByBoardIdandUserId(Integer boardId, Integer userId) {
 
@@ -78,4 +89,6 @@ public class BoardRepository {
     public void delete(Board boardPS) {
         em.remove(boardPS);
     }
+
+
 }

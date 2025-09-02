@@ -20,7 +20,7 @@ public class BoardController {
     //내 글 리스트 전체보기
     @GetMapping("/boards")
     public String list(Model model ){
-
+        ;
         //기본 전체 리스트
         List<BoardResponse.BoardDTO> resDTO = boardService.list();
         model.addAttribute("resDTO", resDTO);

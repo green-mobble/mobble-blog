@@ -31,4 +31,8 @@ public class CategoryRepository {
         em.persist(category);
         return category;
     }
+
+    public Category findById(Integer categoryId) {
+        return em.find(Category.class, categoryId);
+    }
 }
