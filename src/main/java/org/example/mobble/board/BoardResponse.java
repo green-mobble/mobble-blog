@@ -2,7 +2,8 @@ package org.example.mobble.board;
 
 import lombok.Data;
 
-import java.security.Timestamp;
+import java.sql.Timestamp;
+
 
 public class BoardResponse {
 
