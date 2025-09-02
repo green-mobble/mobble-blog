@@ -3,6 +3,8 @@ package org.example.mobble.board;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.example.mobble._util.error.ex.Exception401;
+import org.example.mobble._util.error.ex.Exception404;
 import org.example.mobble.user.User;
 import org.springframework.stereotype.Service;
 
@@ -46,5 +48,20 @@ public class BoardService {
                 .categoryId(boardSaveDTO.getCategoryId())
                 .build();
         boardRepository.boardSave(board);
+    }
+
+    @Transactional
+    public void boardDelete(Integer id, User sessionUser) {
+
+        Board findById = boardRepository.findById(id);
+
+        if (findById == null) {
+            throw new Exception404("게시물을 찾을 수 없습니다 : " + id);
+        }
+        if(findById.getUser().getId() != sessionUser.getId()) {
+            throw new Exception401("권한 없습니다.");
+        }
+
+        boardRepository.boardDelete(id);
     }
 }

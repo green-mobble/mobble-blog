@@ -45,7 +45,7 @@ public class BoardController {
     }
 
     // 글쓰기
-    @PostMapping("/boards/save")
+    @PostMapping("/boards")
     public String Save(BoardRequest.BoardSaveDTO boardSaveDTO){
 
         User sessionUser = (User) session.getAttribute("sessionUser");
@@ -55,4 +55,17 @@ public class BoardController {
         boardService.boardSave(boardSaveDTO,sessionUser);
         return "redirect:/boards";
     }
+    // 글 삭제
+    @PostMapping("/boards/{id}/delete")
+    public String delete(@PathVariable("id")Integer id){
+        User sessionUser = (User) session.getAttribute("sessionUser");
+        if(sessionUser == null){
+            throw new Exception401("로그인 하세요");
+        }
+        boardService.boardDelete(id,sessionUser);
+        return "redirect:/boards";
+    }
+
+
+
 }

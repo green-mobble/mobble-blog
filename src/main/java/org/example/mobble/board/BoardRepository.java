@@ -30,4 +30,10 @@ public class BoardRepository {
     public void boardSave(Board board) {
         em.persist(board);
     }
+
+    public void boardDelete(Integer id) {
+        Query query = em.createQuery("delete from Board b where b.id = :id");
+        query.setParameter("id", id);
+        query.executeUpdate();
+    }
 }
