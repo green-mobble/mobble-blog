@@ -30,7 +30,7 @@ public class UserRepository {
         return  Optional.ofNullable(em.find(User.class, userId));
     }
 
-    //삭제
+    //삭제 -> 삭제를 할때는 id로 찾은 유저를 삭제
     public void delete(User user) {
             em.remove(user);
     }

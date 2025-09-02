@@ -20,29 +20,30 @@ public class HealthController {
         return "auth/login-page";
     }
 
+    // TODO : 아래는 유저로 옮기기
     @PostMapping("/login")
     public String login( UserRequest.LoginDTO reqDTO){
         //로그인 검증
         UserResponse.LoginDTO sessionUser = userService.login(reqDTO);
         //세션 생성
         session.setAttribute("sessionUser", sessionUser);
-        return "redirect:/";
+        return "redirect:/"; // TODO: redirect:/boards
     }
 
     @PostMapping("/join")
     public String join( UserRequest.JoinDTO reqDTO){
         //회원가입 ( save 라도 값은 리턴 - 확인을 위해)
         UserResponse.DTO resDTO = userService.join(reqDTO);
-        return "redirect:/";
+        return "redirect:/"; // TODO : redirect:/login-form
     }
 
     @GetMapping("/login-form")
     public String loginForm( ){
         return "redirect:/";
-    }
+    } // TODO : return mustache
 
     @GetMapping("/join-form")
     public String joinForm( ){
         return "redirect:/";
-    }
+    } // TODO : return mustache
 }

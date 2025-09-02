@@ -19,11 +19,13 @@ public class UserResponse {
     public static class DTO{
         private Integer id;
         private String username;
+        // pw 제외
         private String password;
         private String email;
 
         public DTO(User user) {
             this.id = user.getId();
+            // pw 제외
             this.password = user.getPassword();
             this.username = user.getUsername();
             this.email = user.getEmail();

@@ -14,6 +14,7 @@ import java.util.Optional;
 public class BoardRepository {
     private final EntityManager em;
 
+    // JPA로 변경
     public List<BoardResponse.BoardDTO> findAll() {
         return em.createQuery(
                         "select new org.example.mobble.board.BoardResponse$BoardDTO(" +
@@ -36,6 +37,7 @@ public class BoardRepository {
 
     }
 
+    // JPA 변경
     public Optional<BoardResponse.BoardDetailDTO> findByBoardIdandUserId(Integer boardId, Integer userId) {
 
             return Optional.ofNullable(em.createQuery(

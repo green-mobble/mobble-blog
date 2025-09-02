@@ -19,7 +19,7 @@ public class BoardResponse {
         private Timestamp updatedAt;
 
         private Long bookmarkCount;
-        private String imageUrl;
+        private String image; // base64
     }
 
     @Data

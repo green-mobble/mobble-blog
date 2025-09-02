@@ -97,7 +97,7 @@ public class UserService {
         return userPS;
     }
 
-    //파일 저장
+    //파일 저장 - 팀장 지시에 따라 변경
     private void fileSave(UserRequest.UserProfileUpdateDTO reqDTO,User user) {
         MultipartFile target = reqDTO.getProfileImage();
         if (!target.getName().contains("jpg") && target.getName().contains("png")) {
