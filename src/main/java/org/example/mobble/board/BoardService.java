@@ -42,7 +42,7 @@ public class BoardService {
 
 
     @Transactional
-    public BoardResponse.DTO boardSave(BoardRequest.BoardSaveDTO boardSaveDTO, User sessionUser) {
+    public BoardResponse.DTO boardSave(BoardRequest.BoardSaveANDUpdateDTO boardSaveDTO, User sessionUser) {
         Timestamp now = new Timestamp(System.currentTimeMillis());
 
         // 카테고리 있는지 확인
@@ -89,7 +89,7 @@ public class BoardService {
     }
 
     @Transactional
-    public BoardResponse.DTO boardUpdate(Integer id, BoardRequest.BoardSaveDTO boardSaveDTO, User sessionUser) {
+    public BoardResponse.DTO boardUpdate(Integer id, BoardRequest.BoardSaveANDUpdateDTO boardSaveDTO, User sessionUser) {
 
         Board findBoard = boardRepository.findById(id);
         if (findBoard == null) {

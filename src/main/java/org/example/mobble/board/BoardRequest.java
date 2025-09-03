@@ -8,7 +8,7 @@ public class BoardRequest {
 
     // 생성, 수정 같아서 -> DTO
     @Data
-    public class BoardSaveDTO {
+    public class BoardSaveANDUpdateDTO {
         private String title;
         private String content;
         private String category;
