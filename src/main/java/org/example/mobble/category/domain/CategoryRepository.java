@@ -1,9 +1,10 @@
-package org.example.mobble.category;
+package org.example.mobble.category.domain;
 
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor

@@ -1,4 +1,4 @@
-package org.example.mobble.category;
+package org.example.mobble.category.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -6,7 +6,13 @@ import lombok.*;
 @Data
 @NoArgsConstructor
 @Entity
-@Table(name = "category_tb")
+@Table(
+        name = "category_tb",
+        uniqueConstraints = @UniqueConstraint(
+                name = "uk_user_category",
+                columnNames = {"user_id", "category"} // 같은 유저 내 중복 카테고리명 금지
+        )
+)
 public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,6 +28,11 @@ public class Category {
     public Category(Integer id, Integer userId, String category) {
         this.id = id;
         this.userId = userId;
+        this.category = category;
+    }
+
+    // 이름 변경 도메인 메서드
+    public void rename(String category) {
         this.category = category;
     }
 }
