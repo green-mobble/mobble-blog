@@ -33,7 +33,7 @@ public class BoardRepositoryTest {
             System.out.println("CreatedAt: " + board.getCreatedAt());
             System.out.println("Views: " + board.getViews());
             System.out.println("Bookmark: " + board.getBookmark());
-            System.out.println("CategoryId: " + board.getCategoryId());
+            //System.out.println("CategoryId: " + board.getCategoryId());
             System.out.println("-------------------------");
         });
     }
@@ -52,7 +52,7 @@ public class BoardRepositoryTest {
         System.out.println("CreatedAt: " + board.getCreatedAt());
         System.out.println("Views: " + board.getViews());
         System.out.println("Bookmark: " + board.getBookmark());
-        System.out.println("CategoryId: " + board.getCategoryId());
+        //System.out.println("CategoryId: " + board.getCategoryId());
     }
 
     @Test
@@ -71,7 +71,7 @@ public class BoardRepositoryTest {
                 .bookmark(0)
                 .createdAt(now)
                 .updatedAt(now)
-                .categoryId(category)
+                //.categoryId(category)
                 .build();
         boardRepository.boardSave(board);
         Board savedBoard = em.find(Board.class, board.getId());
@@ -79,7 +79,7 @@ public class BoardRepositoryTest {
         System.out.println("제목: " + savedBoard.getTitle());
         System.out.println("내용: " + savedBoard.getContent());
         System.out.println("작성자: " + savedBoard.getUser().getUsername());
-        System.out.println("카테고리: " + savedBoard.getCategoryId());
+        //System.out.println("카테고리: " + savedBoard.getCategoryId());
         System.out.println("조회수: " + savedBoard.getViews());
         System.out.println("북마크: " + savedBoard.getBookmark());
         System.out.println("생성일: " + savedBoard.getCreatedAt());

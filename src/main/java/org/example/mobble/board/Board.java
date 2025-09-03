@@ -33,7 +33,8 @@ public class Board {
     private Integer bookmark;
 
     // 카테고리
-    private Integer categoryId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Category category;
     
     // 글 작성 시간
     @CreationTimestamp
@@ -47,7 +48,7 @@ public class Board {
     private boolean isBookmark;
 
     @Builder
-    public Board(Integer id, String title, String content, User user, Integer views, Integer bookmark, Timestamp createdAt, Timestamp updatedAt, Integer categoryId) {
+    public Board(Integer id, String title, String content, User user, Integer views, Integer bookmark, Timestamp createdAt, Timestamp updatedAt, Category category) {
         this.id = id;
         this.title = title;
         this.content = content;
@@ -56,12 +57,12 @@ public class Board {
         this.bookmark = bookmark;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
-        this.categoryId = categoryId;
+        this.category = category;
     }
 
-    public void update(String title, String content, Integer categoryId) {
+    public void update(String title, String content, Category category) {
         this.title = title;
         this.content = content;
-        this.categoryId = categoryId;
+        this.category = category;
     }
 }

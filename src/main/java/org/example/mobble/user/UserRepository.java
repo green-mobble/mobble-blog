@@ -5,24 +5,23 @@ import jakarta.persistence.Query;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @RequiredArgsConstructor
 @Repository
 public class UserRepository {
     private final EntityManager em;
 
-    public User findUsername(String username) {
-        // try - catch => Optional로 처리
-        try {
-            Query query = em.createQuery("select u from User u where u.username=:username");
-            query.setParameter("username", username);
-            return (User) query.getSingleResult();
-        } catch(RuntimeException e) {
-            return null;
-        }
-
+    public Optional<User> findUsername(String username){
+        Optional<User> user = em.createQuery("select u from User u where u.username = :username", User.class)
+                .setParameter("username", username)
+                .getResultStream()
+                .findFirst();
+        return user;
     }
-    public void userSave(User user) {
+    public User userSave(User user) {
         em.persist(user);
+        return user;
     }
 
 }
