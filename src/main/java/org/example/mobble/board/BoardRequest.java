@@ -11,6 +11,6 @@ public class BoardRequest {
     public class BoardSaveDTO {
         private String title;
         private String content;
-        private Category category;
+        private String category;
     }
 }

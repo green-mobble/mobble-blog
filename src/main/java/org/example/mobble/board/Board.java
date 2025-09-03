@@ -60,9 +60,12 @@ public class Board {
         this.category = category;
     }
 
-    public void update(String title, String content, Category category) {
+    public void update(String title, String content) {
         this.title = title;
         this.content = content;
-        this.category = category;
+    }
+
+    public void viewUP(Integer views) {
+        this.views = views + 1;
     }
 }

@@ -8,6 +8,7 @@ import org.example.mobble._util.error.ex.Exception404;
 import org.example.mobble.category.Category;
 import org.example.mobble.category.CategoryRepository;
 import org.example.mobble.user.User;
+import org.example.mobble.user.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
@@ -18,6 +19,7 @@ import java.util.List;
 public class BoardService {
     private final BoardRepository boardRepository;
     private final CategoryRepository categoryRepository;
+    private final UserRepository userRepository;
 
     public BoardResponse.BoardListDTO boardList() {
         // 전체리스트
@@ -32,7 +34,7 @@ public class BoardService {
 
         // 조회수 증가
         // TODO : 조회수 증가는 Board 객체에서 더티체킹 하면 됨
-        boardRepository.viewsIncrease(id);
+        findBoard.viewUP(findBoard.getViews());
 
         return new BoardResponse.BoardDetailDTO(findBoard);
     }
@@ -44,14 +46,14 @@ public class BoardService {
 
         Category category = categoryRepository.findByUserIdAndCategory(
                 sessionUser.getId(),
-                boardSaveDTO.getCategory().getCategory()
+                boardSaveDTO.getCategory()
         ).orElse(null);
 
         if (category == null) {
             category = categoryRepository.save(
                     Category.builder()
-                            .userId(sessionUser.getId())   // userId 말고 User 객체 그대로 넣어야 맞음
-                            .category(boardSaveDTO.getCategory().getCategory())
+                            .userId(sessionUser.getId())
+                            .category(boardSaveDTO.getCategory())
                             .build()
             );
         }
@@ -98,9 +100,7 @@ public class BoardService {
         }
 
         // 더티체킹은 update 함수 만들어서
-        findBoard.setTitle(boardSaveDTO.getTitle());
-        findBoard.setContent(boardSaveDTO.getContent());
-        findBoard.getCategory().setCategory(boardSaveDTO.getCategory().getCategory());
+        findBoard.update(boardSaveDTO.getTitle(),boardSaveDTO.getContent());
         return new BoardResponse.DTO(findBoard) ;
     }
 }
