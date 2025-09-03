@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+
+import java.sql.Timestamp;
 
 @Data
 @NoArgsConstructor
@@ -31,6 +34,13 @@ public class Report {
     // 신고 내용
     private String content;
 
+    // 신고 상태
+    private ReportStatus status;
+
+    //작성 시간
+    @CreationTimestamp
+    private Timestamp createdAt;
+
     @Builder
     public Report(Integer id, Integer boardId, Integer userId, ReportCase result, String resultEtc, String content) {
         this.id = id;
@@ -56,6 +66,10 @@ public class Report {
 //    }
     public void updateResultEtc(String resultEtc) {
         this.resultEtc = resultEtc;
+    }
+
+    public void statusUpdate(ReportStatus status) {
+        this.status = status;
     }
 }
 
