@@ -4,7 +4,6 @@ package org.example.mobble.board;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
-import org.example.mobble._util.error.ex.Exception400;
 import org.example.mobble._util.error.ex.Exception401;
 import org.example.mobble.user.User;
 import org.springframework.stereotype.Controller;
@@ -46,7 +45,7 @@ public class BoardController {
 
     // 글쓰기
     @PostMapping("/boards")
-    public String boardSave(BoardRequest.BoardSaveDTO boardSaveDTO){
+    public String boardSave(BoardRequest.BoardSaveANDUpdateDTO boardSaveDTO){
 
         User sessionUser = (User) session.getAttribute("sessionUser");
         if(sessionUser == null){
@@ -83,7 +82,7 @@ public class BoardController {
 
     // 글 수정
     @PostMapping("/boards/{id}/update")
-    public String boardUpdate(@PathVariable("id") Integer id,BoardRequest.BoardSaveDTO boardSaveDTO){
+    public String boardUpdate(@PathVariable("id") Integer id,BoardRequest.BoardSaveANDUpdateDTO boardSaveDTO){
         User sessionUser = (User) session.getAttribute("sessionUser");
         BoardResponse.DTO respDTO = boardService.boardUpdate(id,boardSaveDTO,sessionUser);
         return "redirect:/boards/" + id;
