@@ -32,7 +32,7 @@ public class BoardController {
     @GetMapping("/boards/{id}")
     public String boardDetail(@PathVariable("id")Integer id, HttpServletRequest request) {
 
-        BoardResponse.BoardDetailDTO respDTO = boardService.boardfindById(id);
+        BoardResponse.BoardResponseDTO respDTO = boardService.boardfindById(id);
         request.setAttribute("model", respDTO);
 
         return "board/detail-page";
@@ -75,7 +75,7 @@ public class BoardController {
             throw new Exception401("로그인 하세요");
         }
 
-        BoardResponse.BoardDetailDTO respDTO = boardService.boardfindById(id);
+        BoardResponse.BoardResponseDTO respDTO = boardService.boardfindById(id);
         request.setAttribute("model", respDTO);
 
         return "board/update-page";

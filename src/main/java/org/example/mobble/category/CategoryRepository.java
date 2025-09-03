@@ -16,10 +16,10 @@ public class CategoryRepository {
         return category;
     }
 
-    public Optional<Category> findByUserIdAndCategory(Integer id, String category) {
+    public Optional<Category> findByUserIdAndCategory(Integer userId, String category) {
         try {
             return Optional.ofNullable(em.createQuery("select c from Category c where c.userId = :userId and c.category = :category", Category.class)
-                    .setParameter("userId", id)
+                    .setParameter("userId", userId)
                     .setParameter("category", category)
                     .getSingleResult());
         } catch (Exception e) {

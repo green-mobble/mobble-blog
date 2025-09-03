@@ -7,6 +7,8 @@ import org.example.mobble._util.error.ex.Exception401;
 import org.example.mobble._util.error.ex.Exception404;
 import org.example.mobble.category.Category;
 import org.example.mobble.category.CategoryRepository;
+import org.example.mobble.category.CategoryRequest;
+import org.example.mobble.category.CategoryService;
 import org.example.mobble.user.User;
 import org.example.mobble.user.UserRepository;
 import org.springframework.stereotype.Service;
@@ -19,7 +21,7 @@ import java.util.List;
 public class BoardService {
     private final BoardRepository boardRepository;
     private final CategoryRepository categoryRepository;
-    private final UserRepository userRepository;
+    private final CategoryService categoryService;
 
     public BoardResponse.BoardListDTO boardList() {
         // 전체리스트
@@ -28,15 +30,14 @@ public class BoardService {
     }
 
     @Transactional
-    public BoardResponse.BoardDetailDTO boardfindById(Integer id) {
+    public BoardResponse.BoardResponseDTO boardfindById(Integer id) {
         // 상세보기
         Board findBoard = boardRepository.findById(id);
 
         // 조회수 증가
-        // TODO : 조회수 증가는 Board 객체에서 더티체킹 하면 됨
         findBoard.viewUP(findBoard.getViews());
 
-        return new BoardResponse.BoardDetailDTO(findBoard);
+        return new BoardResponse.BoardResponseDTO(findBoard);
     }
 
 
@@ -44,11 +45,10 @@ public class BoardService {
     public BoardResponse.DTO boardSave(BoardRequest.BoardSaveDTO boardSaveDTO, User sessionUser) {
         Timestamp now = new Timestamp(System.currentTimeMillis());
 
-        Category category = categoryRepository.findByUserIdAndCategory(
-                sessionUser.getId(),
-                boardSaveDTO.getCategory()
-        ).orElse(null);
+        // 카테고리 있는지 확인
+        Category category = categoryRepository.findByUserIdAndCategory( sessionUser.getId(),boardSaveDTO.getCategory()).orElse(null);
 
+        //없으면 null,있으면 카테고리 저장
         if (category == null) {
             category = categoryRepository.save(
                     Category.builder()
@@ -57,7 +57,7 @@ public class BoardService {
                             .build()
             );
         }
-
+        // 저장한 카테고리 객체를 board에 연결
         Board board = Board.builder()
                 .title(boardSaveDTO.getTitle())
                 .content(boardSaveDTO.getContent())
@@ -98,9 +98,21 @@ public class BoardService {
         if(findBoard.getUser().getId() != sessionUser.getId()) {
             throw new Exception401("권한 없습니다.");
         }
+        // 변경한 카테고리를 객체로 변경해서 받아오기
+        Category category = categoryRepository.findByUserIdAndCategory( sessionUser.getId(),boardSaveDTO.getCategory()).orElse(null);
+
+        //없으면 null,있으면 카테고리 저장
+        if (category == null) {
+            category = categoryRepository.save(
+                    Category.builder()
+                            .userId(sessionUser.getId())
+                            .category(boardSaveDTO.getCategory())
+                            .build()
+            );
+        }
 
         // 더티체킹은 update 함수 만들어서
-        findBoard.update(boardSaveDTO.getTitle(),boardSaveDTO.getContent());
+        findBoard.update(boardSaveDTO.getTitle(),boardSaveDTO.getContent(),category);
         return new BoardResponse.DTO(findBoard) ;
     }
 }

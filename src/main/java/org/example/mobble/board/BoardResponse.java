@@ -45,33 +45,6 @@ public class BoardResponse {
         }
     }
 
-    @Data
-    public static class BoardDetailDTO {
-        private Integer id;
-        private Integer userId;
-        private String username;
-        private String title;
-        private String content;
-        private Timestamp createAt;
-        private Integer views;
-        private Integer bookmark;
-        private Integer categoryId;
-        private String categoryName;
-        private Timestamp updatedAt;
-
-        public BoardDetailDTO(Board board) {
-            this.id = board.getId();
-            this.userId = board.getUser().getId();
-            this.username = board.getUser().getUsername();
-            this.title = board.getTitle();
-            this.content = board.getContent();
-            this.createAt =board.getCreatedAt();
-            this.views = board.getViews();
-            this.bookmark = board.getBookmark();
-            this.categoryName = board.getCategory().getCategory();
-            this.updatedAt = board.getUpdatedAt();
-        }
-    }
 
     // 생성, 수정용
     @Data
