@@ -19,7 +19,7 @@ public class UserService {
     public User findByUser(UserRequest.LoginDTO reqDTO) {
         User user = userRepository.findByUsername(reqDTO.getUsername())
                 .orElseThrow(() -> new Exception400("존재하지 않는 사용자 아이디입니다."));
-        if (!user.getPassword().equals(reqDTO.getPassword())) throw new Exception401("비밀번호가 일치하지 않습니다.");
+        if (!user.getPassword().matches(reqDTO.getPassword())) throw new Exception401("비밀번호가 일치하지 않습니다.");
         return user;
     }
 

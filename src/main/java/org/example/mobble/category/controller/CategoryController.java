@@ -3,7 +3,6 @@ package org.example.mobble.category.controller;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.example.mobble._util.error.ex.Exception401;
-import org.example.mobble.category.domain.Category;
 import org.example.mobble.category.dto.CategoryForm;
 import org.example.mobble.category.service.CategoryService;
 import org.example.mobble.user.domain.User;
@@ -29,7 +28,8 @@ public class CategoryController {
     // 마이페이지 - 카테고리 관리 화면
     @GetMapping
     public String categoriesPage(Model model) {
-        Integer userId = currentUserIdOrThrow();
+//        Integer userId = currentUserIdOrThrow();
+        Integer userId = 1;
         model.addAttribute("categories", categoryService.getCategoriesByUser(userId));
         model.addAttribute("saveForm", new CategoryForm.Save());
         return "mypage/update-page"; // 필요시 "mypage/main"으로 변경

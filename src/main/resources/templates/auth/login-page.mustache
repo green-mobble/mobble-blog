@@ -11,38 +11,19 @@
 
 <!-- 상단 바 -->
 <div class="topbar">
-    <button class="btn" onclick="location.href='/'">Logo Area</button>
-    <button class="btn primary" onclick="location.href='/join'">JoinBtn Area</button>
+    <button class="btn primary" onclick="location.href='/join-form'">JoinBtn Area</button>
 </div>
 
 <div class="container">
     <div class="grid">
-        <!-- Left: 소개 -->
-        <section class="hero">
-            <h1>Lorem Ipsum</h1>
-            <p>
-                Lorem ipsum dolor sit amet consectetur. Viverra id lacinia nisl fringilla eget a.
-                Est habitasse mattis penatibus turpis feugiat. Eget sed nibh dui proin leo amet
-                etiam. At neque quisque sed nunc tempor. Risus hendrerit egestas sit est nisl blandit morbi.
-                Arcu leo et leo nunc purus aliquam mollis ut justo. At aliquam elit egestas eget mi imperdiet in in
-                magna.
-                Pellentesque vitae lacus at suspendisse commodo gravida duis massa nulla. Risus est arcu placerat
-                lobortis risus sed cras.
-            </p>
-        </section>
-
-        <!-- Right: 폼 -->
         <section class="panel">
             <h3>로그인</h3>
             <form method="post" action="/login">
-
-                <input class="field" type="text" name="username" placeholder="아이디">
-                <input class="field" type="password" name="password" placeholder="비밀번호">
-
+                <input class="field" type="text" name="username" id="username" placeholder="아이디">
+                <input class="field" type="password" name="password" id="password" placeholder="비밀번호">
                 <button class="btn primary submit" type="submit">LogIn</button>
-
                 <div class="helper">
-                    <a href="/join">회원가입</a>
+                    <a href="/join-form">회원가입</a>
                 </div>
             </form>
         </section>
