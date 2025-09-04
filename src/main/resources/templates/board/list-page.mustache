@@ -1,12 +1,126 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>게시글 목록</title>
+    <style>
+        body {
+            font-family: system-ui, sans-serif;
+            margin: 24px;
+        }
+
+        header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .chip {
+            display: inline-block;
+            padding: 4px 10px;
+            border: 1px solid #ddd;
+            border-radius: 999px;
+            margin-right: 8px;
+            font-size: 12px;
+            color: #333;
+            text-decoration: none;
+        }
+
+        .chip:hover {
+            background: #f5f5f5;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 12px;
+        }
+
+        th, td {
+            border-bottom: 1px solid #eee;
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background: #fafafa;
+        }
+
+        .title a {
+            color: #111;
+            text-decoration: none;
+        }
+
+        .title a:hover {
+            text-decoration: underline;
+        }
+
+        .toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .pager {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            background: #fff;
+            border-radius: 8px;
+            text-decoration: none;
+            color: #333;
+        }
+
+        .btn[disabled] {
+            opacity: .4;
+            pointer-events: none;
+        }
+
+        .search-form input, .search-form select {
+            padding: 6px 8px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+        }
+    </style>
 </head>
 <body>
-{{#boardList}}
 
-{{boardList}}
+<header>
+    <h1 style="margin:0;">게시글</h1>
+    <a class="btn" href="/boards/save-form">새 글 쓰기</a>
+</header>
+
+<table>
+    <thead>
+    <tr>
+        <th style="width:64px;">ID</th>
+        <th>제목</th>
+        <th style="width:120px;">조회수</th>
+        <th style="width:160px;">카테고리</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{#model}}
+        <tr>
+            <td>{{id}}</td>
+            <td class="title"><a href="/boards/{{id}}">{{title}}</a></td>
+            <td>{{views}}</td>
+            <td>{{category}}</td>
+        </tr>
+    {{/model}}
+    </tbody>
+</table>
+
+<!-- 빈 목록 대비 -->
+{{^model}}
+    <p style="color:#666; margin-top:16px;">등록된 게시글이 없습니다.</p>
+{{/model}}
 </body>
 </html>
