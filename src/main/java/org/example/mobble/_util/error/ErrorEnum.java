@@ -14,6 +14,16 @@ public enum ErrorEnum {
     BAD_REQUEST(400, "올바르지 않은 요청"),
 
     /**
+     * 400 Bad Request - 올바르지 요청을 알리는 상태 코드
+     */
+    BAD_REQUEST_NO_EXISTS_KEYWORD(400, "검색어가 존재하지 않습니다. 접두사를 제외한 1자 이상의 문자를 입력해주세요."),
+
+    /**
+     * 400 Bad Request - 올바르지 요청을 알리는 상태 코드
+     */
+    BAD_REQUEST_ONLY_PREFIX(400, "접두사만으로는 검색이 어렵습니다."),
+
+    /**
      * 400 Bad Request - 게시물의 id의 값이 null 또는 공백
      */
     BAD_REQUEST_NO_EXISTS_BOARD_ID(400, "게시물이 지정되지 않았습니다."),

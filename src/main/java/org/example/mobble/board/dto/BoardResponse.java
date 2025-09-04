@@ -7,8 +7,20 @@ import org.example.mobble.category.Category;
 import org.example.mobble.user.domain.User;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 public class BoardResponse {
+    @Data
+    public static class mainListDTO {
+        List<DTO> boardList;
+        List<String> categoryList;
+
+        @Builder
+        public mainListDTO(List<DTO> boardList, List<String> categoryList) {
+            this.boardList = boardList;
+            this.categoryList = categoryList;
+        }
+    }
 
     // 팀원 간 컨벤션 토의
     @Data

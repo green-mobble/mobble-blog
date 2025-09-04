@@ -11,7 +11,7 @@ import org.example.mobble.board.domain.SearchOrderCase;
 import org.example.mobble.board.dto.BoardRequest;
 import org.example.mobble.board.dto.BoardResponse;
 import org.example.mobble.board.service.BoardService;
-import org.example.mobble.report.domain.Report;
+import org.example.mobble.category.CategoryService;
 import org.example.mobble.user.domain.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -22,9 +22,11 @@ import java.util.List;
 @Controller
 @RequestMapping("/boards")
 public class BoardController {
+    public static final Integer PER_PAGE = 10;
+
     private final BoardService boardService;
     private final HttpSession session;
-    public static final Integer PER_PAGE = 10;
+    private final CategoryService categoryService;
 
     //게시글 저장 페이지 이동
     @GetMapping("/save-form")
@@ -45,8 +47,9 @@ public class BoardController {
     @GetMapping
     public String getBoardsList(HttpServletRequest request, @RequestParam(defaultValue = "1") Integer page) {
         getLoginUser();
-        List<BoardResponse.DTO> resDTO = boardService.getList(getFirstIndex(page), PER_PAGE + 1);
-        resDTO = applyPagingFlags(request, resDTO, page);
+        List<BoardResponse.DTO> boardDTOList = boardService.getList(getFirstIndex(page), PER_PAGE + 1);
+        boardDTOList = applyPagingFlags(request, boardDTOList, page);
+        BoardResponse.mainListDTO resDTO = getMainList(boardDTOList);
         request.setAttribute("model", resDTO);
         return "board/list-page";
     }
@@ -54,7 +57,7 @@ public class BoardController {
     @GetMapping("/{id}")
     public String getBoard(HttpServletRequest request, @PathVariable(name = "id") Integer boardId) {
         getLoginUser();
-        BoardResponse.DetailDTO model = boardService.getUpdateBoardDetail(boardId);
+        BoardResponse.DetailDTO model = boardService.getBoardDetail(boardId);
         request.setAttribute("model", model);
         return "board/detail-page";
     }
@@ -62,9 +65,7 @@ public class BoardController {
     @PostMapping("/{id}/update")
     public String update(@PathVariable(name = "id") Integer boardId, BoardRequest.BoardUpdateDTO reqDTO, HttpServletRequest request) {
         User user = getLoginUser();
-        Board board = boardService.update(boardId, reqDTO, user);
-        BoardResponse.DetailDTO resDTO = boardService.getUpdateBoardDetail(board.getId());
-        request.setAttribute("model", resDTO);
+        boardService.update(boardId, reqDTO, user);
         return "redirect:/boards/" + boardId;
     }
 
@@ -73,8 +74,6 @@ public class BoardController {
     public String save(BoardRequest.BoardSaveDTO reqDTO) {
         User user = getLoginUser();
         Board board = boardService.save(reqDTO, user);
-        BoardResponse.DetailDTO res = boardService.getUpdateBoardDetail(board.getId());
-
         return "redirect:/boards/" + board.getId();
     }
 
@@ -88,9 +87,7 @@ public class BoardController {
     @PostMapping("/{id}/report")
     public String report(@PathVariable(name = "id") Integer boardId, BoardRequest.BoardReportDTO reqDTO, HttpServletRequest request) {
         User user = getLoginUser();
-        Report report = boardService.report(user, boardId, reqDTO);
-        // resDTO 추가 할 것
-        request.setAttribute("model", report);
+        boardService.report(user, boardId, reqDTO);
         return "redirect:/boards/" + boardId;
     }
 
@@ -98,10 +95,11 @@ public class BoardController {
      * ----------------------------------------------------------------------------------
      */
     @GetMapping("/search")
-    public String findList(HttpServletRequest request, @RequestParam String key, @RequestParam String keyword, @RequestParam(defaultValue = "CREATED_AT_ASC") String order, @RequestParam(defaultValue = "1") Integer page) {
+    public String findList(HttpServletRequest request, @RequestParam String keyword, @RequestParam(defaultValue = "CREATED_AT_ASC") String order, @RequestParam(defaultValue = "1") Integer page) {
         getLoginUser();
-        List<BoardResponse.DTO> resDTO = boardService.findBy(key, keyword, safeOrder(order), getFirstIndex(page), PER_PAGE + 1);
-        resDTO = applyPagingFlags(request, resDTO, page);
+        List<BoardResponse.DTO> boardDTOList = boardService.findBy(keyword, safeOrder(order), getFirstIndex(page), PER_PAGE + 1);
+        boardDTOList = applyPagingFlags(request, boardDTOList, page);
+        BoardResponse.mainListDTO resDTO = getMainList(boardDTOList);
         request.setAttribute("model", resDTO);
         return "board/list-page";
     }
@@ -120,7 +118,7 @@ public class BoardController {
         try {
             return SearchOrderCase.valueOf(order);
         } catch (IllegalArgumentException e) {
-            return SearchOrderCase.CREATED_AT_ASC; // 안전 기본값
+            return SearchOrderCase.CREATED_AT_DESC; // 안전 기본값
         }
     }
 
@@ -145,5 +143,14 @@ public class BoardController {
         request.setAttribute("isFirst", isFirst);
         request.setAttribute("isLast", isLast);
         return rows;
+    }
+
+    private BoardResponse.mainListDTO getMainList(List<BoardResponse.DTO> boardDTOList) {
+        List<String> categoryList = categoryService.getPopularList(3);
+        return BoardResponse.mainListDTO
+                .builder()
+                .boardList(boardDTOList)
+                .categoryList(categoryList)
+                .build();
     }
 }

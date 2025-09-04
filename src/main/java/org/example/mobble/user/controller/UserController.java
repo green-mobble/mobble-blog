@@ -85,7 +85,7 @@ public class UserController {
     @PostMapping("/users/check-username")
     @ResponseBody
     public Map<String, Boolean> checkUsername(@RequestBody UserRequest.UsernameDTO reqDTO) {
-        return Map.of("duplicate", userService.isNicknameDuplicate(reqDTO));
+        return Map.of("duplicate", userService.isUsernameDuplicate(reqDTO));
     }
 
     private User getLoginUser() {

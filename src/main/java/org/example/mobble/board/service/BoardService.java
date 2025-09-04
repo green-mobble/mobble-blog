@@ -8,7 +8,6 @@ import org.example.mobble._util.error.ex.Exception403;
 import org.example.mobble._util.error.ex.Exception404;
 import org.example.mobble.board.domain.Board;
 import org.example.mobble.board.domain.BoardRepository;
-import org.example.mobble.board.domain.SearchKey;
 import org.example.mobble.board.domain.SearchOrderCase;
 import org.example.mobble.board.dto.BoardRequest;
 import org.example.mobble.board.dto.BoardResponse;
@@ -21,7 +20,6 @@ import org.example.mobble.user.domain.User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -31,20 +29,23 @@ public class BoardService {
     private final CategoryRepository categoryRepository;
     private final ReportRepository reportRepository;
 
+    @Transactional(readOnly = true)
     public List<BoardResponse.DTO> getList(int firstIndex, int size) {
         String orderBy = orderByToString(SearchOrderCase.CREATED_AT_DESC);
         return boardRepository.findAll(orderBy, firstIndex, size);
     }
 
-    public BoardResponse.DetailDTO getUpdateBoardDetail(Integer boardId) {
+    @Transactional(readOnly = true)
+    public BoardResponse.DetailDTO getBoardDetail(Integer boardId) {
         return boardRepository.findByIdDetail(boardId).orElseThrow(
-                () -> new Exception400(ErrorEnum.NOT_FOUND_BOARD)
+                () -> new Exception404(ErrorEnum.NOT_FOUND_BOARD)
         );
     }
-
+    
+    @Transactional(readOnly = true)
     public BoardResponse.DetailDTO getUpdateBoardDetail(Integer boardId, User user) {
         checkPermissions(findById(boardId), user);
-        return getUpdateBoardDetail(boardId);
+        return getBoardDetail(boardId);
     }
 
     @Transactional
@@ -118,23 +119,21 @@ public class BoardService {
         );
     }
 
-    public List<BoardResponse.DTO> findBy(String key, String keyword, SearchOrderCase order, Integer firstIndex, Integer size) {
-        List<BoardResponse.DTO> result = new ArrayList<>();
+    @Transactional(readOnly = true)
+    public List<BoardResponse.DTO> findBy(String keyword, SearchOrderCase order, Integer firstIndex, Integer size) {
         String orderBy = orderByToString(order);
-        if (isNullOrEmpty(key, keyword)) {
-            result = boardRepository.findAll(orderBy, firstIndex, size);
-        } else {
-            SearchKey searchKey = SearchKey.valueOf(key);
-            result = switch (searchKey) {
-                case CATEGORY -> boardRepository.findByCategory(keyword, orderBy, firstIndex, size);
-                case TITLE_CONTENT -> boardRepository.findByTitleAndContent(keyword, orderBy, firstIndex, size);
-                case USERNAME -> boardRepository.findByUsername(keyword, orderBy, firstIndex, size);
-                default -> throw new Exception400(ErrorEnum.BAD_REQUEST_NO_EXISTS_SEARCH_KEY);
-            };
-        }
-        return result;
+        String q = keyword == null ? "" : keyword.trim();
+        if (q.isEmpty()) throw new Exception400(ErrorEnum.BAD_REQUEST_NO_EXISTS_KEYWORD);
+        char searchKey = q.charAt(0);
+        if (q.length() == 1 && (searchKey == '#' || searchKey == '@'))
+            throw new Exception400(ErrorEnum.BAD_REQUEST_ONLY_PREFIX);
+        q = (searchKey == '#' || searchKey == '@') ? q.substring(1) : q;
+        return switch (searchKey) {
+            case '#' -> boardRepository.findByCategory(q, orderBy, firstIndex, size);
+            case '@' -> boardRepository.findByUsername(q, orderBy, firstIndex, size);
+            default -> boardRepository.findByTitleAndContent(q, orderBy, firstIndex, size);
+        };
     }
-
 
     /*                             private logic part
      * ----------------------------------------------------------------------------------
@@ -148,14 +147,6 @@ public class BoardService {
         if (boardId == null) throw new Exception400(ErrorEnum.BAD_REQUEST_NO_EXISTS_BOARD_ID);
     }
 
-    // 해당 내용들이 비어있는지 확인
-    private boolean isNullOrEmpty(String... strings) {
-        for (String s : strings) {
-            if (s == null || s.isEmpty()) return true;
-        }
-        return false;
-    }
-
     // 🔢 정렬 컬럼 결정 (bookmarkCount는 count(bm))
     private String orderByToString(SearchOrderCase order) {
         String orderColumn = switch (order) {
@@ -164,7 +155,7 @@ public class BoardService {
             default -> "b.createdAt";
         };
         String direction = order.getDirection().isAscending() ? "asc" : "desc";
-        return orderColumn + direction + ", b.id desc";
+        return orderColumn + " " + direction + ", b.id desc";
     }
 
 

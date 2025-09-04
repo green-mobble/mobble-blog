@@ -25,7 +25,7 @@ public class UserRepository {
         em.persist(user);
     }
 
-    public boolean existsByNickname(String username) {
+    public boolean existsByUsername(String username) {
         return em.createQuery("select count(u) from User u where u.username = :username", Long.class)
                 .setParameter("username", username)
                 .getSingleResult() > 0;

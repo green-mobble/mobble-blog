@@ -36,6 +36,21 @@ public class BoardRepository {
                 .setParameter("boardId", boardId).getSingleResult());
     }
 
+    public Optional<BoardResponse.DetailDTO> findByIdDetail(Integer boardId, Integer userId) {
+        return Optional.ofNullable(em.createQuery("""
+                        select b, u, c, bm
+                        from Board b
+                        left join Bookmark bm on bm.boardId = b.id
+                        left join Category c on c.id = b.categoryId
+                        left join User u on u.id = b.userId
+                        where b.id = :boardId
+                        and b.userId = :userId
+                        """, BoardResponse.DetailDTO.class)
+                .setParameter("boardId", boardId)
+                .setParameter("userId", userId)
+                .getSingleResult());
+    }
+
     public void delete(Integer boardId) {
         em.remove(em.find(Board.class, boardId));
     }
