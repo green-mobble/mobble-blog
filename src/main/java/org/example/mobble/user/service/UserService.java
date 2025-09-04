@@ -51,7 +51,7 @@ public class UserService {
     @Transactional
     public void delete(User user, Integer userId) {
         checkPermissions(user, userId);
-        userRepository.delete(user);
+        userRepository.delete(user.getId());
     }
 
     // 해당 로직은 외부에서 중복 아이디를 확인하는 로직으로 private 설정이 불가하여 public으로 놔두었습니다.

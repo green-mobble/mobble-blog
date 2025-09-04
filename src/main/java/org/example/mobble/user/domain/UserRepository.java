@@ -32,16 +32,10 @@ public class UserRepository {
     }
 
     public Optional<User> findById(Integer userId) {
-        try {
-            // 이 줄만 있어도 정상 작동
-            return Optional.ofNullable(em.find(User.class, userId));
-        } catch (Exception e) {
-            return Optional.empty();
-        }
+        return Optional.ofNullable(em.find(User.class, userId));
     }
 
-    public void delete(User user) {
-        // userId -> em.remove(em.find(User.class, userId));
-        em.remove(user);
+    public void delete(Integer userId) {
+        em.remove(em.find(User.class, userId));
     }
 }
