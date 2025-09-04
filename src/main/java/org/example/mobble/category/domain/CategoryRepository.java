@@ -12,15 +12,18 @@ import java.util.Optional;
 public class CategoryRepository {
     private final EntityManager em;
 
+    // 새로운 카테고리 저장
     public Category save(Category category) {
         em.persist(category);
         return category;
     }
 
+    // PK(id)로 카테고리 단건 조회
     public Optional<Category> findById(Integer id) {
         return Optional.ofNullable(em.find(Category.class, id));
     }
 
+    // 특정 유저의 모든 카테고리 목록 조회(id 내림차순 -> 최신순)
     public List<Category> findAllByUserIdOrderByIdDesc(Integer userId) {
         return em.createQuery(
                 "select c from Category c where c.userId = :userId order by c.id desc",
@@ -28,6 +31,7 @@ public class CategoryRepository {
         ).setParameter("userId", userId).getResultList();
     }
 
+    // 특정 유저의 특정 카테고리명으로 단건 조회
     public Optional<Category> findByUserIdAndCategory(Integer userId, String category) {
         // 예외 대신 리스트로 안전 조회
         List<Category> rows = em.createQuery(
@@ -40,6 +44,7 @@ public class CategoryRepository {
         return rows.stream().findFirst();
     }
 
+    // 특정 유저가 같은 이름의 카테고리를 가지고 있는지 여부 확인
     public boolean existsByUserIdAndCategory(Integer userId, String category) {
         // 가장 가벼운 존재 확인: 1건만 조회
         List<Integer> rows = em.createQuery(
@@ -52,6 +57,7 @@ public class CategoryRepository {
         return !rows.isEmpty();
     }
 
+    // PK(id)로 카테고리 삭제
     public void deleteById(Integer id) {
         Category found = em.find(Category.class, id);
         if (found != null) em.remove(found);

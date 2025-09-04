@@ -1,7 +1,6 @@
 package org.example.mobble.category.controller;
 
 import jakarta.servlet.http.HttpSession;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.example.mobble._util.error.ex.Exception401;
 import org.example.mobble.category.domain.Category;
@@ -11,6 +10,7 @@ import org.example.mobble.user.domain.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 /**
