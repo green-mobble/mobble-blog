@@ -13,14 +13,13 @@
 
     <!-- 회원가입 전용 CSS (시안 커스터마이즈) -->
     <link rel="stylesheet" href="/css/signup.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand&display=swap" rel="stylesheet">
   </head>
   <body>
     <!-- 헤더: 100% 경계, 내부 1920 컨테이너 -->
     <header>
       <div class="header-inner">
-        <button class="logo" onclick="location.href='index.html'">
-          Logo Area
-        </button>
+        <a href="/" class="logo">Mobble</a>
         <button class="join-btn" disabled>JoinBtn Area</button>
       </div>
     </header>
@@ -29,10 +28,11 @@
       <div class="auth-content">
         <!-- 좌측: 비주얼 박스는 signup.css의 ::before로 그려짐 -->
         <section class="auth-left">
+          <h1>Mobble과 함께 하세요.</h1>
+          <h2>당신의 이야기를 여기서 시작해 보세요.</h2>
+          <br />
           <p>
-            Lorem ipsum dolor sit amet consectetur. Viverra id lacinia nisl
-            fringilla eget a. Est habitasse mattis penatibus turpis feugiat.
-            Eget sed nibh dui proin leo amet etiam.
+            모두와 함께하는 블로그, Mobble입니다.
           </p>
         </section>
 
@@ -40,7 +40,7 @@
         <aside class="auth-right">
           <h3>회원가입</h3>
 
-          <form class="auth-form" action="#" method="post" novalidate>
+          <form class="auth-form" action="/join" method="post" novalidate>
             <!-- 아이디 -->
             <div class="form-group">
               <input
