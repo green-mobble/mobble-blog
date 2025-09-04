@@ -58,7 +58,7 @@ class BoardControllerTest {
         mockMvc.perform(get("/boards").session(session))
                 .andExpect(status().isOk())
                 .andExpect(view().name("board/list-page"))
-                .andExpect(request().attributeExists("model"))
+                .andExpect(request().attribute("model", new Object()))
                 .andExpect(request().attribute("isFirst", true));
         // isLast는 더미 개수/ PER_PAGE에 따라 달라짐 → 고정 검증은 생략
     }
@@ -70,7 +70,7 @@ class BoardControllerTest {
         mockMvc.perform(get("/boards/{id}", 1).session(session))
                 .andExpect(status().isOk())
                 .andExpect(view().name("board/detail-page"))
-                .andExpect(request().attributeExists("model"));
+                .andExpect(request().attribute("model", new Object()));
     }
 
     @Test
@@ -83,7 +83,7 @@ class BoardControllerTest {
                         .session(session))
                 .andExpect(status().isOk())
                 .andExpect(view().name("board/list-page"))
-                .andExpect(request().attributeExists("model"));
+                .andExpect(request().attribute("model", new Object()));
     }
 
     @Test
