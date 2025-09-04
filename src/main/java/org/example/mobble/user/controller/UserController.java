@@ -22,8 +22,7 @@ public class UserController {
      *  ------------------------------------------------------------------
      */
     @GetMapping("/login-form")
-    public String loginForm(UserRequest.JoinDTO reqDTO) {
-        userService.save(reqDTO);
+    public String loginForm() {
         return "auth/login-page";
     }
 
@@ -37,6 +36,12 @@ public class UserController {
         User user = userService.findByUser(reqDTO);
         session.setAttribute("model", user);
         return "redirect:/boards";
+    }
+
+    @GetMapping("/join")
+    public String join(UserRequest.JoinDTO reqDTO) {
+        userService.save(reqDTO);
+        return "redirect:/login-form";
     }
 
     @GetMapping("/logout")
