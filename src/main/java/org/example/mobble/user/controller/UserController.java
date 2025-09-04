@@ -40,7 +40,7 @@ public class UserController {
     @PostMapping("/login")
     public String login(@RequestBody UserRequest.LoginDTO reqDTO) {
         User user = userService.findByUser(reqDTO);
-        session.setAttribute("model", user);
+        session.setAttribute("user", user);
         return "redirect:/boards";
     }
 
