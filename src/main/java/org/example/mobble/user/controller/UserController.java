@@ -22,8 +22,8 @@ public class UserController {
      *  ------------------------------------------------------------------
      */
     @GetMapping("/login-form")
-    public String loginForm(UserRequest.JoinDTO reqDTO) {
-        userService.save(reqDTO);
+    public String loginForm() {
+        // userService.save(reqDTO);
         return "auth/login-page";
     }
 

@@ -26,18 +26,10 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .contentType(MediaType.TEXT_HTML)
                 .body(Script.back(e.getMessage()));
-    public ResponseEntity<String> ex400(Exception400 e) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .contentType(MediaType.TEXT_HTML)
-                .body(Script.back(e.getMessage()));
     }
 
     // 401 Unauthorized
     @ExceptionHandler(Exception401.class)
-    public ResponseEntity<String> ex401(Exception401 e) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                .contentType(MediaType.TEXT_HTML)
-                .body(Script.href(e.getMessage(), "/login-form"));
     public ResponseEntity<String> ex401(Exception401 e) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                 .contentType(MediaType.TEXT_HTML)
@@ -50,18 +42,10 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.FORBIDDEN)
                 .contentType(MediaType.TEXT_HTML)
                 .body(Script.back(e.getMessage()));
-    public ResponseEntity<String> ex403(Exception403 e) {
-        return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                .contentType(MediaType.TEXT_HTML)
-                .body(Script.back(e.getMessage()));
     }
 
     // 404 Not Found
     @ExceptionHandler(Exception404.class)
-    public ResponseEntity<String> ex404(Exception404 e) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                .contentType(MediaType.TEXT_HTML)
-                .body(Script.back(e.getMessage()));
     public ResponseEntity<String> ex404(Exception404 e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .contentType(MediaType.TEXT_HTML)
@@ -71,21 +55,13 @@ public class GlobalExceptionHandler {
     // Unknown Server Error
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> exUnknown(Exception e) {
-    public ResponseEntity<String> exUnknown(Exception e) {
-        System.out.println("Error Log : " + e.getMessage());
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .contentType(MediaType.TEXT_HTML)
-                .body(Script.back("관리자에게 문의해주세요."));
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .contentType(MediaType.TEXT_HTML)
                 .body(Script.back("관리자에게 문의해주세요."));
     }
 
     // ===== API 오류는 JSON으로 =====
-    // ===== API 오류는 JSON으로 =====
     @ExceptionHandler(ExceptionApi400.class)
-    public ResponseEntity<Resp<?>> exApi400(ExceptionApi400 e) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Resp.fail(400, e.getMessage()));
     public ResponseEntity<Resp<?>> exApi400(ExceptionApi400 e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Resp.fail(400, e.getMessage()));
     }
@@ -93,20 +69,14 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ExceptionApi401.class)
     public ResponseEntity<Resp<?>> exApi401(ExceptionApi401 e) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Resp.fail(401, e.getMessage()));
-    public ResponseEntity<Resp<?>> exApi401(ExceptionApi401 e) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Resp.fail(401, e.getMessage()));
     }
 
     @ExceptionHandler(ExceptionApi403.class)
     public ResponseEntity<Resp<?>> exApi403(ExceptionApi403 e) {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Resp.fail(403, e.getMessage()));
-    public ResponseEntity<Resp<?>> exApi403(ExceptionApi403 e) {
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Resp.fail(403, e.getMessage()));
     }
 
     @ExceptionHandler(ExceptionApi404.class)
-    public ResponseEntity<Resp<?>> exApi404(ExceptionApi404 e) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Resp.fail(404, e.getMessage()));
     public ResponseEntity<Resp<?>> exApi404(ExceptionApi404 e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Resp.fail(404, e.getMessage()));
     }

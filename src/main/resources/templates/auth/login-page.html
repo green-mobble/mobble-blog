@@ -4,17 +4,17 @@
     <meta charset="UTF-8" />
     <title>로그인</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="stylesheet" href="css/common.css" />
-    <link rel="stylesheet" href="css/header.css" />
-    <link rel="stylesheet" href="css/footer.css" />
-    <link rel="stylesheet" href="css/auth.css" />
-    <link rel="stylesheet" href="css/login.css" />
+    <link rel="stylesheet" href="/src/main/resources/static/css/common.css" />
+    <link rel="stylesheet" href="/src/main/resources/static/css/header.css" />
+    <link rel="stylesheet" href="/src/main/resources/static/css/footer.css" />
+    <link rel="stylesheet" href="/src/main/resources/static/css/auth.css" />
+    <link rel="stylesheet" href="/src/main/resources/static/css/login.css" />
   </head>
   <body>
     <header>
       <div class="header-inner">
         <button class="logo">Logo Area</button>
-        <button class="join-btn" onclick="location.href='signup.html'">
+        <button class="join-btn" onclick="location.href='/join-form'">
           JoinBtn Area
         </button>
       </div>
@@ -53,7 +53,7 @@
             <button type="submit" class="auth-submit">LogIn</button>
           </form>
           <div class="auth-subtext">
-            아직 계정이 없으신가요? <a href="signup.html">회원가입</a>
+            아직 계정이 없으신가요? <a href="/join-form">회원가입</a>
           </div>
         </aside>
       </div>
