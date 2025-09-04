@@ -2,6 +2,7 @@ package org.example.mobble.board.dto;
 
 import lombok.Builder;
 import lombok.Data;
+import org.example.mobble.report.domain.ReportCase;
 
 public class BoardRequest {
     @Data
@@ -35,13 +36,13 @@ public class BoardRequest {
     }
 
     @Data
-    public static class BoardReportDTO {
-        String result;
+    public static class ReportSaveDTO {
+        ReportCase result;
         String content;
         String resultEtc;
 
         @Builder
-        public BoardReportDTO(String result, String content, String resultEtc) {
+        public ReportSaveDTO(ReportCase result, String content, String resultEtc) {
             this.result = result;
             this.content = content;
             this.resultEtc = resultEtc;

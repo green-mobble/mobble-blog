@@ -5,11 +5,13 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.example.mobble._util.error.ex.Exception401;
+import org.example.mobble._util.util.Resp;
 import org.example.mobble.board.domain.Board;
 import org.example.mobble.board.dto.BoardRequest;
 import org.example.mobble.board.dto.BoardResponse;
 import org.example.mobble.board.service.BoardService;
 import org.example.mobble.user.domain.User;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,12 +31,14 @@ public class BoardController {
         return "board/save-page";
     }
 
+    //게시글 수정 페이지 이동
     @GetMapping("/{id}/update-form")
     public String boardUpdateForm(@PathVariable(name = "id") Integer boardId) {
         User user = getLoginUser();
         session.setAttribute("model", boardService.getBoard(boardId));
         return "board/update-page";
     }
+
 
     // 모든 게시물 목록 찾기
     @GetMapping
@@ -75,9 +79,10 @@ public class BoardController {
     }
 
     @PostMapping("/{id}/report")
-    public String report(@PathVariable(name = "id") Integer boardId, @RequestBody BoardRequest.BoardReportDTO reqDTO) {
+    public String reportSave(@PathVariable(name = "id") Integer boardId, BoardRequest.ReportSaveDTO reqDTO) {
         User user = getLoginUser();
-        boardService.report(user, boardId, reqDTO);
+        boardService.reportSave(user, boardId, reqDTO);
+
         return "redirect:/boards/" + boardId;
     }
 

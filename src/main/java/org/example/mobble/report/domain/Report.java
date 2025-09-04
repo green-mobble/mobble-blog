@@ -4,7 +4,9 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.example.mobble.board.domain.Board;
 import org.example.mobble.report.dto.ReportRequest;
+import org.example.mobble.user.domain.User;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.sql.Timestamp;
@@ -21,12 +23,15 @@ public class Report {
     // 테이블 설정 후 추가
 
     // 신고할 게시글
-    private Integer boardId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Board board;
 
     // 신고하는 유저
-    private Integer userId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private User user;
 
     // 신고 사유
+    @Enumerated(EnumType.STRING)
     private ReportCase result;
 
     // 기타 신고 사유
@@ -36,6 +41,7 @@ public class Report {
     private String content;
 
     // 신고 상태
+    @Enumerated(EnumType.STRING)
     private ReportStatus status;
 
     //작성 시간
@@ -43,28 +49,15 @@ public class Report {
     private Timestamp createdAt;
 
     @Builder
-    public Report(Integer id, Integer boardId, Integer userId, ReportCase result, String resultEtc, String content) {
+    public Report(Integer id, Board board, User user, ReportCase result, String resultEtc, String content) {
         this.id = id;
-        this.boardId = boardId;
-        this.userId = userId;
+        this.board = board;
+        this.user = user;
         this.result = result;
         this.resultEtc = resultEtc;
         this.content = content;
     }
 
-    // 신고 서비스에서 처리
-//    public Report(User user, Integer boardId, BoardRequest.BoardReportDTO reqDTO) {
-//        this.boardId = boardId;
-//        this.userId = user.getId();
-//        try {
-//            this.result = ReportCase.valueOf(reqDTO.getResult());
-//        } catch (IllegalArgumentException e) {
-//            this.result = ReportCase.ETC;
-//            this.resultEtc = reqDTO.getResult();
-//        }
-//        this.content = reqDTO.getContent();
-//
-//    }
     public void updateResultEtc(String resultEtc) {
         this.resultEtc = resultEtc;
     }

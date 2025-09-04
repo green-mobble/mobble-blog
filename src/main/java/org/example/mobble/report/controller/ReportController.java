@@ -3,12 +3,14 @@ package org.example.mobble.report.controller;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.example.mobble._util.error.ex.Exception401;
+import org.example.mobble._util.util.Resp;
 import org.example.mobble.board.dto.BoardRequest;
 import org.example.mobble.report.domain.ReportStatus;
 import org.example.mobble.report.dto.ReportRequest;
 import org.example.mobble.report.dto.ReportResponse;
 import org.example.mobble.report.service.ReportService;
 import org.example.mobble.user.domain.User;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -21,27 +23,32 @@ public class ReportController {
     private final ReportService reportService;
     private final HttpSession session;
 
-    //신고 수정 form 가기//TODO 필요한지 확인필요
+    //신고 수정 form 가기 (모달)
+    @ResponseBody
+    @GetMapping ("/reports/{id}/update-form")
+    public ResponseEntity<?>  updateForm(@PathVariable(name = "id") Integer reportId,Model model) {
+        //조회
+        ReportResponse.ReportDetailDTO resDTO = reportService.getReport(reportId);
+        return Resp.ok(resDTO);
+    }
 
-
-
-    //내 신고 리스트 //TODO
+    //내 신고 리스트
     @GetMapping ("/reports")
     public String getReportList(Model model) {
         User user = getLoginUser();
         //조회
         List<ReportResponse.ReportDTO> resDTO = reportService.getList(user);
-        //model.addAttribute("resDTO",resDTO);
+        model.addAttribute("resDTO",resDTO);
         return "mypage/report/list-page";
     }
 
-    //내 신고 보기//TODO
+    //내 신고 보기
     @GetMapping ("/reports/{id}")
     public String getReport(@PathVariable(name = "id") Integer reportId,Model model) {
-        User user = getLoginUser();
+
         //조회
         ReportResponse.ReportDetailDTO resDTO = reportService.getReport(reportId);
-        //model.addAttribute("resDTO",resDTO);
+        model.addAttribute("resDTO",resDTO);
         return "mypage/report/detail-page";
     }
 
@@ -60,10 +67,11 @@ public class ReportController {
         User user = getLoginUser();
         //수정
         ReportResponse.ReportUpateDTO resDTO = reportService.update(reportId,user,reqDTO);
+
         return "redirect:/reports";
     }
 
-    //서비스 이용자 확인 절차.
+    //서비스 이용자 확인 절차
     private User getLoginUser() {
         User user = (User) session.getAttribute("user");
         if (user == null) {

@@ -20,6 +20,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import static org.example.mobble._util.error.ErrorEnum.NOT_FOUND;
+
 @RequiredArgsConstructor
 @Service
 public class BoardService {
@@ -46,7 +48,7 @@ public class BoardService {
                 Board.builder()
                         .title(reqDTO.getTitle())
                         .content(reqDTO.getContent())
-                        .userId(user.getId())
+                        .user(user)
                         .categoryId(category.getId())
                         .build();
         return boardRepository.save(board);
@@ -78,23 +80,24 @@ public class BoardService {
     }
 
     @Transactional
-    public void report(User user, Integer boardId, BoardRequest.BoardReportDTO reqDTO) {
+    public void reportSave(User user, Integer boardId, BoardRequest.ReportSaveDTO reqDTO) {
         Board boardPS = getBoard(boardId);
-        ReportCase reportCase = ReportCase.valueOf(reqDTO.getResult());
         Report report =
                 Report.builder()
-                        .userId(user.getId())
-                        .boardId(boardId)
+                        .user(user)
+                        .board(boardPS)
                         .content(reqDTO.getContent())
-                        .result(reportCase)
+                        .result(reqDTO.getResult())
                         .build();
-        if (reportCase.equals(ReportCase.ETC)) report.updateResultEtc(reqDTO.getResultEtc());
+        if (reqDTO.getResult().equals(ReportCase.ETC)) report.updateResultEtc(reqDTO.getResultEtc());
         reportRepository.save(report);
+
+
 
     }
 
     // 권한 확인 로직
     private void checkPermissions(Board board, User user) {
-        if (!board.getUserId().equals(user.getId())) throw new Exception403("해당 게시물을 등록한 사용자가 아닙니다.");
+        if (!board.getUser().getId().equals(user.getId())) throw new Exception403("해당 게시물을 등록한 사용자가 아닙니다.");
     }
 }

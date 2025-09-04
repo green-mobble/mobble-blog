@@ -3,8 +3,11 @@ package org.example.mobble.board.dto;
 import lombok.Builder;
 import lombok.Data;
 import org.example.mobble.board.domain.Board;
+import org.example.mobble.report.domain.ReportCase;
 
 import java.sql.Timestamp;
+import java.util.Arrays;
+import java.util.List;
 
 public class BoardResponse {
 
@@ -31,9 +34,25 @@ public class BoardResponse {
             this.views = board.getViews();
             this.bookmarkCount = bookmarkCount;
             this.categoryId = board.getCategoryId();
-            this.userId = board.getUserId();
+            this.userId = board.getUser().getId();
             this.createAt = board.getCreatedAt();
             this.updateAt = board.getUpdatedAt();
         }
     }
+
+    @Data
+    public static class ReportSaveFormDTO {
+
+
+        private List<ReportCase> resultList ;
+
+        private Integer boardId;
+
+        @Builder
+        public ReportSaveFormDTO(List<ReportCase> resultList, Integer boardId) {
+            this.resultList = resultList;
+            this.boardId = boardId;
+        }
+    }
+
 }

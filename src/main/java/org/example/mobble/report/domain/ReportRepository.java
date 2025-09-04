@@ -30,4 +30,11 @@ public class ReportRepository {
     public void delete(Report report) {
             em.remove(report);
     }
+
+    public List<Report> findAllByUserId(Integer userId) {
+        return em.createQuery("select r FROM Report r where r.user.id = :userId", Report.class)
+                .setParameter("userId", userId)
+                .getResultList();
+
+    }
 }

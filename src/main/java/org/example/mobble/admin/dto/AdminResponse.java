@@ -11,6 +11,7 @@ import java.sql.Timestamp;
 
 public class AdminResponse {
 
+    //리스트용
     @Data
     public static class ReportDTO {
         private Integer id; //신고 id
@@ -22,17 +23,42 @@ public class AdminResponse {
         private Timestamp createdAt; //생성일자
 
 
-        public ReportDTO(Board boardPS, User reportUser, Report report,User BoardUser) {
+        public ReportDTO(Board board, Report report) {
             this.id = report.getId();
             this.result = report.getResult();
             this.status = report.getStatus();
-            this.reportingUsername = reportUser.getUsername();
-            this.reportedUsername = BoardUser.getUsername();
-            this.boardTitle = boardPS.getTitle();
+            this.reportingUsername = report.getUser().getUsername();
+            this.reportedUsername = board.getUser().getUsername();
+            this.boardTitle = board.getTitle();
              this.createdAt = report.getCreatedAt();
         }
     }
 
-    public class ReportDetailDTO {
+    @Data
+    public static class ReportDetailDTO {
+
+        Integer  id;
+        String content;
+        ReportStatus status;
+        ReportCase result;
+        Timestamp createdAt;
+        String reportedUsername;
+        String reportingUsername;
+        String  resultEtc;
+        String boardTitle;
+
+
+        public ReportDetailDTO(Report report) {
+
+            this.id = report.getId();
+            this.content = report.getContent();
+            this.status = report.getStatus();
+            this.result = report.getResult();
+            this.createdAt = report.getCreatedAt();
+            this.reportedUsername = report.getBoard().getUser().getUsername();
+            this.reportingUsername = report.getUser().getUsername();
+            this.resultEtc = report.getResultEtc();
+            this.boardTitle = report.getBoard().getTitle();
+        }
     }
 }

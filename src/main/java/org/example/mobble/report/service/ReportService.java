@@ -16,6 +16,7 @@ import org.example.mobble.report.dto.ReportResponse;
 import org.example.mobble.user.domain.User;
 import org.example.mobble.user.domain.UserRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,13 +27,11 @@ import static org.example.mobble._util.error.ErrorEnum.*;
 @Service
 public class ReportService {
     private final ReportRepository reportRepository;
-    private final BoardRepository boardRepository;
     private final UserRepository userRepository;
 
 
-
-
     //내 신고 글 삭제
+    @Transactional
     public void delete(Integer reportId,User user) {
         //유저 정보 조회
         User userPS = getUser(user.getId());
@@ -40,8 +39,10 @@ public class ReportService {
         Report reportPS = checkPermissions(reportId,userPS);
         //삭제
         reportRepository.delete(reportPS);
-    }
 
+    }
+    //내 신고 글 수정
+    @Transactional
     public ReportResponse.ReportUpateDTO update(Integer reportId, User user, ReportRequest.ReportUpateDTO reqDTO) {
         //유저 정보 조회
         User userPS = getUser(user.getId());
@@ -52,11 +53,29 @@ public class ReportService {
         return new ReportResponse.ReportUpateDTO(reportPS);
 
     }
+
+    //내 신고 글 전체 조회
+    public List<ReportResponse.ReportDTO> getList(User user) {
+        List<Report> reportList = reportRepository.findAllByUserId(user.getId());
+
+        return  reportList.stream()
+                .map(ReportResponse.ReportDTO::new)
+                .toList();
+    }
+
+    // 내 신고 글 보기
+    public ReportResponse.ReportDetailDTO getReport(Integer reportId) {
+        Report reportPS = reportRepository.findById(reportId)
+                .orElseThrow(() -> new Exception404(NOT_FOUND));
+
+        return new ReportResponse.ReportDetailDTO(reportPS);
+    }
+
     //권한 검증
     private Report checkPermissions(Integer reportId, User userPS) {
         Report reportPS = reportRepository.findById(reportId)
                 .orElseThrow(() -> new Exception404(NOT_FOUND));
-        if (!userPS.getId().equals(reportPS.getUserId())) {
+        if (!userPS.getId().equals(reportPS.getUser().getId())) {
             throw new Exception403(FORBIDDEN);
         }
         return reportPS;
@@ -68,11 +87,5 @@ public class ReportService {
         );
     }
 
-    public List<ReportResponse.ReportDTO> getList(User user) {
-        return null;
-    }
 
-    public ReportResponse.ReportDetailDTO getReport(Integer reportId) {
-        return null;
-    }
 }
