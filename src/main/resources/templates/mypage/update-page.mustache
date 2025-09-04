@@ -1,0 +1,38 @@
+{{> layout/header}}  <!-- 공용 header가 있다면 사용, 없다면 제거 -->
+
+<div class="container p-4">
+    <h2 class="mb-3">내 카테고리</h2>
+
+    <!-- 목록 -->
+    <ul class="list-group mb-4">
+        {{#categories}}
+            <li class="list-group-item d-flex align-items-center gap-2">
+                <span class="me-auto">{{category}}</span>
+
+                <!-- 이름 변경 -->
+                <form action="/mypage/categories/{{id}}/rename" method="post" class="d-flex gap-2">
+                    <input type="text" name="category" placeholder="새 이름" required class="form-control form-control-sm" />
+                    <button type="submit" class="btn btn-sm btn-primary">이름변경</button>
+                </form>
+
+                <!-- 삭제 -->
+                <form action="/mypage/categories/{{id}}/delete" method="post" class="ms-2">
+                    <button type="submit" class="btn btn-sm btn-outline-danger">삭제</button>
+                </form>
+            </li>
+        {{/categories}}
+
+        {{^categories}}
+            <li class="list-group-item text-muted">카테고리가 없습니다.</li>
+        {{/categories}}
+    </ul>
+
+    <!-- 추가 -->
+    <h3 class="mb-2">카테고리 추가</h3>
+    <form action="/mypage/categories" method="post" class="d-flex gap-2">
+        <input type="text" name="category" value="{{saveForm.category}}" placeholder="예) 개발일지" required class="form-control" />
+        <button type="submit" class="btn btn-success">추가</button>
+    </form>
+</div>
+
+{{> layout/footer}}

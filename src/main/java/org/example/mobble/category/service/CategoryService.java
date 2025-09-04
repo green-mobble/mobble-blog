@@ -16,18 +16,15 @@ public class CategoryService {
 
     private final CategoryRepository categoryRepository;
 
-    /**
-     * 특정 유저의 카테고리 목록 조회
-     */
+
+     // 특정 유저의 카테고리 목록 조회
     @Transactional(readOnly = true)
     public List<Category> getCategoriesByUser(Integer userId) {
         if (userId == null) throw new Exception400("userId가 없습니다.");
         return categoryRepository.findAllByUserIdOrderByIdDesc(userId);
     }
 
-    /**
-     * 카테고리 추가
-     */
+    // 카테고리 추가
     @Transactional
     public Category addCategory(Integer userId, String categoryName) {
         if (userId == null) throw new Exception400("userId가 없습니다.");
@@ -44,9 +41,7 @@ public class CategoryService {
         return categoryRepository.save(category);
     }
 
-    /**
-     * 카테고리 이름 변경
-     */
+    // 카테고리 이름 변경
     @Transactional
     public Category renameCategory(Integer categoryId, String newName) {
         if (categoryId == null) throw new Exception400("categoryId가 없습니다.");
@@ -64,9 +59,7 @@ public class CategoryService {
         return category;
     }
 
-    /**
-     * 카테고리 삭제
-     */
+    // 카테고리 삭제
     @Transactional
     public void deleteCategory(Integer categoryId) {
         if (categoryId == null) throw new Exception400("categoryId가 없습니다.");

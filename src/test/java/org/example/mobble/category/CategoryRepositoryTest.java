@@ -23,6 +23,7 @@ public class CategoryRepositoryTest {
     @Autowired
     EntityManager em;
 
+    // 저장 후 (PK 발급 확인) userId+category 조건으로 단건 조회가 되는지 검증
     @Test
     void save_and_findByUserIdAndCategory() {
         // given
@@ -37,6 +38,7 @@ public class CategoryRepositoryTest {
         assertThat(categoryRepository.findByUserIdAndCategory(1, "Dev")).isPresent();
     }
 
+    // 특정 유저가 동일 이름의 카테고리를 가지고 있는지 존재여부 체크 검증
     @Test
     void existsByUserIdAndCategory() {
         // given
@@ -51,6 +53,7 @@ public class CategoryRepositoryTest {
         assertThat(categoryRepository.existsByUserIdAndCategory(1, "Ops")).isFalse();
     }
 
+    // (userId, category) 유니크 제약이 실제로 동작해 예외를 발생시키는지 검증
     @Test
     void uniqueConstraint_userId_category_enforced() {
         // given: 같은 userId + category 두 번 저장 → 유니크 위반
@@ -64,6 +67,7 @@ public class CategoryRepositoryTest {
 
     }
 
+    // PK(id)로 단건 조회가 정상 동작하는지 검증 (존재 케이스)
     @Test
     void findById_returnsCategory_whenExists() {
         // given
@@ -79,6 +83,7 @@ public class CategoryRepositoryTest {
         assertThat(found.get().getCategory()).isEqualTo("Dev");
     }
 
+    // 특정 유저의 카테고리 목록이 id 기준 내림차순으로 반환되는지 검증
     @Test
     void findAllByUserIdOrderByIdDesc_returnsCategoriesSorted() {
         // given
@@ -94,6 +99,7 @@ public class CategoryRepositoryTest {
         assertThat(categories.get(0).getCategory()).isEqualTo("B"); // desc 정렬 확인
     }
 
+    // 존재여부 체크 메서드가 true를 반환하는지 재확인 (단일 케이스)
     @Test
     void existsByUserIdAndCategory_returnsTrue_whenDuplicateExists() {
         // given
@@ -107,6 +113,7 @@ public class CategoryRepositoryTest {
         assertThat(exists).isTrue();
     }
 
+    // PK로 삭제가 정상 동작하는지 검증 (삭제 후 findById가 empty여야 함)
     @Test
     void deleteById_removesCategory() {
         // given
