@@ -2,7 +2,6 @@ package org.example.mobble.user.controller;
 
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
-import org.example.mobble._util.error.ex.Exception401;
 import org.example.mobble.user.domain.User;
 import org.example.mobble.user.dto.UserRequest;
 import org.example.mobble.user.dto.UserResponse;
@@ -56,7 +55,7 @@ public class UserController {
      */
     @GetMapping("/users")
     public String getUsers() {
-        User user = getLoginUser();
+        User user = (User) session.getAttribute("user");
         session.setAttribute("model", new UserResponse.UserDetailDTO(user));
         return "mypage/main";
     }
@@ -64,21 +63,21 @@ public class UserController {
     // 이미지 변경
     @PostMapping(consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE, value = "/users/{id}/profile")
     public String updateUsersProfile(@PathVariable(name = "id") Integer userId, @ModelAttribute UserRequest.ProfileUpdateDTO reqDTO) {
-        User user = getLoginUser();
+        User user = (User) session.getAttribute("user");
         userService.changeProfile(user, userId, reqDTO);
         return "redirect:/users";
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE, value = "/users/{id}/password")
     public String updateUsersPassword(@PathVariable(name = "id") Integer userId, @ModelAttribute UserRequest.PasswordUpdateDTO reqDTO) {
-        User user = getLoginUser();
+        User user = (User) session.getAttribute("user");
         userService.changePassword(user, userId, reqDTO);
         return "redirect:/users";
     }
 
     @DeleteMapping("/users/{id}")
     public String deleteUsers(@PathVariable(name = "id") Integer userId) {
-        User user = getLoginUser();
+        User user = (User) session.getAttribute("user");
         userService.delete(user, userId);
         return "redirect:/";
     }
@@ -86,12 +85,6 @@ public class UserController {
     @PostMapping(consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE, value = "/users/check-username")
     @ResponseBody
     public Map<String, Boolean> checkUsername(@ModelAttribute UserRequest.UsernameDTO reqDTO) {
-        return Map.of("duplicate", userService.isNicknameDuplicate(reqDTO));
-    }
-
-    private User getLoginUser() {
-        User user = (User) session.getAttribute("user");
-        if (user == null) throw new Exception401("로그인 후 이용부탁드립니다.");
-        return user;
+        return Map.of("duplicate", userService.isUsernameDuplicate(reqDTO));
     }
 }
