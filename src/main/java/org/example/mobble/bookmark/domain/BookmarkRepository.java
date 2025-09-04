@@ -3,34 +3,51 @@ package org.example.mobble.bookmark.domain;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
 import lombok.RequiredArgsConstructor;
-import org.example.mobble.bookmark.dto.BookmarkResponse;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Repository
 public class BookmarkRepository {
     private final EntityManager em;
 
-    public boolean findByBoardIdAndUserId(int boardId, int userId) {
-        Long count = em.createQuery(
-                        "select count(b) from Bookmark b where b.boardId = :boardId and b.userId = :userId",
-                        Long.class)
-                .setParameter("boardId", boardId)
-                .setParameter("userId", userId)
-                .getSingleResult();
 
-        return count > 0;
+    public Optional<Bookmark> findByBoardIdAndUserId(int boardId, int userId) {
+        try {
+            Bookmark BookmarkPS = em.createQuery(
+                            "select b from Bookmark b where b.board.id = :boardId and b.userId = :userId",
+                            Bookmark.class
+                    )
+                    .setParameter("boardId", boardId)
+                    .setParameter("userId", userId)
+                    .getSingleResult();
+            return Optional.of(BookmarkPS);
+        }catch (Exception e) {
+            return Optional.ofNullable(null);
+        }
     }
 
-    public BookmarkResponse.BookmarkSaveDTO BookmarkSave(Bookmark bookmark) {
-        em.persist(bookmark);
-        return null;
-    }
 
     public void BookmarkDelete(Integer boardId, Integer userId) {
-        Query query =  em.createQuery("delete from Bookmark b where b.boardId = :boardId and b.userId = :userId");
+        Query query =  em.createQuery("delete from Bookmark b where b.board.id = :boardId and b.userId = :userId");
         query.setParameter("boardId", boardId);
         query.setParameter("userId", userId);
         query.executeUpdate();
+    }
+
+    public Bookmark BookmarkSave(Bookmark bookmark) {
+       em.persist(bookmark);
+        return bookmark;
+    }
+
+    public List<Bookmark> bookmarkList(Integer userId) {
+        return em.createQuery(
+                        "SELECT b FROM Bookmark b JOIN FETCH b.board bo WHERE b.userId = :userId",
+                        Bookmark.class
+                )
+                .setParameter("userId", userId)
+                .getResultList();
     }
 }

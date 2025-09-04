@@ -22,14 +22,20 @@ public class UserController {
      *  ------------------------------------------------------------------
      */
     @GetMapping("/login-form")
-    public String loginForm(UserRequest.JoinDTO reqDTO) {
-        userService.save(reqDTO);
+    public String loginForm() {
         return "auth/login-page";
+    }
+
+    @GetMapping("/join")
+    public String join(UserRequest.JoinDTO reqDTO) {
+        userService.save(reqDTO);
+        return "redirect:/login-form";
     }
 
     @GetMapping("/join-form")
     public String joinForm() {
         return "auth/join-page";
+
     }
 
     @PostMapping("/login")

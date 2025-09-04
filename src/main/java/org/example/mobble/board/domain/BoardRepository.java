@@ -17,7 +17,7 @@ public class BoardRepository {
         List<Object[]> rows = em.createQuery(
                 "select b, count(bm) " +
                         "from Board b " +
-                        "left join Bookmark bm on bm.boardId = b.id " +
+                        "left join Bookmark bm on bm.board.id = b.id " +
                         "group by b " +
                         "order by b.createdAt desc",
                 Object[].class

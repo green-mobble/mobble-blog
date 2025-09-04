@@ -34,13 +34,8 @@
         <!-- Right: 폼 -->
         <section class="panel">
             <h3>로그인</h3>
-            <form method="post" action="/login">
-                <!-- 서버에서 CSRF 토큰을 내려주면 바인딩 -->
-                {{#_csrf}}
-                    <input type="hidden" name="{{parameterName}}" value="{{token}}">
-                {{/_csrf}}
-
-                <input class="field" type="text" name="username" placeholder="아이디" value="{{prefillUsername}}">
+            <form method="post" action="/login" enctype="application/x-www-form-urlencoded">
+                <input class="field" type="text" name="username" placeholder="아이디">
                 <input class="field" type="password" name="password" placeholder="비밀번호">
 
                 <button class="btn primary submit" type="submit">LogIn</button>
