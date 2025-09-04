@@ -6,6 +6,7 @@ import org.example.mobble.report.dto.ReportResponse;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Repository
@@ -22,14 +23,11 @@ public class ReportRepository {
                 .getResultList();
     }
 
-    public Report findById(Integer reportId) {
-        return em.find(Report.class, reportId);
+    public Optional<Report> findById(Integer reportId) {
+        return Optional.ofNullable(em.find(Report.class, reportId));
     }
 
-    public void delete(Integer reportId) {
-        Report report = em.find(Report.class, reportId);
-        if (report != null) {
+    public void delete(Report report) {
             em.remove(report);
-        }
     }
 }

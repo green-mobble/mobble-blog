@@ -21,34 +21,55 @@ public class ReportController {
     private final ReportService reportService;
     private final HttpSession session;
 
-    //관리자 전체 신고 리스트
-    @GetMapping("/admin/reports")
-    public String list(Model model) {
-        List<ReportResponse.ReportDTO> resDTO = reportService.findAll();
-        model.addAttribute("resDTO", resDTO);
-        return "admin/main";
+    //신고 수정 form 가기//TODO 필요한지 확인필요
+
+
+
+    //내 신고 리스트 //TODO
+    @GetMapping ("/reports")
+    public String getReportList(Model model) {
+        User user = getLoginUser();
+        //조회
+        List<ReportResponse.ReportDTO> resDTO = reportService.getList(user);
+        //model.addAttribute("resDTO",resDTO);
+        return "mypage/report/list-page";
     }
 
-    //관리자 상태 변경
-    @PutMapping("/admin/reports/{id}")
-    public String statusUpdate(@PathVariable(name = "id") Integer reportId, ReportRequest.ReportUpateDTO reqDTO) {
-        ReportStatus status = reportService.statusUpdate(reportId,reqDTO);
-        return "admin/main";
+    //내 신고 보기//TODO
+    @GetMapping ("/reports/{id}")
+    public String getReport(@PathVariable(name = "id") Integer reportId,Model model) {
+        User user = getLoginUser();
+        //조회
+        ReportResponse.ReportDetailDTO resDTO = reportService.getReport(reportId);
+        //model.addAttribute("resDTO",resDTO);
+        return "mypage/report/detail-page";
     }
-
-    // 어드민 신고 보기
-
-    //내 신고 보기
 
     //내 신고 삭제
-    //관리자 상태 변경
-    @PutMapping("/reports/{id}")
+    @PostMapping ("/reports/{id}/delete")
     public String delete(@PathVariable(name = "id") Integer reportId) {
-        reportService.delete(reportId);
-        return "admin/main";
+        User user = getLoginUser();
+        //삭제
+        reportService.delete(reportId,user);
+        return "redirect:/reports";
     }
 
     //내 신고 수정
+    @PostMapping ("/reports/{id}/update")
+    public String update(@PathVariable(name = "id") Integer reportId,ReportRequest.ReportUpateDTO reqDTO) {
+        User user = getLoginUser();
+        //수정
+        ReportResponse.ReportUpateDTO resDTO = reportService.update(reportId,user,reqDTO);
+        return "redirect:/reports";
+    }
 
+    //서비스 이용자 확인 절차.
+    private User getLoginUser() {
+        User user = (User) session.getAttribute("user");
+        if (user == null) {
+            throw new Exception401("로그인 후 이용 부탁드립니다."); // 에러 코드, 에러 메시지 컨벤션
+        }
+        return user;
+    }
 
 }

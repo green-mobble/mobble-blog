@@ -1,4 +1,4 @@
-package org.example.mobble.report.dto;
+package org.example.mobble.admin.dto;
 
 import lombok.Data;
 import org.example.mobble.board.domain.Board;
@@ -9,7 +9,7 @@ import org.example.mobble.user.domain.User;
 
 import java.sql.Timestamp;
 
-public class ReportResponse {
+public class AdminResponse {
 
     @Data
     public static class ReportDTO {
@@ -21,22 +21,15 @@ public class ReportResponse {
         private String boardTitle; //게시물 제목
         private Timestamp createdAt; //생성일자
 
-    }
 
-    //업데이트 확인용
-    @Data
-    public static class ReportUpateDTO{
-
-        private Integer Id;
-        private ReportCase result;
-        private String resultEtc;
-        private String content;
-
-        public ReportUpateDTO(Report report) {
-            this.Id = report.getId();
+        public ReportDTO(Board boardPS, User reportUser, Report report,User BoardUser) {
+            this.id = report.getId();
             this.result = report.getResult();
-            this.resultEtc = report.getResultEtc();
-            this.content = report.getContent();
+            this.status = report.getStatus();
+            this.reportingUsername = reportUser.getUsername();
+            this.reportedUsername = BoardUser.getUsername();
+            this.boardTitle = boardPS.getTitle();
+             this.createdAt = report.getCreatedAt();
         }
     }
 

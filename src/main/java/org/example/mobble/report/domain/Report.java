@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.example.mobble.report.dto.ReportRequest;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.sql.Timestamp;
@@ -68,8 +69,15 @@ public class Report {
         this.resultEtc = resultEtc;
     }
 
-    public void statusUpdate(ReportStatus status) {
+    public void updateStauts(ReportStatus status) {
         this.status = status;
+    }
+
+    public void updateInfo(ReportRequest.ReportUpateDTO reqDTO) {
+
+        this.result =reqDTO.getResult();
+        this.resultEtc = reqDTO.getResultEtc();
+        this.content = reqDTO.getContent();
     }
 }
 

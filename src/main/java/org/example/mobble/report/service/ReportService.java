@@ -1,8 +1,11 @@
 package org.example.mobble.report.service;
 
 import lombok.RequiredArgsConstructor;
+import org.example.mobble._util.error.ex.Exception400;
 import org.example.mobble._util.error.ex.Exception403;
 import org.example.mobble._util.error.ex.Exception404;
+import org.example.mobble.admin.dto.AdminRequest;
+import org.example.mobble.admin.dto.AdminResponse;
 import org.example.mobble.board.domain.Board;
 import org.example.mobble.board.domain.BoardRepository;
 import org.example.mobble.report.domain.Report;
@@ -27,41 +30,49 @@ public class ReportService {
     private final UserRepository userRepository;
 
 
-    //전체 신고 리스트 보기
-    public List<ReportResponse.ReportDTO> findAll() {
 
-        List<Report> reportList = reportRepository.findAll();
-        List<ReportResponse.ReportDTO> resDTO = new ArrayList<>();
-        for (Report report : reportList) {
-          Board boardPS =   getBoard(report.getBoardId());
-          User boardUser = getUser(report.getBoardId());
-          User reportUser = getUser(report.getUserId());
-            resDTO.add(new ReportResponse.ReportDTO(boardPS,reportUser,report,boardUser));
+
+    //내 신고 글 삭제
+    public void delete(Integer reportId,User user) {
+        //유저 정보 조회
+        User userPS = getUser(user.getId());
+        //신고 권한이 있는지 확인
+        Report reportPS = checkPermissions(reportId,userPS);
+        //삭제
+        reportRepository.delete(reportPS);
+    }
+
+    public ReportResponse.ReportUpateDTO update(Integer reportId, User user, ReportRequest.ReportUpateDTO reqDTO) {
+        //유저 정보 조회
+        User userPS = getUser(user.getId());
+        //신고 권한이 있는지 확인
+        Report reportPS = checkPermissions(reportId,userPS);
+        //업데이트
+        reportPS.updateInfo(reqDTO);
+        return new ReportResponse.ReportUpateDTO(reportPS);
+
+    }
+    //권한 검증
+    private Report checkPermissions(Integer reportId, User userPS) {
+        Report reportPS = reportRepository.findById(reportId)
+                .orElseThrow(() -> new Exception404(NOT_FOUND));
+        if (!userPS.getId().equals(reportPS.getUserId())) {
+            throw new Exception403(FORBIDDEN);
         }
-        return resDTO;
-
+        return reportPS;
     }
-
-    public Board getBoard(Integer boardId) {
-        return boardRepository.findById(boardId).orElseThrow(
-                () -> new Exception404(BAD_REQUEST)
-        );
-    }
+    //유저 조회
     private User getUser(Integer userId) {
         return userRepository.findById(userId).orElseThrow(
-                () -> new Exception403(NOT_FOUND)
+                () -> new Exception404(NOT_FOUND)
         );
     }
 
-    //상태 변경
-    public ReportStatus statusUpdate(Integer reportId, ReportRequest.ReportUpateDTO reqDTO) {
-        Report reportPS = reportRepository.findById(reportId);
-        reportPS.statusUpdate(reqDTO.getStatus());
-        return reportPS.getStatus();
+    public List<ReportResponse.ReportDTO> getList(User user) {
+        return null;
     }
 
-
-    public void delete(Integer reportId) {
-        reportRepository.delete(reportId);
+    public ReportResponse.ReportDetailDTO getReport(Integer reportId) {
+        return null;
     }
 }
