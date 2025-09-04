@@ -28,8 +28,9 @@ public class CategoryController {
     // 마이페이지 - 카테고리 관리 화면
     @GetMapping
     public String categoriesPage(Model model) {
-//        Integer userId = currentUserIdOrThrow();
-        Integer userId = 1;
+        // TODO(local-test): 로그인 우회
+        // Integer userId = currentUserIdOrThrow();
+        Integer userId = 1;  // 테스트용 하드 코딩
         model.addAttribute("categories", categoryService.getCategoriesByUser(userId));
         model.addAttribute("saveForm", new CategoryForm.Save());
         return "mypage/update-page"; // 필요시 "mypage/main"으로 변경
@@ -37,10 +38,10 @@ public class CategoryController {
 
     // 카테고리 추가 (폼 전송)
     @PostMapping
-    public String addCategory(@Valid @ModelAttribute("saveForm") CategoryForm.Save form,
-                              Errors errors) {
-        Integer userId = currentUserIdOrThrow();
-        // Errors가 존재하면 GlobalValidationHandler가 Exception400 던짐 (별도 처리 불필요)
+    public String addCategory(@Valid @ModelAttribute("saveForm") CategoryForm.Save form, Errors errors) {
+        // TODO(local-test): 로그인 우회
+        // Integer userId = currentUserIdOrThrow();
+        Integer userId = 1;  // 테스트용 하드 코딩
         categoryService.addCategory(userId, form.getCategory());
         return "redirect:/mypage/categories";
     }
@@ -50,7 +51,8 @@ public class CategoryController {
     public String renameCategory(@PathVariable Integer categoryId,
                                  @Valid @ModelAttribute CategoryForm.Rename form,
                                  Errors errors) {
-        currentUserIdOrThrow();
+        // TODO(local-test): 로그인 우회
+        // currentUserIdOrThrow();  // 임시 주석
         categoryService.renameCategory(categoryId, form.getCategory());
         return "redirect:/mypage/categories";
     }
@@ -58,7 +60,8 @@ public class CategoryController {
     // 카테고리 삭제 (폼 전송)
     @PostMapping("/{categoryId}/delete")
     public String deleteCategory(@PathVariable Integer categoryId) {
-        currentUserIdOrThrow();
+        // TODO(local-test): 로그인 우회
+        // currentUserIdOrThrow();  // 임시 주석
         categoryService.deleteCategory(categoryId);
         return "redirect:/mypage/categories";
     }
