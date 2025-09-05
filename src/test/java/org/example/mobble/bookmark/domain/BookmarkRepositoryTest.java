@@ -57,7 +57,7 @@ public class BookmarkRepositoryTest {
     public void findByBoardIdAndUserIdTRUE_test() {
         User testUser = User.builder()
                 .username("tester")
-                .build();  // ID 지정하지 않음
+                .build();
         userRepository.save(testUser);
 
         Board testboard = Board.builder()
@@ -91,7 +91,7 @@ public class BookmarkRepositoryTest {
         // 1. 테스트용 User 생성 및 저장
         User testUser = User.builder()
                 .username("tester")
-                .build(); // ID는 지정하지 않음
+                .build();
         userRepository.save(testUser);
 
         // 2. 테스트용 Board 생성 및 User 연결 후 저장
@@ -184,10 +184,33 @@ public class BookmarkRepositoryTest {
         List<Bookmark> bookmarks = bookmarkRepository.bookmarkList(testUser.getId());
         System.out.println(">>> 저장된 북마크 리스트:");
         for (Bookmark b : bookmarks) {
-            System.out.println("BoardId: " + b.getBoard().getId() +
-                    ", Board Title: " + b.getBoard().getTitle() +
-                    ", Board views: " + b.getBoard().getViews() +
-                    ", UserId: " + b.getUser().getId());
+            System.out.println("===== Bookmark 값 =====");
+            System.out.println("BookmarkId: " + b.getId());
+            System.out.println("CreatedAt: " + b.getCreatedAt());
+
+            Board board = b.getBoard();
+            if (board != null) {
+                System.out.println("BoardId: " + board.getId());
+                System.out.println("Board Title: " + board.getTitle());
+                System.out.println("Board Content: " + board.getContent());
+                System.out.println("Board Views: " + board.getViews());
+                System.out.println("Board CreatedAt: " + board.getCreatedAt());
+                System.out.println("Board UpdatedAt: " + board.getUpdatedAt());
+
+                if (board.getCategory() != null) {
+                    System.out.println("Board CategoryId: " + board.getCategory().getId());
+                    System.out.println("Board Category: " + board.getCategory().getCategory());
+                }
+            }
+
+            User user = b.getUser();
+            if (user != null) {
+                System.out.println("UserId: " + user.getId());
+                System.out.println("UserName: " + user.getUsername());
+                System.out.println("User Email: " + user.getEmail());
+                System.out.println("User ProfileImage: " + user.getProfileImage());
+            }
+            System.out.println("======================");
         }
     }
 }

@@ -78,20 +78,61 @@ class BookmarkControllerTest {
     @Test
     @DisplayName("북마크 저장 성공")
     void bookmarkSave_success() throws Exception {
+        // when
         mockMvc.perform(post("/bookmark/{boardId}/save", testBoard.getId())
                         .sessionAttr("user", testUser))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/boards/" + testBoard.getId()));
 
+        // then
         Bookmark bookmark = bookmarkRepository.findByBoardIdAndUserId(testBoard.getId(), testUser.getId())
                 .orElseThrow(() -> new IllegalStateException("북마크 저장 실패"));
 
-        System.out.printf(">>> 저장된 북마크 확인: boardId=%d, boardTitle=%s, userId=%d, username=%s%n",
-                bookmark.getBoard().getId(),
-                bookmark.getBoard().getTitle(),
-                bookmark.getUser().getId(),
-                bookmark.getUser().getUsername());
+        // ✅ 전체 값 출력
+        System.out.println("===== Bookmark 저장 확인 =====");
+        System.out.println("BookmarkId: " + bookmark.getId());
+        System.out.println("Bookmark CreatedAt: " + bookmark.getCreatedAt());
 
+        Board board = bookmark.getBoard();
+        if (board != null) {
+            System.out.println("----- Board 값 -----");
+            System.out.println("BoardId: " + board.getId());
+            System.out.println("Board Title: " + board.getTitle());
+            System.out.println("Board Content: " + board.getContent());
+            System.out.println("Board Views: " + board.getViews());
+            System.out.println("Board CreatedAt: " + board.getCreatedAt());
+            System.out.println("Board UpdatedAt: " + board.getUpdatedAt());
+
+            if (board.getCategory() != null) {
+                System.out.println("----- Category 값 -----");
+                System.out.println("CategoryId: " + board.getCategory().getId());
+                System.out.println("Category Name: " + board.getCategory().getCategory());
+                if (board.getCategory().getUser() != null) {
+                    User categoryUser = board.getCategory().getUser();
+                    System.out.println("Category UserId: " + categoryUser.getId());
+                    System.out.println("Category UserName: " + categoryUser.getUsername());
+                }
+            }
+
+            if (board.getUser() != null) {
+                System.out.println("----- Board 작성자 -----");
+                System.out.println("Board UserId: " + board.getUser().getId());
+                System.out.println("Board UserName: " + board.getUser().getUsername());
+                System.out.println("Board User Email: " + board.getUser().getEmail());
+            }
+        }
+
+        User user = bookmark.getUser();
+        if (user != null) {
+            System.out.println("----- Bookmark 작성자 -----");
+            System.out.println("UserId: " + user.getId());
+            System.out.println("UserName: " + user.getUsername());
+            System.out.println("User Email: " + user.getEmail());
+            System.out.println("User ProfileImage: " + user.getProfileImage());
+        }
+        System.out.println("======================");
+
+        // 검증
         assertThat(bookmark.getBoard().getId()).isEqualTo(testBoard.getId());
         assertThat(bookmark.getUser().getId()).isEqualTo(testUser.getId());
     }
@@ -106,19 +147,57 @@ class BookmarkControllerTest {
                 .build();
         bookmarkRepository.BookmarkSave(bookmark);
 
-        System.out.printf(">>> 삭제 전 북마크: boardId=%d, boardTitle=%s, userId=%d, username=%s%n",
-                bookmark.getBoard().getId(),
-                bookmark.getBoard().getTitle(),
-                bookmark.getUser().getId(),
-                bookmark.getUser().getUsername());
+        // ✅ 삭제 전 전체 값 출력
+        System.out.println("===== 삭제 전 Bookmark =====");
+        System.out.println("BookmarkId: " + bookmark.getId());
+        System.out.println("Bookmark CreatedAt: " + bookmark.getCreatedAt());
 
+        Board board = bookmark.getBoard();
+        if (board != null) {
+            System.out.println("----- Board 값 -----");
+            System.out.println("BoardId: " + board.getId());
+            System.out.println("Board Title: " + board.getTitle());
+            System.out.println("Board Content: " + board.getContent());
+            System.out.println("Board Views: " + board.getViews());
+            System.out.println("Board CreatedAt: " + board.getCreatedAt());
+            System.out.println("Board UpdatedAt: " + board.getUpdatedAt());
+
+            if (board.getCategory() != null) {
+                System.out.println("----- Category 값 -----");
+                System.out.println("CategoryId: " + board.getCategory().getId());
+                System.out.println("Category Name: " + board.getCategory().getCategory());
+            }
+
+            if (board.getUser() != null) {
+                System.out.println("----- Board 작성자 -----");
+                System.out.println("Board UserId: " + board.getUser().getId());
+                System.out.println("Board UserName: " + board.getUser().getUsername());
+                System.out.println("Board User Email: " + board.getUser().getEmail());
+            }
+        }
+
+        User user = bookmark.getUser();
+        if (user != null) {
+            System.out.println("----- Bookmark 작성자 -----");
+            System.out.println("UserId: " + user.getId());
+            System.out.println("UserName: " + user.getUsername());
+            System.out.println("User Email: " + user.getEmail());
+        }
+        System.out.println("======================");
+
+        // 삭제 실행
         mockMvc.perform(post("/bookmark/{boardId}/delete", testBoard.getId())
                         .sessionAttr("user", testUser))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/boards/" + testBoard.getId()));
 
+        // 삭제 여부 확인
         boolean exists = bookmarkRepository.findByBoardIdAndUserId(testBoard.getId(), testUser.getId()).isPresent();
-        System.out.println(">>> 삭제 후 북마크 존재 여부: " + exists);
+
+        System.out.println("===== 삭제 후 Bookmark 확인 =====");
+        System.out.println("삭제 후 존재 여부: " + exists);
+        System.out.println("===============================");
+
         assertThat(exists).isFalse();
     }
 
@@ -143,30 +222,36 @@ class BookmarkControllerTest {
                     .user(testUser)
                     .build();
             bookmarkRepository.BookmarkSave(bm);
-
-            System.out.printf(">>> 저장된 Board & Bookmark: boardId=%d, boardTitle=%s, userId=%d, username=%s, bookmarkId=%d%n",
-                    board.getId(), board.getTitle(), testUser.getId(), testUser.getUsername(), bm.getId());
         }
 
+        // 북마크 리스트 조회 API 요청
         mockMvc.perform(get("/bookmarks")
                         .sessionAttr("user", testUser))
                 .andExpect(status().isOk())
                 .andExpect(view().name("mypage/main"));
 
+        // 서비스 레벨에서 결과 확인
         BookmarkResponse.BookmarkListDTO respDTO = bookmarkService.bookmarkList(testUser.getId());
 
-        System.out.println(">>> 북마크 리스트 조회 확인:");
+        System.out.println("===== 북마크 리스트 조회 결과 =====");
         System.out.println("isList = " + respDTO.isList());
         for (BookmarkResponse.BookmarkDTO dto : respDTO.getBookmarksList()) {
             Board board = dto.getBoard();
-            System.out.printf("bookId=%d, boardId=%d, boardTitle=%s, boardContent=%s, boardViews=%d, userId=%d, username=%s%n",
-                    dto.getBookId(),
-                    board.getId(),
-                    board.getTitle(),
-                    board.getContent(),
-                    board.getViews(),
-                    board.getUser().getId(),
-                    board.getUser().getUsername());
+            System.out.println(">>> BookmarkDTO");
+            System.out.println("BookmarkId: " + dto.getBookId());
+            System.out.println("BoardId: " + board.getId());
+            System.out.println("Board Title: " + board.getTitle());
+            System.out.println("Board Content: " + board.getContent());
+            System.out.println("Board Views: " + board.getViews());
+            System.out.println("Board CreatedAt: " + board.getCreatedAt());
+            System.out.println("Board UpdatedAt: " + board.getUpdatedAt());
+
+            if (board.getUser() != null) {
+                System.out.println("Board UserId: " + board.getUser().getId());
+                System.out.println("Board UserName: " + board.getUser().getUsername());
+                System.out.println("Board User Email: " + board.getUser().getEmail());
+            }
+            System.out.println("===============================");
         }
     }
 
