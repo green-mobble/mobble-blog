@@ -5,10 +5,15 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.example.mobble.board.dto.BoardRequest;
+import org.example.mobble.bookmark.domain.Bookmark;
+import org.example.mobble.category.Category;
+import org.example.mobble.report.domain.Report;
+import org.example.mobble.user.domain.User;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -24,13 +29,15 @@ public class Board {
     private String content;
 
     // 글 쓴 사람
-    private Integer userId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private User user;
+
+    // 카테고리
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Category category;
 
     // 조회수
     private Integer views;
-
-    // 카테고리
-    private Integer categoryId;
 
     // 글 작성 시간
     @CreationTimestamp
@@ -40,15 +47,24 @@ public class Board {
     @UpdateTimestamp
     private Timestamp updatedAt;
 
+    //연관 신고는 게시글이 삭제되면 자동 삭제 처리
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    private List<Report> reports;
+
+    //연관 북마크는 게시글 삭제시 자동 삭제 처리
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    private List<Bookmark> bookmarks;
+
     @Builder
-    public Board(Integer id, String title, String content, Integer userId, Integer views, Integer categoryId, Timestamp createdAt, Timestamp updatedAt) {
+    public Board(Integer id, String title, String content, User user, Integer views, Category category, Timestamp createdAt, List<Report> reports, Timestamp updatedAt) {
         this.id = id;
         this.title = title;
         this.content = content;
-        this.userId = userId;
+        this.user = user;
         this.views = views;
-        this.categoryId = categoryId;
+        this.category = category;
         this.createdAt = createdAt;
+        this.reports = reports;
         this.updatedAt = updatedAt;
     }
 
