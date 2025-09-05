@@ -3,6 +3,7 @@ package org.example.mobble.category;
 import jakarta.persistence.EntityManager;
 import org.example.mobble.category.domain.Category;
 import org.example.mobble.category.domain.CategoryRepository;
+import org.example.mobble.user.domain.User;
 import org.hibernate.exception.ConstraintViolationException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,11 +24,25 @@ public class CategoryRepositoryTest {
     @Autowired
     EntityManager em;
 
+    private User newUser(String uname) {
+        User u = User.builder()
+                .username(uname)
+                .password("1234")
+                .email(uname + "@test.com")
+                .build();
+        em.persist(u);      // ManyToOne에는 보통 cascade 안 걸림 → 직접 저장
+        return u;
+    }
+
     // 저장 후 (PK 발급 확인) userId+category 조건으로 단건 조회가 되는지 검증
     @Test
     void save_and_findByUserIdAndCategory() {
         // given
-        Category c = Category.builder().userId(1).category("Dev").build();
+        User user = newUser("user2");
+        Category c = Category.builder()
+                .user(user)             // 기존 .userId(1) → .user(user)
+                .category("Dev")
+                .build();
 
         // when
         categoryRepository.save(c);
@@ -42,10 +57,8 @@ public class CategoryRepositoryTest {
     @Test
     void existsByUserIdAndCategory() {
         // given
-        Category c = Category.builder().userId(1).category("Dev").build();
-
-        // when
-        categoryRepository.save(c);
+        User user = newUser("user2");
+        categoryRepository.save(Category.builder().user(user).category("Dev").build());
         em.flush();
 
         // then
@@ -55,23 +68,26 @@ public class CategoryRepositoryTest {
 
     // (userId, category) 유니크 제약이 실제로 동작해 예외를 발생시키는지 검증
     @Test
-    void uniqueConstraint_userId_category_enforced() {
-        // given: 같은 userId + category 두 번 저장 → 유니크 위반
-        categoryRepository.save(Category.builder().userId(1).category("Dev").build());
+    void uniqueConstraint_user_category_enforced() {
+        // given
+        User user = newUser("user2");
+        categoryRepository.save(Category.builder().user(user).category("Dev").build());
 
-        // when & then: 두 번째 save()나 flush() 어느 시점에서든 제약 위반이 발생할 수 있음
+        // when & then
         assertThatThrownBy(() -> {
-            categoryRepository.save(Category.builder().userId(1).category("Dev").build());
-            em.flush();
-        }).isInstanceOf(org.hibernate.exception.ConstraintViolationException.class);
-
+            categoryRepository.save(Category.builder().user(user).category("Dev").build());
+            em.flush(); // flush 시점에 제약 위반 가능
+        }).isInstanceOfAny(ConstraintViolationException.class,
+                org.springframework.dao.DataIntegrityViolationException.class);
     }
+
 
     // PK(id)로 단건 조회가 정상 동작하는지 검증 (존재 케이스)
     @Test
     void findById_returnsCategory_whenExists() {
         // given
-        Category c = Category.builder().userId(1).category("Dev").build();
+        User user = newUser("user2");
+        Category c = Category.builder().user(user).category("Dev").build();
         categoryRepository.save(c);
         em.flush(); em.clear();
 
@@ -87,8 +103,9 @@ public class CategoryRepositoryTest {
     @Test
     void findAllByUserIdOrderByIdDesc_returnsCategoriesSorted() {
         // given
-        categoryRepository.save(Category.builder().userId(2).category("A").build());
-        categoryRepository.save(Category.builder().userId(2).category("B").build());
+        User user = newUser("user2");
+        categoryRepository.save(Category.builder().user(user).category("A").build());
+        categoryRepository.save(Category.builder().user(user).category("B").build());
         em.flush(); em.clear();
 
         // when
@@ -103,7 +120,9 @@ public class CategoryRepositoryTest {
     @Test
     void existsByUserIdAndCategory_returnsTrue_whenDuplicateExists() {
         // given
-        categoryRepository.save(Category.builder().userId(1).category("Dev").build());
+        User user = newUser("user2");
+        Category c = Category.builder().user(user).category("Dev").build();
+        categoryRepository.save(c);
         em.flush(); em.clear();
 
         // when
@@ -117,7 +136,8 @@ public class CategoryRepositoryTest {
     @Test
     void deleteById_removesCategory() {
         // given
-        Category c = Category.builder().userId(1).category("Dev").build();
+        User user = newUser("user2");
+        Category c = Category.builder().user(user).category("Dev").build();
         categoryRepository.save(c);
         em.flush(); em.clear();
 
