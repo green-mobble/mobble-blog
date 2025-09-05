@@ -58,6 +58,7 @@ public class ReportTest {
                         MockMvcRequestBuilders
                                 .get("/reports/{id}/update-form", reportId)
                                 .contentType(MediaType.APPLICATION_JSON)
+                                .session(session)
                 );
 
                 //eye

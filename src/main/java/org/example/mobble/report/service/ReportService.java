@@ -56,6 +56,10 @@ public class ReportService {
 
     //내 신고 글 전체 조회
     public List<ReportResponse.ReportDTO> getList(User user) {
+
+        //유저 정보 조회 + 검증
+        User userPS = getUser(user.getId());
+
         List<Report> reportList = reportRepository.findAllByUserId(user.getId());
 
         return  reportList.stream()
@@ -64,9 +68,11 @@ public class ReportService {
     }
 
     // 내 신고 글 보기
-    public ReportResponse.ReportDetailDTO getReport(Integer reportId) {
-        Report reportPS = reportRepository.findById(reportId)
-                .orElseThrow(() -> new Exception404(NOT_FOUND_REPORT));
+    public ReportResponse.ReportDetailDTO getReport(Integer reportId,User user) {
+        //유저 정보 조회
+        User userPS = getUser(user.getId());
+        //신고 권한이 있는지 확인 + 조회
+        Report reportPS = checkPermissions(reportId,userPS);
 
         return new ReportResponse.ReportDetailDTO(reportPS);
     }

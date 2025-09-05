@@ -29,8 +29,9 @@ public class ReportController {
     @ResponseBody
     @GetMapping ("/reports/{id}/update-form")
     public ResponseEntity<?>  updateForm(@PathVariable(name = "id") Integer reportId,Model model) {
+        User user = getLoginUser();
         //조회
-        ReportResponse.ReportDetailDTO resDTO = reportService.getReport(reportId);
+        ReportResponse.ReportDetailDTO resDTO = reportService.getReport(reportId,user);
         return Resp.ok(resDTO);
     }
 
@@ -47,9 +48,9 @@ public class ReportController {
     //내 신고 보기
     @GetMapping ("/reports/{id}")
     public String getReport(@PathVariable(name = "id") Integer reportId,Model model) {
-
+        User user = getLoginUser();
         //조회
-        ReportResponse.ReportDetailDTO resDTO = reportService.getReport(reportId);
+        ReportResponse.ReportDetailDTO resDTO = reportService.getReport(reportId,user);
         model.addAttribute("model",resDTO);
         return "mypage/report/detail-page";
     }
