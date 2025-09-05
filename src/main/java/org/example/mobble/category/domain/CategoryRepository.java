@@ -66,4 +66,11 @@ public class CategoryRepository {
         Category found = em.find(Category.class, id);
         if (found != null) em.remove(found);
     }
+
+    public void detachBoards(Integer categoryId) {
+        em.createQuery("update Board b set b.category = null where b.category.id = :cid")
+                .setParameter("cid", categoryId)
+                .executeUpdate();
+    }
+
 }

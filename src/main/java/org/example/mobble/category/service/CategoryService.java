@@ -98,7 +98,9 @@ public class CategoryService {
             throw new Exception401("본인 카테고리만 삭제할 수 있습니다.");
         }
 
-        // (다음 단계에서: board_tb.category_id = NULL 처리 추가 예정)
+        // 참조 끊기
+        categoryRepository.detachBoards(categoryId);
+
         categoryRepository.deleteById(category.getId());
     }
 
