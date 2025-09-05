@@ -13,19 +13,14 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Map;
 
-import static org.hamcrest.Matchers.matchesPattern;
-import static org.hamcrest.Matchers.notNullValue;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
         import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.assertj.core.api.Assertions.assertThat;
+
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @Transactional
@@ -72,6 +67,7 @@ public class ReportTest {
 
         }
 
+    //전체 리스트 보기
         @Test
         void get_report_list_test() throws Exception {
                 // given
@@ -91,7 +87,7 @@ public class ReportTest {
                 System.out.println(resDTO);
 
         }
-
+    //상세보기 테스트
         @Test
         void get_report_test() throws Exception {
                 // given
@@ -114,7 +110,7 @@ public class ReportTest {
         }
 
 
-
+    //수정 테스트
         @Test
         void update_test() throws Exception {
                 // given
@@ -131,7 +127,7 @@ public class ReportTest {
                 .andExpect(redirectedUrlPattern("/reports*")) // 저장 후 리다이렉트
                         .andDo(print());
         }
-
+    //삭제 테스트
         @Test
         void delete_test() throws Exception {
                 // given
@@ -147,6 +143,7 @@ public class ReportTest {
                         .andDo(print());
         }
 
+    //저장 테스트
     @Test
     void report_save_test() throws Exception {
 

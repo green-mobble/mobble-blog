@@ -33,6 +33,7 @@ public class AdminTest {
     public void setup() {
     }
 
+    //어드민 신고 전체 리스트
     @Test
     void get_admin_report_list_test() throws Exception {
         // given
@@ -50,12 +51,15 @@ public class AdminTest {
             System.out.println("=== resDTO ===");
             System.out.println(resDTO);
     }
+    //신고 상태값 변경
         @Test
         void status_update_test() throws Exception {
                 // given
-                // when
+            Integer reportId = 2;
+
+            // when
                 ResultActions actions = mvc.perform(
-                        post("/admin/reports/2/update")
+                        post("/admin/reports/{id}/update",reportId)
                                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                                 .param("status","COMPLETED")
                 );
@@ -65,7 +69,7 @@ public class AdminTest {
                 .andDo(print());
         }
 
-
+//어드민 신고 상세보기
         @Test
         public void get_admin_report_test() throws Exception {
                 //given
