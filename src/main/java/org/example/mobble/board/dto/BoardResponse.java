@@ -30,8 +30,8 @@ public class BoardResponse {
             this.imageUrl = imageUrl;
             this.views = board.getViews();
             this.bookmarkCount = bookmarkCount;
-            this.categoryId = board.getCategoryId();
-            this.userId = board.getUserId();
+            this.categoryId = board.getCategory().getId();
+            this.userId = board.getUser().getId();
             this.createAt = board.getCreatedAt();
             this.updateAt = board.getUpdatedAt();
         }
