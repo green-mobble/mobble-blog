@@ -64,7 +64,8 @@ public class UserController {
     @PostMapping(consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE, value = "/users/{id}/profile")
     public String updateUsersProfile(@PathVariable(name = "id") Integer userId, @ModelAttribute UserRequest.ProfileUpdateDTO reqDTO) {
         User user = (User) session.getAttribute("user");
-        userService.changeProfile(user, userId, reqDTO);
+        User userPS = userService.changeProfile(user, userId, reqDTO);
+        session.setAttribute("user", userPS);
         return "redirect:/users";
     }
 
@@ -86,5 +87,6 @@ public class UserController {
     @ResponseBody
     public Map<String, Boolean> checkUsername(@ModelAttribute UserRequest.UsernameDTO reqDTO) {
         return Map.of("duplicate", userService.isUsernameDuplicate(reqDTO));
+
     }
 }

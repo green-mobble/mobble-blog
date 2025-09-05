@@ -29,6 +29,31 @@ public enum ErrorEnum {
     BAD_REQUEST_NO_EXISTS_PASSWORD(400, "비밀번호가 유실되었습니다."),
 
     /*
+     * 400 Bad Request - 검색어가 존재하지 않습니다.
+     */
+    BAD_REQUEST_NO_EXISTS_KEYWORD(400, "검색어가 존재하지 않습니다. 접두사를 제외한 1자 이상의 문자를 입력해주세요."),
+
+    /**
+     * 400 Bad Request - 접두사 외에 검색어가 존재하지 않습니다.
+     */
+    BAD_REQUEST_ONLY_PREFIX(400, "접두사만으로는 검색이 어렵습니다."),
+
+    /**
+     * 400 Bad Request - 게시물의 id의 값이 null 또는 공백
+     */
+    BAD_REQUEST_NO_EXISTS_BOARD_ID(400, "게시물이 지정되지 않았습니다."),
+
+    /**
+     * 400 Bad Request - 두 개의 board id가 서로 맞지 않음
+     */
+    BAD_REQUEST_NO_MATCHED_BOARD_ID(400, "수정하고자 하는 게시물과 해당 수정본의 고유 번호가 맞지 않습니다."),
+
+    /*
+     * 400 Bad Request - Enum에 존재하지 않는 검색 항목
+     */
+    BAD_REQUEST_NO_EXISTS_SEARCH_KEY(400, "존재하지 않는 검색 항목입니다."),
+
+    /*
      * 401 Unauthorized - 사용자의 로그인(인증)이 되지 않음을 알리는 상태 코드
      */
     UNAUTHORIZED(401, "인증되지 않은 사용자"),
@@ -54,6 +79,11 @@ public enum ErrorEnum {
     FORBIDDEN_NO_MATCH_PASSWORD(403, "비밀번호가 알맞지 않습니다."),
 
     /*
+     * 403 Forbidden - 권한 갖지 않은 유저의 CRUD 요청
+     */
+    FORBIDDEN_USER_AT_BOARD(403, "해당 게시글의 권한이 존재하지 않습니다."),
+
+    /*
      * 404 Not Found - 특정 객체를 찾을 수 없음을 알리는 상태 코드
      */
     NOT_FOUND(404, "찾을 수 없음"),
@@ -67,6 +97,11 @@ public enum ErrorEnum {
      * 404 Not Found - 해당 유저가 존재하지 않습니다.
      */
     NOT_FOUND_USER_TO_USERID(404, "해당 유저가 존재하지 않습니다."),
+
+    /*
+     * 404 Not Found - 게시글을 찾을 수 없음
+     */
+    NOT_FOUND_BOARD(404, "게시글을 찾을 수 없습니다."),
 
     /*
      * 500 Internal Server Error - 알 수 없는 오류 발생 시 기본 메시지입니다.

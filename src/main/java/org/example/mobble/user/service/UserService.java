@@ -1,6 +1,5 @@
 package org.example.mobble.user.service;
 
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.example.mobble._util.error.ErrorEnum;
 import org.example.mobble._util.error.ex.*;
@@ -9,6 +8,7 @@ import org.example.mobble.user.domain.UserRepository;
 import org.example.mobble.user.dto.UserRequest;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
@@ -34,12 +34,13 @@ public class UserService {
     }
 
     @Transactional
-    public void changeProfile(User user, Integer userId, UserRequest.ProfileUpdateDTO reqDTO) {
+    public User changeProfile(User user, Integer userId, UserRequest.ProfileUpdateDTO reqDTO) {
         checkPermissions(user, userId);
         User userPS = getUser(user.getId());
         if (reqDTO == null || reqDTO.getProfileImage().isEmpty())
             throw new Exception400(ErrorEnum.BAD_REQUEST_NO_EXISTS_FILE);
         userPS.updateProfileImage(reqDTO.getProfileImage());
+        return userPS;
     }
 
     @Transactional
@@ -54,7 +55,7 @@ public class UserService {
     @Transactional
     public void delete(User user, Integer userId) {
         checkPermissions(user, userId);
-        userRepository.delete(user);
+        userRepository.delete(user.getId());
     }
 
     // 해당 로직은 외부에서 중복 아이디를 확인하는 로직으로 private 설정이 불가하여 public으로 놔두었습니다.

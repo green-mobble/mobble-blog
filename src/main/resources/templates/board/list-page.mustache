@@ -1,126 +1,114 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <title>게시글 목록</title>
-    <style>
-        body {
-            font-family: system-ui, sans-serif;
-            margin: 24px;
-        }
+    <meta charset="UTF-8"/>
+    <title>피드 - Mobble</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
 
-        header {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 16px;
-        }
+    <!-- 공통 CSS -->
+    <link rel="stylesheet" href="/css/common.css"/>
+    <link rel="stylesheet" href="/css/header.css"/>
+    <link rel="stylesheet" href="/css/footer.css"/>
 
-        .chip {
-            display: inline-block;
-            padding: 4px 10px;
-            border: 1px solid #ddd;
-            border-radius: 999px;
-            margin-right: 8px;
-            font-size: 12px;
-            color: #333;
-            text-decoration: none;
-        }
-
-        .chip:hover {
-            background: #f5f5f5;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 12px;
-        }
-
-        th, td {
-            border-bottom: 1px solid #eee;
-            padding: 10px;
-            text-align: left;
-        }
-
-        th {
-            background: #fafafa;
-        }
-
-        .title a {
-            color: #111;
-            text-decoration: none;
-        }
-
-        .title a:hover {
-            text-decoration: underline;
-        }
-
-        .toolbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 8px;
-            margin-top: 12px;
-        }
-
-        .pager {
-            display: flex;
-            gap: 8px;
-        }
-
-        .btn {
-            padding: 8px 12px;
-            border: 1px solid #ddd;
-            background: #fff;
-            border-radius: 8px;
-            text-decoration: none;
-            color: #333;
-        }
-
-        .btn[disabled] {
-            opacity: .4;
-            pointer-events: none;
-        }
-
-        .search-form input, .search-form select {
-            padding: 6px 8px;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-        }
-    </style>
+    <!-- 글 리스트 전용 CSS -->
+    <link rel="stylesheet" href="/css/board-list.css"/>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand&display=swap" rel="stylesheet">
 </head>
 <body>
-
+<!-- 헤더 -->
 <header>
-    <h1 style="margin:0;">게시글</h1>
-    <a class="btn" href="/boards/save-form">새 글 쓰기</a>
+    <div class="header-inner">
+        <a href="/" class="logo">Mobble</a>
+        <div class="search-box">SearchBox Area</div>
+        <button class="join-btn">WriteBtn Area</button>
+    </div>
 </header>
 
-<table>
-    <thead>
-    <tr>
-        <th style="width:64px;">ID</th>
-        <th>제목</th>
-        <th style="width:120px;">조회수</th>
-        <th style="width:160px;">카테고리</th>
-    </tr>
-    </thead>
-    <tbody>
-    {{#model}}
-        <tr>
-            <td>{{id}}</td>
-            <td class="title"><a href="/boards/{{id}}">{{title}}</a></td>
-            <td>{{views}}</td>
-            <td>{{category}}</td>
-        </tr>
-    {{/model}}
-    </tbody>
-</table>
+<main class="feed-container">
+    <!-- 좌측 피드 -->
+    <section class="feed-left">
+        <h2>피드</h2>
+        <h3>HOT TOPIC</h3>
+        <div class="feed-sorting">
+            <a href="#">최신순</a> | <a href="#">인기순</a>
+        </div>
 
-<!-- 빈 목록 대비 -->
-{{^model}}
-    <p style="color:#666; margin-top:16px;">등록된 게시글이 없습니다.</p>
-{{/model}}
+        <!-- 글 카드 반복 -->
+        <article class="post-card">
+            <div class="thumb"></div>
+            <div class="post-body">
+                <div class="tags">#태그 #태그 #태그</div>
+                <h4 class="title">제목1</h4>
+                <p class="excerpt">
+                    Lorem ipsum dolor sit amet consectetur. Vel volutpat rutrum phasellus felis
+                    cursus quis non diam congue.
+                </p>
+                <div class="meta">
+                    <span>2025.09.04</span>
+                    <span>💬 28</span>
+                    <span>👍 106</span>
+                </div>
+            </div>
+        </article>
+
+        <article class="post-card">
+            <div class="thumb"></div>
+            <div class="post-body">
+                <div class="tags">#태그 #태그 #태그</div>
+                <h4 class="title">제목2</h4>
+                <p class="excerpt">
+                    Lorem ipsum dolor sit amet consectetur. Ut fermentum ut nunc sed.
+                </p>
+                <div class="meta">
+                    <span>2025.09.04</span>
+                    <span>💬 14</span>
+                    <span>👍 57</span>
+                </div>
+            </div>
+        </article>
+
+        <!-- 페이징 -->
+        <div class="pagination">
+            <a href="#">&lt;prev</a>
+            <a href="#">next&gt;</a>
+        </div>
+    </section>
+
+    <!-- 우측 인기글 -->
+    <aside class="feed-right">
+        <h3>인기글</h3>
+        <ul class="popular-list">
+            <li class="popular-item">
+                <div class="thumb small"></div>
+                <div class="info">
+                    <span class="author">ssar</span>
+                    <h4 class="title">제목1</h4>
+                    <div class="meta">
+                        <span>2025.09.04</span>
+                        <span>💬 28</span>
+                        <span>👍 106</span>
+                    </div>
+                </div>
+            </li>
+            <li class="popular-item">
+                <div class="thumb small"></div>
+                <div class="info">
+                    <span class="author">cos</span>
+                    <h4 class="title">제목2</h4>
+                    <div class="meta">
+                        <span>2025.09.04</span>
+                        <span>💬 12</span>
+                        <span>👍 80</span>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </aside>
+</main>
+
+<!-- 푸터 -->
+<footer>
+    <div class="footer-inner">© Footer Content</div>
+</footer>
 </body>
 </html>
