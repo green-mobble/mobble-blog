@@ -10,49 +10,42 @@ import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @Controller
+@RequestMapping("/mypage/categories")
 public class CategoryController {
 
     private final CategoryService categoryService;
     private final HttpSession session;
 
     // 마이페이지(내 피드) > 카테고리 관리 화면
-    @GetMapping("/categories")
+    @GetMapping
     public String categoriesPage(HttpServletRequest request) {
-        // TODO(local-test): 로그인 우회
-        // Integer userId = currentUserIdOrThrow();
-        Integer userId = 1;  // 테스트용 하드 코딩
+        Integer userId = 1; // TODO: 세션 로그인으로 교체
         request.setAttribute("model", categoryService.getCategoriesByUser(userId));
-        request.setAttribute("saveForm", CategoryRequest.CategorySaveDTO.builder().build());
         return "mypage/category-page";
     }
 
-    // 카테고리 추가 (폼 전송)
-    @PostMapping("/category")
-    public String addCategory(@ModelAttribute("saveForm") CategoryRequest.CategorySaveDTO reqDTO) {
-        // TODO(local-test): 로그인 우회
-        Integer userId = 1;  // 테스트용 하드 코딩
-        categoryService.addCategory(userId, reqDTO.getCategory());
-        return "redirect:/categories";
+    // 카테고리 추가
+    @PostMapping
+    public String addCategory(CategoryRequest.CategorySaveDTO req) {
+        Integer userId = 1;
+        categoryService.addCategory(userId, req.getCategory()); // 빈값 금지(마이페이지 정책)
+        return "redirect:/mypage/categories";
     }
 
-    // 카테고리 이름 변경 (빈값이면 서비스에서 예외)
-    @PostMapping("/category/{categoryId}")
-    public String renameCategory(@PathVariable Integer categoryId, CategoryRequest.CategoryUpdateDTO reqDTO) {
-        // TODO(local-test): 로그인 우회
+    // 카테고리 이름 변경
+    @PostMapping("/{categoryId}/rename")
+    public String renameCategory(@PathVariable Integer categoryId,
+                                 CategoryRequest.CategoryUpdateDTO req) {
         Integer userId = 1;
-
-        reqDTO.setId(categoryId); // PathVariable 우선
-        categoryService.renameCategory(userId, reqDTO.getId(), reqDTO.getCategory());
-        return "redirect:/categories";
+        categoryService.renameCategory(userId, categoryId, req.getCategory());
+        return "redirect:/mypage/categories";
     }
 
     // 카테고리 삭제 (폼 전송)
-    @PostMapping("/category/{categoryId}/delete")
+    @PostMapping("/{categoryId}/delete")
     public String deleteCategory(@PathVariable Integer categoryId) {
-        // TODO(local-test): 로그인 우회
         Integer userId = 1;
-
         categoryService.deleteCategory(userId, categoryId);
-        return "redirect:/categories";
+        return "redirect:/mypage/categories";
     }
 }
