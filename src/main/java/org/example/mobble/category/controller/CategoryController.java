@@ -3,6 +3,7 @@ package org.example.mobble.category.controller;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.example.mobble._util.error.ex.Exception401;
 import org.example.mobble.category.dto.CategoryRequest;
 import org.example.mobble.category.service.CategoryService;
 import org.example.mobble.user.domain.User;
@@ -23,6 +24,7 @@ public class CategoryController {
     @GetMapping
     public String categoriesPage(HttpServletRequest request) {
         User sessionUser = (User) session.getAttribute("user");
+        if (sessionUser == null) throw new Exception401("로그인이 필요합니다.");
         request.setAttribute("model", categoryService.getCategoriesByUser(sessionUser.getId()));
         return "mypage/category-page";
     }
@@ -31,6 +33,7 @@ public class CategoryController {
     @PostMapping
     public String addCategory(CategoryRequest.CategorySaveDTO req) {
         User sessionUser = (User) session.getAttribute("user");
+        if (sessionUser == null) throw new Exception401("로그인이 필요합니다.");
         categoryService.addCategory(sessionUser.getId(), req.getCategory()); // 빈값 금지(마이페이지 정책)
         return "redirect:/mypage/categories";
     }
@@ -39,6 +42,7 @@ public class CategoryController {
     @PostMapping("/{categoryId}/rename")
     public String renameCategory(@PathVariable Integer categoryId, CategoryRequest.CategoryUpdateDTO req) {
         User sessionUser = (User) session.getAttribute("user");
+        if (sessionUser == null) throw new Exception401("로그인이 필요합니다.");
         categoryService.renameCategory(sessionUser.getId(), categoryId, req.getCategory());
         return "redirect:/mypage/categories";
     }
@@ -47,6 +51,7 @@ public class CategoryController {
     @PostMapping("/{categoryId}/delete")
     public String deleteCategory(@PathVariable Integer categoryId) {
         User sessionUser = (User) session.getAttribute("user");
+        if (sessionUser == null) throw new Exception401("로그인이 필요합니다.");
         categoryService.deleteCategory(sessionUser.getId(), categoryId);
         return "redirect:/mypage/categories";
     }
