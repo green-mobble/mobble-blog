@@ -13,4 +13,4 @@ VALUES
 (4, 2, 'ETC', '정치 관련 발언', '부적절한 정치 발언이 있어 신고합니다.', 'PENDING', NOW()),
 
 -- 도배/스팸 신고 (user1이 cos 글을 신고)
-(5, 3, 'SPAM', NULL, '같은 내용이 반복적으로 작성되었습니다.', 'COMPLETED', NOW());
+(5, 1, 'SPAM', NULL, '같은 내용이 반복적으로 작성되었습니다.', 'COMPLETED', NOW());

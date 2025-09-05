@@ -22,6 +22,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import static org.example.mobble._util.error.ErrorEnum.NOT_FOUND;
+
 @RequiredArgsConstructor
 @Service
 public class BoardService {
@@ -93,7 +95,7 @@ public class BoardService {
     }
 
     @Transactional
-    public void reportSave(User user, Integer boardId, BoardRequest.ReportSaveDTO reqDTO) {
+    public BoardResponse.ReportSaveDTO reportSave(User user, Integer boardId, BoardRequest.ReportSaveDTO reqDTO) {
         Board boardPS = findById(boardId);
         Report report =
                 Report.builder()
@@ -104,6 +106,8 @@ public class BoardService {
                         .build();
         if (reqDTO.getResult().equals(ReportCase.ETC)) report.updateResultEtc(reqDTO.getResultEtc());
         reportRepository.save(report);
+
+       return new BoardResponse.ReportSaveDTO(report);
 
     }
 

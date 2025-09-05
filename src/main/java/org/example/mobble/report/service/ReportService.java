@@ -66,7 +66,7 @@ public class ReportService {
     // 내 신고 글 보기
     public ReportResponse.ReportDetailDTO getReport(Integer reportId) {
         Report reportPS = reportRepository.findById(reportId)
-                .orElseThrow(() -> new Exception404(NOT_FOUND));
+                .orElseThrow(() -> new Exception404(NOT_FOUND_REPORT));
 
         return new ReportResponse.ReportDetailDTO(reportPS);
     }
@@ -74,16 +74,16 @@ public class ReportService {
     //권한 검증
     private Report checkPermissions(Integer reportId, User userPS) {
         Report reportPS = reportRepository.findById(reportId)
-                .orElseThrow(() -> new Exception404(NOT_FOUND));
+                .orElseThrow(() -> new Exception404(NOT_FOUND_REPORT));
         if (!userPS.getId().equals(reportPS.getUser().getId())) {
-            throw new Exception403(FORBIDDEN);
+            throw new Exception403(FORBIDDEN_USER_AT_REPORT);
         }
         return reportPS;
     }
     //유저 조회
     private User getUser(Integer userId) {
         return userRepository.findById(userId).orElseThrow(
-                () -> new Exception404(NOT_FOUND)
+                () -> new Exception404(NOT_FOUND_USER_TO_USERID)
         );
     }
 

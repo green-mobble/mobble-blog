@@ -29,15 +29,15 @@ public class AdminController {
     @GetMapping("/admin/reports")
     public String getAdminReportList(Model model) {
         List<AdminResponse.ReportDTO> resDTO = adminService.getList();
-        model.addAttribute("resDTO", resDTO);
-        return "admin/report-page"; //TODO 위치 변경
+        model.addAttribute("model", resDTO);
+        return "admin/report-page";
     }
 
     //관리자 상태 변경
     @PostMapping("/admin/reports/{id}/update")
     public String statusUpdate(@PathVariable(name = "id") Integer reportId, AdminRequest.ReportUpateDTO reqDTO) {
         ReportStatus status = adminService.updateStatus(reportId,reqDTO);
-        return "admin/report-page"; //TODO 위치 변경
+        return "admin/report-page";
     }
 
     // 관리자 신고 상세보기 (모달)

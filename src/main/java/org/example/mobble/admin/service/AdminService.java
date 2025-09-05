@@ -41,13 +41,13 @@ public class AdminService {
     //board 조회
     public Board getBoard(Integer boardId) {
         return boardRepository.findById(boardId).orElseThrow(
-                () -> new Exception400(BAD_REQUEST)
+                () -> new Exception400(NOT_FOUND_BOARD)
         );
     }
     //user 조회
     private User getUser(Integer userId) {
         return userRepository.findById(userId).orElseThrow(
-                () -> new Exception404(NOT_FOUND)
+                () -> new Exception404(NOT_FOUND_USER_TO_USERID)
         );
     }
 
@@ -55,7 +55,7 @@ public class AdminService {
     @Transactional
     public ReportStatus updateStatus(Integer reportId, AdminRequest.ReportUpateDTO reqDTO) {
         Report reportPS = reportRepository.findById(reportId)
-                .orElseThrow(() -> new Exception404(NOT_FOUND));
+                .orElseThrow(() -> new Exception404(NOT_FOUND_REPORT));
 
         reportPS.updateStauts(reqDTO.getStatus());
         return reportPS.getStatus();
@@ -63,7 +63,7 @@ public class AdminService {
     //신고 글 상세보기
     public AdminResponse.ReportDetailDTO getReport(Integer reportId) {
         Report reportPS = reportRepository.findById(reportId)
-                .orElseThrow(() -> new Exception404(NOT_FOUND));
+                .orElseThrow(() -> new Exception404(NOT_FOUND_REPORT));
         return new AdminResponse.ReportDetailDTO (reportPS);
     }
 }

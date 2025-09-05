@@ -26,6 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Transactional
 @AutoConfigureMockMvc
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
+
 public class ReportTest {
 
     @Autowired
@@ -82,9 +83,9 @@ public class ReportTest {
                         .andReturn();
 
                 Map<String, Object> modelMap = result.getModelAndView().getModel();
-                Object resDTO = modelMap.get("resDTO");
-                System.out.println("=== resDTO ===");
-                System.out.println(resDTO);
+                Object model = modelMap.get("model");
+                System.out.println("=== model ===");
+                System.out.println(model);
 
         }
     //상세보기 테스트
@@ -103,9 +104,9 @@ public class ReportTest {
                         .andReturn();
 
                 Map<String, Object> modelMap = result.getModelAndView().getModel();
-                Object resDTO = modelMap.get("resDTO");
-                System.out.println("=== resDTO ===");
-                System.out.println(resDTO);
+                Object model = modelMap.get("model");
+                System.out.println("=== model ===");
+                System.out.println(model);
 
         }
 
@@ -113,14 +114,15 @@ public class ReportTest {
     //수정 테스트
         @Test
         void update_test() throws Exception {
-                // given
+            // given
+            Integer reportId = 1;
                 // when
                 ResultActions actions = mvc.perform(
-                        post("/reports/4/update")
+                        post("/reports/{id}/update",reportId)
                                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                                 .session(session)
                                 .param("result","ADVERTISING_BOARD_CONTENT")
-                                .param("content","바보로 수정")
+                                .param("content","내용 수정이요")
                 );
                 // then
                 actions.andExpect(status().is3xxRedirection()) // redirect
@@ -130,10 +132,11 @@ public class ReportTest {
     //삭제 테스트
         @Test
         void delete_test() throws Exception {
-                // given
+            // given
+            Integer reportId = 1;
                 // when
                 ResultActions actions = mvc.perform(
-                        post("/reports/1/delete")
+                        post("/reports/{id}/delete",reportId)
                                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                                 .session(session)
                 );
@@ -148,14 +151,15 @@ public class ReportTest {
     void report_save_test() throws Exception {
 
         // given
-        Integer boardId = 1;
+        Integer boardId = 3;
         // when
         ResultActions actions = mvc.perform(
                 post("/boards/{id}/report",boardId)
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                         .session(session)
-                        .param("result","ADVERTISING_BOARD_CONTENT")
+                        .param("result","ETC")
                         .param("content","추가 신고")
+                        .param("resultEtc","추가 기타 사항")
 
         );
         // then

@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static org.example.mobble._util.error.ErrorEnum.UNAUTHORIZED_NO_EXISTS_USER_INFO;
+
 @RequiredArgsConstructor
 @Controller
 public class ReportController {
@@ -38,7 +40,7 @@ public class ReportController {
         User user = getLoginUser();
         //조회
         List<ReportResponse.ReportDTO> resDTO = reportService.getList(user);
-        model.addAttribute("resDTO",resDTO);
+        model.addAttribute("model",resDTO);
         return "mypage/report/list-page";
     }
 
@@ -48,7 +50,7 @@ public class ReportController {
 
         //조회
         ReportResponse.ReportDetailDTO resDTO = reportService.getReport(reportId);
-        model.addAttribute("resDTO",resDTO);
+        model.addAttribute("model",resDTO);
         return "mypage/report/detail-page";
     }
 
@@ -67,7 +69,6 @@ public class ReportController {
         User user = getLoginUser();
         //수정
         ReportResponse.ReportUpateDTO resDTO = reportService.update(reportId,user,reqDTO);
-
         return "redirect:/reports";
     }
 
@@ -75,7 +76,7 @@ public class ReportController {
     private User getLoginUser() {
         User user = (User) session.getAttribute("user");
         if (user == null) {
-            throw new Exception401("로그인 후 이용 부탁드립니다."); // 에러 코드, 에러 메시지 컨벤션
+            throw new Exception401(UNAUTHORIZED_NO_EXISTS_USER_INFO); // 에러 코드, 에러 메시지 컨벤션
         }
         return user;
     }

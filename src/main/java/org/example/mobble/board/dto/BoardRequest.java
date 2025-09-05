@@ -45,11 +45,5 @@ public class BoardRequest {
         String content;
         String resultEtc;
 
-        @Builder
-        public ReportSaveDTO(ReportCase result, String content, String resultEtc) {
-            this.result = result;
-            this.content = content;
-            this.resultEtc = resultEtc;
-        }
     }
 }

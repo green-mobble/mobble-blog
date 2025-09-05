@@ -45,9 +45,9 @@ public class AdminTest {
                     .andReturn();
 
             Map<String, Object> modelMap = result.getModelAndView().getModel();
-            Object resDTO = modelMap.get("resDTO");
-            System.out.println("=== resDTO ===");
-            System.out.println(resDTO);
+            Object model = modelMap.get("model");
+            System.out.println("=== model ===");
+            System.out.println(model);
     }
     //신고 상태값 변경
         @Test
@@ -71,7 +71,7 @@ public class AdminTest {
         @Test
         public void get_admin_report_test() throws Exception {
                 //given
-                Integer reportId = 1;
+                Integer reportId = 4;
 
                 //when
                 ResultActions actions = mvc.perform(
