@@ -2,7 +2,9 @@ package org.example.mobble.bookmark.dto;
 
 import lombok.Data;
 import org.example.mobble.board.domain.Board;
+import org.example.mobble.board.dto.BoardResponse;
 import org.example.mobble.bookmark.domain.Bookmark;
+import org.example.mobble.user.domain.User;
 
 import java.sql.Timestamp;
 import java.util.List;
@@ -15,24 +17,34 @@ public class BookmarkResponse {
     public static class BookmarkSaveDTO {
         private Integer boardId;
         private Integer userId;
+        private Timestamp createAt;
 
         public BookmarkSaveDTO(Bookmark bookmark) {
             this.boardId = bookmark.getBoard().getId();
             this.userId = bookmark.getUser().getId();
+            this.createAt = bookmark.getCreatedAt();
         }
     }
 
     @Data
     public static class BookmarkDTO {
         private Integer bookId;
-        private Board board;
-        private Integer userId;
+        private BoardResponse.DTO board;
+        private Boolean isBookmark;
         private Timestamp createAt;
 
         public BookmarkDTO(Bookmark  bookmark) {
+            Board temp = bookmark.getBoard();
             this.bookId = bookmark.getId();
-            this.board = bookmark.getBoard();
-            this.userId = bookmark.getUser().getId();
+            this.board =
+                    BoardResponse.DTO.builder()
+                            .board(temp)
+                            .bookmarkCount(temp.getBookmarks().size())
+                            .image(null)
+                            .category(temp.getCategory())
+                            .user(temp.getUser())
+                            .build();
+            this.isBookmark = true;
             this.createAt = bookmark.getCreatedAt();
         }
     }

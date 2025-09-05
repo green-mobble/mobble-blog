@@ -73,6 +73,7 @@ public class BookmarkService {
 
     // 북마크 리스트
     public BookmarkResponse.BookmarkListDTO bookmarkList(Integer userId) {
+        // 유저 아이디로 북마크 리스트 불러오기
         List<Bookmark> bookmarkList = bookmarkRepository.bookmarkList(userId);
         return new BookmarkResponse.BookmarkListDTO(bookmarkList);
     }

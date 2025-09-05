@@ -1,5 +1,6 @@
 package org.example.mobble.bookmark.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.example.mobble._util.error.ex.Exception401;
@@ -38,9 +39,10 @@ public class BookmarkController {
 
     // 북마크 리스트
     @GetMapping("/bookmarks")
-    public String bookmarkList(){
+    public String bookmarkList(HttpServletRequest request) {
         User user = getLoginUser();
         BookmarkResponse.BookmarkListDTO respDTO = bookmarkService.bookmarkList(user.getId());
+        request.setAttribute("model", respDTO);
         return "mypage/main"; // bookmark 페이지로 이동
     }
 
