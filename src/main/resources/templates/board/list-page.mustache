@@ -1,12 +1,114 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <meta charset="UTF-8"/>
+    <title>피드 - Mobble</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+    <!-- 공통 CSS -->
+    <link rel="stylesheet" href="/css/common.css"/>
+    <link rel="stylesheet" href="/css/header.css"/>
+    <link rel="stylesheet" href="/css/footer.css"/>
+
+    <!-- 글 리스트 전용 CSS -->
+    <link rel="stylesheet" href="/css/board-list.css"/>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand&display=swap" rel="stylesheet">
 </head>
 <body>
-{{#boardList}}
+<!-- 헤더 -->
+<header>
+    <div class="header-inner">
+        <a href="/" class="logo">Mobble</a>
+        <div class="search-box">SearchBox Area</div>
+        <button class="join-btn">WriteBtn Area</button>
+    </div>
+</header>
 
-{{boardList}}
+<main class="feed-container">
+    <!-- 좌측 피드 -->
+    <section class="feed-left">
+        <h2>피드</h2>
+        <h3>HOT TOPIC</h3>
+        <div class="feed-sorting">
+            <a href="#">최신순</a> | <a href="#">인기순</a>
+        </div>
+
+        <!-- 글 카드 반복 -->
+        <article class="post-card">
+            <div class="thumb"></div>
+            <div class="post-body">
+                <div class="tags">#태그 #태그 #태그</div>
+                <h4 class="title">제목1</h4>
+                <p class="excerpt">
+                    Lorem ipsum dolor sit amet consectetur. Vel volutpat rutrum phasellus felis
+                    cursus quis non diam congue.
+                </p>
+                <div class="meta">
+                    <span>2025.09.04</span>
+                    <span>💬 28</span>
+                    <span>👍 106</span>
+                </div>
+            </div>
+        </article>
+
+        <article class="post-card">
+            <div class="thumb"></div>
+            <div class="post-body">
+                <div class="tags">#태그 #태그 #태그</div>
+                <h4 class="title">제목2</h4>
+                <p class="excerpt">
+                    Lorem ipsum dolor sit amet consectetur. Ut fermentum ut nunc sed.
+                </p>
+                <div class="meta">
+                    <span>2025.09.04</span>
+                    <span>💬 14</span>
+                    <span>👍 57</span>
+                </div>
+            </div>
+        </article>
+
+        <!-- 페이징 -->
+        <div class="pagination">
+            <a href="#">&lt;prev</a>
+            <a href="#">next&gt;</a>
+        </div>
+    </section>
+
+    <!-- 우측 인기글 -->
+    <aside class="feed-right">
+        <h3>인기글</h3>
+        <ul class="popular-list">
+            <li class="popular-item">
+                <div class="thumb small"></div>
+                <div class="info">
+                    <span class="author">ssar</span>
+                    <h4 class="title">제목1</h4>
+                    <div class="meta">
+                        <span>2025.09.04</span>
+                        <span>💬 28</span>
+                        <span>👍 106</span>
+                    </div>
+                </div>
+            </li>
+            <li class="popular-item">
+                <div class="thumb small"></div>
+                <div class="info">
+                    <span class="author">cos</span>
+                    <h4 class="title">제목2</h4>
+                    <div class="meta">
+                        <span>2025.09.04</span>
+                        <span>💬 12</span>
+                        <span>👍 80</span>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </aside>
+</main>
+
+<!-- 푸터 -->
+<footer>
+    <div class="footer-inner">© Footer Content</div>
+</footer>
 </body>
 </html>
