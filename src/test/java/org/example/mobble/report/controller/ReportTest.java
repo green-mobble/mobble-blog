@@ -1,4 +1,4 @@
-package org.example.mobble.report;
+package org.example.mobble.report.controller;
 
 
 import org.example.mobble.user.domain.User;
