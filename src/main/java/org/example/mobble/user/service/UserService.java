@@ -1,6 +1,5 @@
 package org.example.mobble.user.service;
 
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.example.mobble._util.error.ErrorEnum;
 import org.example.mobble._util.error.ex.*;
