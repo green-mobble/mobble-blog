@@ -17,7 +17,7 @@ public class BookmarkRepository {
     public Optional<Bookmark> findByBoardIdAndUserId(int boardId, int userId) {
         try {
             Bookmark BookmarkPS = em.createQuery(
-                            "select b from Bookmark b where b.board.id = :boardId and b.userId = :userId",
+                            "select b from Bookmark b where b.board.id = :boardId and b.user.id = :userId",
                             Bookmark.class
                     )
                     .setParameter("boardId", boardId)
@@ -31,7 +31,7 @@ public class BookmarkRepository {
 
 
     public void BookmarkDelete(Integer boardId, Integer userId) {
-        Query query =  em.createQuery("delete from Bookmark b where b.board.id = :boardId and b.userId = :userId");
+        Query query =  em.createQuery("delete from Bookmark b where b.board.id = :boardId and b.user.id = :userId");
         query.setParameter("boardId", boardId);
         query.setParameter("userId", userId);
         query.executeUpdate();
@@ -44,7 +44,7 @@ public class BookmarkRepository {
 
     public List<Bookmark> bookmarkList(Integer userId) {
         return em.createQuery(
-                        "SELECT b FROM Bookmark b JOIN FETCH b.board bo WHERE b.userId = :userId",
+                        "SELECT b FROM Bookmark b JOIN FETCH b.board bo WHERE b.user.id = :userId",
                         Bookmark.class
                 )
                 .setParameter("userId", userId)

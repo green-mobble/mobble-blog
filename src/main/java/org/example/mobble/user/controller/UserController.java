@@ -26,11 +26,6 @@ public class UserController {
         return "auth/login-page";
     }
 
-    @GetMapping("/join")
-    public String join(UserRequest.JoinDTO reqDTO) {
-        userService.save(reqDTO);
-        return "redirect:/login-form";
-    }
 
     @GetMapping("/join-form")
     public String joinForm() {

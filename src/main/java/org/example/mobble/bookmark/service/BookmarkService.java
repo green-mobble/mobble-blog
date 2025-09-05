@@ -40,7 +40,7 @@ public class BookmarkService {
         } else {
             Bookmark bookmark = Bookmark.builder()
                     .board(foundBoard)
-                    .userId(userId)
+                    .user(foundBoard.getUser())
                     .build();
             Bookmark bookmarkPs = bookmarkRepository.BookmarkSave(bookmark);
             return new BookmarkResponse.BookmarkSaveDTO(bookmarkPs);
@@ -66,7 +66,7 @@ public class BookmarkService {
         if (foundBookmark == null) { throw new Exception404(ErrorEnum.NOT_FOUND);}
 
         // 북마크 유저아이디와 삭제요청한 유저아이디 맞는지 확인
-        if (!foundBookmark.getUserId().equals(userId)) { throw new Exception403(ErrorEnum.FORBIDDEN);}
+        if (!foundBookmark.getUser().getId().equals(userId)) { throw new Exception403(ErrorEnum.FORBIDDEN);}
 
         bookmarkRepository.BookmarkDelete(boardId, userId);
     }

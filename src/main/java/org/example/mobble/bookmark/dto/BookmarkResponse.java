@@ -18,7 +18,7 @@ public class BookmarkResponse {
 
         public BookmarkSaveDTO(Bookmark bookmark) {
             this.boardId = bookmark.getBoard().getId();
-            this.userId = bookmark.getUserId();
+            this.userId = bookmark.getUser().getId();
         }
     }
 
@@ -32,7 +32,7 @@ public class BookmarkResponse {
         public BookmarkDTO(Bookmark  bookmark) {
             this.bookId = bookmark.getId();
             this.board = bookmark.getBoard();
-            this.userId = bookmark.getUserId();
+            this.userId = bookmark.getUser().getId();
             this.createAt = bookmark.getCreatedAt();
         }
     }
