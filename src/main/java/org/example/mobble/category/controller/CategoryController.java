@@ -18,7 +18,6 @@ public class CategoryController {
 
     private final CategoryService categoryService;
     private final HttpSession session;
-    private final UserService userService;
 
     // 마이페이지(내 피드) > 카테고리 관리 화면
     @GetMapping
