@@ -72,13 +72,8 @@ public class BookmarkService {
     }
 
     // 북마크 리스트
-    public List<BookmarkResponse.BookmarkDTO> bookmarkList(Integer userId) {
+    public BookmarkResponse.BookmarkListDTO bookmarkList(Integer userId) {
         List<Bookmark> bookmarkList = bookmarkRepository.bookmarkList(userId);
-
-        List<BookmarkResponse.BookmarkDTO> respDTO = new ArrayList<>();
-        for (Bookmark bookmark : bookmarkList) {
-            respDTO.add(new BookmarkResponse.BookmarkDTO(bookmark));
-        }
-        return respDTO;
+        return new BookmarkResponse.BookmarkListDTO(bookmarkList);
     }
 }

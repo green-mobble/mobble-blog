@@ -2,9 +2,11 @@ package org.example.mobble.bookmark.controller;
 
 import org.example.mobble.board.domain.Board;
 import org.example.mobble.board.domain.BoardRepository;
+import org.example.mobble.board.service.BoardService;
 import org.example.mobble.bookmark.domain.Bookmark;
 import org.example.mobble.bookmark.domain.BookmarkRepository;
 import org.example.mobble.bookmark.dto.BookmarkResponse;
+import org.example.mobble.bookmark.service.BookmarkService;
 import org.example.mobble.user.domain.User;
 import org.example.mobble.user.domain.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -41,6 +43,9 @@ class BookmarkControllerTest {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private BookmarkService bookmarkService;
 
     private User testUser;
     private Board testBoard;
@@ -126,9 +131,9 @@ class BookmarkControllerTest {
             Board board = Board.builder()
                     .title("테스트 제목 " + i)
                     .content("테스트 내용 " + i)
-                    .views(10 + i)              // 조회수 다르게 설정
-                    .userId(testUser.getId())    // 글 작성자
-                    .categoryId(i)               // 카테고리 id
+                    .views(10 + i)                // 조회수 다르게 설정
+                    .userId(testUser.getId())     // 글 작성자
+                    .categoryId(i)                // 카테고리 id
                     .createdAt(new Timestamp(System.currentTimeMillis()))
                     .updatedAt(new Timestamp(System.currentTimeMillis()))
                     .build();
@@ -142,22 +147,21 @@ class BookmarkControllerTest {
                     .build());
         }
 
-        // when
+        // when: 컨트롤러 호출
         mockMvc.perform(get("/bookmarks")
                         .sessionAttr("user", testUser))
                 .andExpect(status().isOk())
                 .andExpect(view().name("mypage/main"));
 
-        // then: DB에서 직접 조회해서 DTO 변환 후 검증
-        List<BookmarkResponse.BookmarkDTO> bookmarkDTOList = bookmarkRepository.bookmarkList(testUser.getId())
-                .stream()
-                .map(BookmarkResponse.BookmarkDTO::new)
-                .toList();
+        // then: DB에서 직접 조회 후 DTO 변환
+        BookmarkResponse.BookmarkListDTO respDTO = bookmarkService.bookmarkList(testUser.getId());
 
         System.out.println("==== 북마크 리스트 조회 확인 ====");
-        for (BookmarkResponse.BookmarkDTO dto : bookmarkDTOList) {
+        System.out.println("isList = " + respDTO.isList()); // ★ 추가: 리스트 존재 여부 출력
+        for (BookmarkResponse.BookmarkDTO dto : respDTO.getBookmarksList()) {
             Board board = dto.getBoard(); // fetch join 했으면 바로 접근 가능
-            System.out.printf("bookId=%d, boardId=%d, boardTitle=%s, boardContent=%s, boardViews=%d, userId=%d, categoryId=%d, createAt=%s, updateAt=%s%n",
+            System.out.printf(
+                    "bookId=%d, boardId=%d, boardTitle=%s, boardContent=%s, boardViews=%d, userId=%d, categoryId=%d, createAt=%s, updateAt=%s%n",
                     dto.getBookId(),
                     board.getId(),
                     board.getTitle(),
@@ -166,9 +170,35 @@ class BookmarkControllerTest {
                     board.getUserId(),
                     board.getCategoryId(),
                     board.getCreatedAt(),
-                    board.getUpdatedAt());
+                    board.getUpdatedAt()
+            );
         }
 
-        assertThat(bookmarkDTOList).hasSize(5);
+        // 리스트 존재 여부 확인
+        assertThat(respDTO.isList()).isTrue();
+        assertThat(respDTO.getBookmarksList()).hasSize(5);
+    }
+
+    @Test
+    @DisplayName("북마크 리스트 조회 - 북마크 없음, isList=false")
+    void bookmarkList_emptyList_isFalse() throws Exception {
+        // given: 북마크가 없는 테스트 유저 (Board, Bookmark 생성 안 함)
+
+        // when: 컨트롤러 호출
+        mockMvc.perform(get("/bookmarks")
+                        .sessionAttr("user", testUser))
+                .andExpect(status().isOk())
+                .andExpect(view().name("mypage/main"));
+
+        // then: DB에서 직접 조회 후 DTO 변환
+        BookmarkResponse.BookmarkListDTO respDTO = bookmarkService.bookmarkList(testUser.getId());
+
+        System.out.println("==== 북마크 리스트 조회 확인 (빈 리스트) ====");
+        System.out.println("isList = " + respDTO.isList()); // ★ false 출력
+        System.out.println("bookmarkList size = " + respDTO.getBookmarksList().size());
+
+        // 리스트 존재 여부 검증
+        assertThat(respDTO.isList()).isFalse();
+        assertThat(respDTO.getBookmarksList()).isEmpty();
     }
 }
