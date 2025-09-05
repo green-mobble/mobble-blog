@@ -4,7 +4,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.example.mobble.board.domain.Board;
-import org.example.mobble.category.Category;
+import org.example.mobble.category.domain.Category;
 import org.example.mobble.report.domain.Report;
 import org.example.mobble.report.domain.ReportCase;
 import org.example.mobble.user.domain.User;
