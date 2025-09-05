@@ -1,45 +1,38 @@
 package org.example.mobble.category.domain;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.example.mobble.board.domain.Board;
+import org.example.mobble.user.domain.User;
+
+import java.util.List;
 
 @Data
 @NoArgsConstructor
 @Entity
-@Table(
-        name = "category_tb",
-        uniqueConstraints = @UniqueConstraint(
-                name = "uk_user_category",
-                columnNames = {"user_id", "category"} // 같은 유저 내 중복 카테고리명 금지
-        )
-)
+@Table(name = "category_tb")
 public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     // 만든 사람
-    @Column(name = "user_id", nullable = false)
-    private Integer userId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private User user;
 
     // 카테고리명
-    @Column(name = "category", nullable = false, length = 50)
     private String category;
 
+    @OneToMany(fetch = FetchType.LAZY)
+    private List<Board> boards;
+
     @Builder
-    public Category(Integer id, Integer userId, String category) {
+    public Category(Integer id, User user, String category, List<Board> boards) {
         this.id = id;
-        this.userId = userId;
+        this.user = user;
         this.category = category;
-    }
-
-    // 이름 변경 도메인 메서드
-    public void rename(String category) {
-        this.category = category;
-    }
-
-    @PrePersist @PreUpdate
-    private void onPersistUpdate() {
-        if (category != null) category = category.trim();
+        this.boards = boards;
     }
 }

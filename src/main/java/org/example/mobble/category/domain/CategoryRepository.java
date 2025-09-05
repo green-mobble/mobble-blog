@@ -26,7 +26,7 @@ public class CategoryRepository {
     // 특정 유저의 모든 카테고리 목록 조회(id 내림차순 -> 최신순)
     public List<Category> findAllByUserIdOrderByIdDesc(Integer userId) {
         return em.createQuery(
-                "select c from Category c where c.userId = :userId order by c.id desc",
+                "select c from Category c where c.user.id = :userId order by c.id desc",
                 Category.class
         ).setParameter("userId", userId).getResultList();
     }
@@ -35,7 +35,7 @@ public class CategoryRepository {
     public Optional<Category> findByUserIdAndCategory(Integer userId, String category) {
         // 예외 대신 리스트로 안전 조회
         List<Category> rows = em.createQuery(
-                        "select c from Category c where c.userId = :userId and c.category = :category",
+                        "select c from Category c where c.user.id = :userId and c.category = :category",
                         Category.class
                 ).setParameter("userId", userId)
                 .setParameter("category", category)
@@ -48,7 +48,7 @@ public class CategoryRepository {
     public boolean existsByUserIdAndCategory(Integer userId, String category) {
         // 가장 가벼운 존재 확인: 1건만 조회
         List<Integer> rows = em.createQuery(
-                        "select 1 from Category c where c.userId = :userId and c.category = :category",
+                        "select 1 from Category c where c.user.id = :userId and c.category = :category",
                         Integer.class
                 ).setParameter("userId", userId)
                 .setParameter("category", category)
