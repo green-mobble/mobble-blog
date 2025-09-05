@@ -34,6 +34,7 @@ public class Board {
 
     // 카테고리
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id")  // FK 명시
     private Category category;
 
     // 조회수
