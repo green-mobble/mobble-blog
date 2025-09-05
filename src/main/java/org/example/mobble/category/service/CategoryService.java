@@ -101,4 +101,8 @@ public class CategoryService {
         // (다음 단계에서: board_tb.category_id = NULL 처리 추가 예정)
         categoryRepository.deleteById(category.getId());
     }
+
+    public List<String> getPopularList(Integer count) {
+        return categoryRepository.getPopularList(count);
+    }
 }

@@ -6,7 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.example.mobble.board.dto.BoardRequest;
 import org.example.mobble.bookmark.domain.Bookmark;
-import org.example.mobble.category.Category;
+import org.example.mobble.category.domain.Category;
 import org.example.mobble.report.domain.Report;
 import org.example.mobble.user.domain.User;
 import org.hibernate.annotations.CreationTimestamp;

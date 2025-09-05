@@ -18,17 +18,21 @@ public class CategoryRepository {
         return category;
     }
 
-    // PK(id)로 카테고리 단건 조회
-    public Optional<Category> findById(Integer id) {
-        return Optional.ofNullable(em.find(Category.class, id));
-    }
-
     // 특정 유저의 모든 카테고리 목록 조회(id 내림차순 -> 최신순)
     public List<Category> findAllByUserIdOrderByIdDesc(Integer userId) {
         return em.createQuery(
                 "select c from Category c where c.user.id = :userId order by c.id desc",
                 Category.class
         ).setParameter("userId", userId).getResultList();
+    }
+
+    public List<String> getPopularList(Integer maxResult) {
+        return em.createQuery("select c.category from Category c group by c.category order by count(c) desc", String.class).setFirstResult(0).setMaxResults(maxResult).getResultList();
+    }
+
+    // PK(id)로 카테고리 단건 조회
+    public Optional<Category> findById(Integer id) {
+        return Optional.ofNullable(em.find(Category.class, id));
     }
 
     // 특정 유저의 특정 카테고리명으로 단건 조회
