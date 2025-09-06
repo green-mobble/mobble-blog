@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.example.mobble._util.error.ErrorEnum;
 import org.example.mobble._util.error.ex.Exception302;
+import org.example.mobble._util.error.ex.Exception401;
 import org.example.mobble._util.error.ex.Exception403;
 import org.example.mobble._util.error.ex.Exception404;
 import org.example.mobble.board.domain.Board;
@@ -11,16 +12,20 @@ import org.example.mobble.board.domain.BoardRepository;
 import org.example.mobble.bookmark.domain.Bookmark;
 import org.example.mobble.bookmark.domain.BookmarkRepository;
 import org.example.mobble.bookmark.dto.BookmarkResponse;
+import org.example.mobble.user.domain.User;
+import org.example.mobble.user.domain.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
 public class BookmarkService {
     private final BookmarkRepository bookmarkRepository;
     private final BoardRepository boardRepository;
+    private final UserRepository userRepository;
 
     // 북마크 저장
     @Transactional
@@ -38,15 +43,18 @@ public class BookmarkService {
             // 이미 북마크가 있으면 중복 에러 처리
             throw new Exception302(ErrorEnum.FOUND); // 또는 이미 존재 메시지
         } else {
+            Optional<User> foundUser = userRepository.findById(userId);
+            User user = foundUser.orElseThrow(() -> new Exception401(ErrorEnum.UNAUTHORIZED_NO_EXISTS_USER_INFO));
             Bookmark bookmark = Bookmark.builder()
                     .board(foundBoard)
-                    .user(foundBoard.getUser())
+                    .user(user)
                     .build();
             Bookmark bookmarkPs = bookmarkRepository.BookmarkSave(bookmark);
             return new BookmarkResponse.BookmarkSaveDTO(bookmarkPs);
         }
 
     }
+
 
 
 
@@ -77,4 +85,6 @@ public class BookmarkService {
         List<Bookmark> bookmarkList = bookmarkRepository.bookmarkList(userId);
         return new BookmarkResponse.BookmarkListDTO(bookmarkList);
     }
+
+
 }

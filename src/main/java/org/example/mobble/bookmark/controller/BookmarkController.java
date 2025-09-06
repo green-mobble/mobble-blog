@@ -4,9 +4,11 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.example.mobble._util.error.ex.Exception401;
+import org.example.mobble._util.util.Resp;
 import org.example.mobble.bookmark.dto.BookmarkResponse;
 import org.example.mobble.bookmark.service.BookmarkService;
 import org.example.mobble.user.domain.User;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,20 +23,20 @@ public class BookmarkController {
 
     // 북마크 추가
     @PostMapping("/bookmark/{boardId}/save")
-    public String bookmarkInsert(@PathVariable Integer boardId) {
+    public ResponseEntity<?> bookmarkInsert(@PathVariable("boardId") Integer boardId) {
         User user = getLoginUser();
 
         BookmarkResponse.BookmarkSaveDTO respDTO = bookmarkService.bookmarkSave(boardId,user.getId());
-        return "redirect:/boards/"+boardId;
+        return Resp.ok(respDTO);
     }
 
     // 북마크 삭제
     @PostMapping("/bookmark/{boardId}/delete")
-    public String bookmarkDelete(@PathVariable Integer boardId) {
+    public ResponseEntity<?> bookmarkDelete(@PathVariable("boardId") Integer boardId) {
         User user = getLoginUser();
 
         bookmarkService.bookmarkDelete(boardId,user.getId());
-        return "redirect:/boards/"+boardId;
+        return Resp.ok(null);
     }
 
     // 북마크 리스트
