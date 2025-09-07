@@ -78,28 +78,26 @@ class BookmarkControllerTest {
     }
 
     @Test
-    @DisplayName("북마크 저장 성공")
-    void bookmarkSave_success() throws Exception {
-        // when
+    @DisplayName("북마크 저장 성공 - Security 없이 세션 기반")
+    void bookmarkSave_success_noSecurity() throws Exception {
+        // 세션에 testUser 넣고 요청
         mockMvc.perform(post("/bookmark/{boardId}/save", testBoard.getId())
                         .sessionAttr("user", testUser))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/boards/" + testBoard.getId()));
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.status").value(200))  // 숫자로 비교
+                .andExpect(jsonPath("$.msg").value("성공")); // 메시지도 확인
 
-        // then
-        Bookmark bookmark = bookmarkRepository.findByBoardIdAndUserId(testBoard.getId(), testUser.getId())
-                .orElseThrow(() -> new IllegalStateException("북마크 저장 실패"));
+        // DB에 북마크 저장 확인
+        Bookmark bookmark = bookmarkRepository.findByBoardIdAndUserId(
+                testBoard.getId(), testUser.getId()
+        ).orElseThrow(() -> new IllegalStateException("북마크 저장 실패"));
 
-        // ✅ 전체 값 출력
         System.out.println("===== Bookmark 저장 확인 =====");
         System.out.println("BookmarkBoardId: " + bookmark.getBoard().getId());
         System.out.println("BookmarkUserId: " + bookmark.getUser().getId());
         System.out.println("Bookmark CreatedAt: " + bookmark.getCreatedAt());
-
-
         System.out.println("======================");
 
-        // 검증
         assertThat(bookmark.getBoard().getId()).isEqualTo(testBoard.getId());
         assertThat(bookmark.getUser().getId()).isEqualTo(testUser.getId());
     }
@@ -107,7 +105,7 @@ class BookmarkControllerTest {
     @Test
     @DisplayName("북마크 삭제 성공")
     void bookmarkDelete_success() throws Exception {
-        // 먼저 북마크 생성
+        // 1. 북마크 생성
         Bookmark bookmark = Bookmark.builder()
                 .board(testBoard)
                 .user(testUser)
@@ -118,16 +116,16 @@ class BookmarkControllerTest {
         System.out.println("===== 삭제 전 Bookmark =====");
         System.out.println("BookmarkId: " + bookmark.getId());
         System.out.println("Bookmark CreatedAt: " + bookmark.getCreatedAt());
-
         System.out.println("======================");
 
-        // 삭제 실행
+        // 2. 삭제 API 호출 (JSON 응답)
         mockMvc.perform(post("/bookmark/{boardId}/delete", testBoard.getId())
                         .sessionAttr("user", testUser))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/boards/" + testBoard.getId()));
+                .andExpect(status().isOk()) // 200 OK 확인
+                .andExpect(jsonPath("$.status").value(200))
+                .andExpect(jsonPath("$.msg").value("성공"));
 
-        // 삭제 여부 확인
+        // 3. 삭제 여부 확인
         boolean exists = bookmarkRepository.findByBoardIdAndUserId(testBoard.getId(), testUser.getId()).isPresent();
 
         System.out.println("===== 삭제 후 Bookmark 확인 =====");
