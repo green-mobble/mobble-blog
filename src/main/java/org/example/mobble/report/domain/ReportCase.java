@@ -4,13 +4,16 @@ package org.example.mobble.report.domain;
 public enum ReportCase {
     INAPPROPRIATE_AUTHOR_NAME("부적절한 작성자명"), INAPPROPRIATE_BOARD_CONTENT("부적절한 글 내용"), ADVERTISING_BOARD_CONTENT("광고성 글 내용"), ETC("기타");
 
-    private String reason;
+    private String result;
 
-    ReportCase(String reason) {
-        this.reason = reason;
+    ReportCase() {
+    }
+
+    ReportCase(String result) {
+        this.result = result;
     }
 
     public String getReason() {
-        return reason;
+        return result;
     }
 }

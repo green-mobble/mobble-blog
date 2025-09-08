@@ -17,6 +17,7 @@ import org.example.mobble.report.domain.Report;
 import org.example.mobble.report.domain.ReportCase;
 import org.example.mobble.report.domain.ReportRepository;
 import org.example.mobble.user.domain.User;
+import org.example.mobble.user.domain.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,28 +29,33 @@ public class BoardService {
     private final BoardRepository boardRepository;
     private final CategoryRepository categoryRepository;
     private final ReportRepository reportRepository;
+    private final UserRepository userRepository;
 
     @Transactional(readOnly = true)
-    public List<BoardResponse.DTO> getList(int firstIndex, int size) {
-        String orderBy = orderByToString(SearchOrderCase.CREATED_AT_DESC);
+    public List<BoardResponse.DTO> getList(int firstIndex, int size, SearchOrderCase order) {
+        String orderBy = orderByToString(order);
         return boardRepository.findAll(orderBy, firstIndex, size);
     }
 
-    @Transactional(readOnly = true)
-    public BoardResponse.DetailDTO getBoardDetail(Integer boardId) {
-        return boardRepository.findByIdDetail(boardId).orElseThrow(
+    @Transactional
+    public BoardResponse.DetailDTO getBoardDetail(Integer boardId, Integer userId) {
+        Board boardPS = findById(boardId);
+        boardPS.viewsCounting();
+        return boardRepository.findByIdDetail(boardId, userId).orElseThrow(
                 () -> new Exception404(ErrorEnum.NOT_FOUND_BOARD)
         );
     }
 
     @Transactional(readOnly = true)
     public BoardResponse.DetailDTO getUpdateBoardDetail(Integer boardId, User user) {
+        user = getByIdForMockupData(user);
         checkPermissions(findById(boardId), user);
-        return getBoardDetail(boardId);
+        return getBoardDetail(boardId, user.getId());
     }
 
     @Transactional
     public Board save(BoardRequest.BoardSaveDTO reqDTO, User user) {
+        user = getByIdForMockupData(user);
         Category category = categoryRepository.findByUserIdAndCategory(user.getId(), reqDTO.getCategory()).orElse(null);
         if (category == null) {
             category = categoryRepository.save(
@@ -66,11 +72,13 @@ public class BoardService {
                         .user(user)
                         .category(category)
                         .build();
-        return boardRepository.save(board);
+        Board savedBoard = boardRepository.save(board);
+        return savedBoard;
     }
 
     @Transactional
     public Board update(Integer boardId, BoardRequest.BoardUpdateDTO reqDTO, User user) {
+        user = getByIdForMockupData(user);
         checkBoardId(boardId);
         checkBoardId(reqDTO.getId());
         if (!boardId.equals(reqDTO.getId()))
@@ -85,6 +93,7 @@ public class BoardService {
 
     @Transactional
     public void delete(Integer boardId, User user) {
+        user = getByIdForMockupData(user);
         checkBoardId(boardId);
         Board boardPS = findById(boardId);
         // 권한 체크 (403)
@@ -94,6 +103,7 @@ public class BoardService {
 
     @Transactional
     public Report report(User user, Integer boardId, BoardRequest.BoardReportDTO reqDTO) {
+        user = getByIdForMockupData(user);
         Board boardPS = findById(boardId);
         ReportCase reportCase = ReportCase.valueOf(reqDTO.getResult());
         Report report =
@@ -144,7 +154,8 @@ public class BoardService {
     }
 
     private void checkBoardId(Integer boardId) {
-        if (boardId == null) throw new Exception400(ErrorEnum.BAD_REQUEST_NO_EXISTS_BOARD_ID);
+        if (boardId == null || boardId.toString().trim().equals(""))
+            throw new Exception400(ErrorEnum.BAD_REQUEST_NO_EXISTS_BOARD_ID);
     }
 
     // 🔢 정렬 컬럼 결정 (bookmarkCount는 count(bm))
@@ -158,5 +169,13 @@ public class BoardService {
         return orderColumn + " " + direction + ", b.id desc";
     }
 
+    private User getByIdForMockupData(User user) {
+        return userRepository.findById(user.getId()).orElseThrow(
+                () -> new Exception404(ErrorEnum.NOT_FOUND_USER_TO_USERID)
+        );
+    }
 
+    public List<BoardResponse.DTO> getPopularList(int count) {
+        return boardRepository.findAll("b.views desc", 0, count);
+    }
 }

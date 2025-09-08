@@ -19,7 +19,7 @@ public class CategoryRepository {
 
     public Optional<Category> findByUserIdAndCategory(Integer id, String category) {
         try {
-            return Optional.ofNullable(em.createQuery("select c from Category c where c.userId = :userId and c.category = :category", Category.class)
+            return Optional.ofNullable(em.createQuery("select c from Category c where c.user.id = :userId and c.category = :category", Category.class)
                     .setParameter("userId", id)
                     .setParameter("category", category)
                     .getSingleResult());

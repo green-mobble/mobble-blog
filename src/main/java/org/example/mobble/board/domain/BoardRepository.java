@@ -24,32 +24,35 @@ public class BoardRepository {
         return Optional.ofNullable(em.find(Board.class, boardId));
     }
 
-    public Optional<BoardResponse.DetailDTO> findByIdDetail(Integer boardId) {
-        return Optional.ofNullable(em.createQuery("""
-                                                select b, u, c, bm
-                                                from Board b
-                                                left join Bookmark bm on bm.board.id = b.id
-                                                left join Category c on c.id = b.category.id
-                                                left join User u on u.id = b.user.id
-                                                where b.id = :boardId
-                        """, BoardResponse.DetailDTO.class)
-                .setParameter("boardId", boardId).getSingleResult());
-    }
 
     public Optional<BoardResponse.DetailDTO> findByIdDetail(Integer boardId, Integer userId) {
-        return Optional.ofNullable(em.createQuery("""
-                                                select b, u, c, bm
-                                                from Board b
-                                                left join Bookmark bm on bm.board.id = b.id
-                                                left join Category c on c.id = b.category.id
-                                                left join User u on u.id = b.user.id
-                                                where b.id = :boardId
-                                                and b.user.id = :userId
-                        """, BoardResponse.DetailDTO.class)
+        List<Object[]> rows = em.createQuery("""
+                        select b, u, c,
+                               count(distinct bm),
+                               count(distinct bm2) as myCount
+                        from Board b
+                        left join b.bookmarks bm
+                        left join b.bookmarks bm2 on bm2.user.id = :userId
+                        left join b.category c
+                        left join b.user u
+                        where b.id = :boardId
+                        group by b, u, c
+                        """, Object[].class)
                 .setParameter("boardId", boardId)
                 .setParameter("userId", userId)
-                .getSingleResult());
+                .getResultList();
+
+        return rows.stream().findFirst().map(result ->
+                BoardResponse.DetailDTO.builder()
+                        .board((Board) result[0])
+                        .user((User) result[1])
+                        .category((Category) result[2])
+                        .bookmarkCount(((Number) result[3]).intValue())
+                        .isBookmark(((Number) result[4]).intValue() > 0)
+                        .build()
+        );
     }
+
 
     public void delete(Integer boardId) {
         em.remove(em.find(Board.class, boardId));

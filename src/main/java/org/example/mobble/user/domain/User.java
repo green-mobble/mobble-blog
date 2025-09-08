@@ -2,8 +2,9 @@ package org.example.mobble.user.domain;
 
 import jakarta.persistence.*;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.example.mobble.board.domain.Board;
 import org.example.mobble.bookmark.domain.Bookmark;
 import org.example.mobble.category.Category;
@@ -11,7 +12,7 @@ import org.example.mobble.report.domain.Report;
 
 import java.util.List;
 
-@Data
+@Getter
 @NoArgsConstructor
 @Entity
 @Table(name = "user_tb")
@@ -34,31 +35,31 @@ public class User {
 
     private String profileImage;
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    @ToString.Exclude
     private List<Board> boards;
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    @ToString.Exclude
     private List<Bookmark> bookmarks;
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    @ToString.Exclude
     private List<Report> reports;
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    @ToString.Exclude
     private List<Category> categories;
 
     // reCAPTCHA 추가? : 봇 생성 방지용
 
     @Builder
-    public User(Integer id, String username, String password, String email, String profileImage, List<Board> boards, List<Bookmark> bookmarks, List<Report> reports, List<Category> categories) {
+    public User(Integer id, String username, String password, String email, String profileImage) {
         this.id = id;
         this.username = username;
         this.password = password;
         this.email = email;
         this.profileImage = profileImage;
-        this.boards = boards;
-        this.bookmarks = bookmarks;
-        this.reports = reports;
-        this.categories = categories;
     }
 
     public void updateProfileImage(String profileImage) {

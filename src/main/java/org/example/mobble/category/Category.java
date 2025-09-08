@@ -2,14 +2,15 @@ package org.example.mobble.category;
 
 import jakarta.persistence.*;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.example.mobble.board.domain.Board;
 import org.example.mobble.user.domain.User;
 
 import java.util.List;
 
-@Data
+@Getter
 @NoArgsConstructor
 @Entity
 @Table(name = "category_tb")
@@ -20,12 +21,14 @@ public class Category {
 
     // 만든 사람
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
     private User user;
 
     // 카테고리명
     private String category;
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
+    @ToString.Exclude
     private List<Board> boards;
 
     @Builder
