@@ -8,6 +8,7 @@ import org.example.mobble._util.error.ex.Exception401;
 import org.example.mobble._util.error.ex.Exception404;
 import org.example.mobble.category.domain.Category;
 import org.example.mobble.category.domain.CategoryRepository;
+import org.example.mobble.category.dto.CategoryResponse;
 import org.example.mobble.user.domain.User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -80,7 +81,7 @@ public class CategoryService {
         }
 
         // 도메인 메서드가 없으므로 세터 사용 (@Data)
-        category.setCategory(normalized); // 더티체킹 반영
+        category.updateCategory(normalized); // 더티체킹 반영
         return category;
     }
 
@@ -104,7 +105,24 @@ public class CategoryService {
         categoryRepository.deleteById(category.getId());
     }
 
+    @Transactional(readOnly = true)
+    public List<CategoryResponse.CategoryItemDTO> getMyCategoryItems(Integer userId) {
+        if (userId == null) throw new Exception400("userId가 없습니다.");
+        return categoryRepository.findAllByUserIdOrderByIdDesc(userId)
+                .stream()
+                .map(c -> CategoryResponse.CategoryItemDTO.builder()
+                        .id(c.getId())
+                        .category(c.getCategory())
+                        .build())
+                .toList();
+    }
+
+
     public List<String> getPopularList(Integer count) {
         return categoryRepository.getPopularList(count);
+    }
+
+    public List<String> getMyFeedPopularList(Integer count ,User user) {
+        return categoryRepository.getMyFeedPopularList(count,user);
     }
 }
