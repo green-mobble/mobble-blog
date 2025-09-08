@@ -9,7 +9,7 @@ import org.example.mobble.board.domain.SearchOrderCase;
 import org.example.mobble.board.dto.BoardRequest;
 import org.example.mobble.board.dto.BoardResponse;
 import org.example.mobble.board.service.BoardService;
-import org.example.mobble.category.CategoryService;
+import org.example.mobble.category.service.CategoryService;
 import org.example.mobble.user.domain.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -39,7 +39,7 @@ public class BoardController {
         request.setAttribute("model", model);
         return "board/update-page";
     }
-    
+
     // 모든 게시물 목록 찾기
     @GetMapping
     public String getBoardsList(HttpServletRequest request, @RequestParam(defaultValue = "1") Integer page, @RequestParam(defaultValue = "CREATED_AT_DESC") String order) {
@@ -53,7 +53,7 @@ public class BoardController {
     @GetMapping("/{id}")
     public String getBoard(HttpServletRequest request, @PathVariable(name = "id") Integer boardId) {
         User user = (User) session.getAttribute("user");
-        BoardResponse.DetailDTO model = boardService.getBoardDetail(boardId, user.getId());
+        BoardResponse.DetailDTO model = boardService.getBoardDetail(boardId);
         request.setAttribute("model", model);
         return "board/detail-page";
     }
@@ -80,10 +80,11 @@ public class BoardController {
         return "redirect:/boards";
     }
 
+
     @PostMapping("/{id}/report")
-    public String report(@PathVariable(name = "id") Integer boardId, BoardRequest.BoardReportDTO reqDTO) {
+    public String reportSave(@PathVariable(name = "id") Integer boardId, BoardRequest.ReportSaveDTO reqDTO) {
         User user = (User) session.getAttribute("user");
-        boardService.report(user, boardId, reqDTO);
+        BoardResponse.ReportSaveDTO resDTO = boardService.reportSave(user, boardId, reqDTO);
         return "redirect:/boards/" + boardId;
     }
 

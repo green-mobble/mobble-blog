@@ -6,13 +6,14 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.example.mobble.board.dto.BoardRequest;
 import org.example.mobble.bookmark.domain.Bookmark;
-import org.example.mobble.category.Category;
+import org.example.mobble.category.domain.Category;
 import org.example.mobble.report.domain.Report;
 import org.example.mobble.user.domain.User;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -35,7 +36,7 @@ public class Board {
 
     // 카테고리
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id")
+    @JoinColumn(name = "category_id")  // FK 명시
     private Category category;
 
     // 조회수
@@ -50,12 +51,12 @@ public class Board {
     private Timestamp updatedAt;
 
     //연관 신고는 게시글이 삭제되면 자동 삭제 처리
-    @OneToMany(mappedBy = "board", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, mappedBy = "board")
     private List<Report> reports;
 
     //연관 북마크는 게시글 삭제시 자동 삭제 처리
-    @OneToMany(mappedBy = "board", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
-    private List<Bookmark> bookmarks;
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, mappedBy = "board")
+    private List<Bookmark> bookmarks = new ArrayList<>();
 
     @Builder
     public Board(Integer id, String title, String content, User user, Category category, Integer views, Timestamp createdAt, Timestamp updatedAt, List<Report> reports, List<Bookmark> bookmarks) {

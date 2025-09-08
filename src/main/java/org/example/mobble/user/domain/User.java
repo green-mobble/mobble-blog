@@ -4,10 +4,9 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 import org.example.mobble.board.domain.Board;
 import org.example.mobble.bookmark.domain.Bookmark;
-import org.example.mobble.category.Category;
+import org.example.mobble.category.domain.Category;
 import org.example.mobble.report.domain.Report;
 
 import java.util.List;
@@ -35,20 +34,16 @@ public class User {
 
     private String profileImage;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-    @ToString.Exclude
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     private List<Board> boards;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-    @ToString.Exclude
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     private List<Bookmark> bookmarks;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-    @ToString.Exclude
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     private List<Report> reports;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-    @ToString.Exclude
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     private List<Category> categories;
 
     // reCAPTCHA 추가? : 봇 생성 방지용

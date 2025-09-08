@@ -30,6 +30,7 @@ public class UserController {
     @GetMapping("/join-form")
     public String joinForm() {
         return "auth/join-page";
+
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE, value = "/login")

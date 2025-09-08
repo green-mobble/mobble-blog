@@ -3,7 +3,7 @@ package org.example.mobble.board.domain;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.example.mobble.board.dto.BoardResponse;
-import org.example.mobble.category.Category;
+import org.example.mobble.category.domain.Category;
 import org.example.mobble.user.domain.User;
 import org.springframework.stereotype.Repository;
 
@@ -23,23 +23,21 @@ public class BoardRepository {
     public Optional<Board> findById(Integer boardId) {
         return Optional.ofNullable(em.find(Board.class, boardId));
     }
-
-
-    public Optional<BoardResponse.DetailDTO> findByIdDetail(Integer boardId, Integer userId) {
+    
+    public Optional<BoardResponse.DetailDTO> findByIdDetail(Integer boardId) {
         List<Object[]> rows = em.createQuery("""
                         select b, u, c,
                                count(distinct bm),
                                count(distinct bm2) as myCount
                         from Board b
                         left join b.bookmarks bm
-                        left join b.bookmarks bm2 on bm2.user.id = :userId
+                        left join b.bookmarks bm2
                         left join b.category c
                         left join b.user u
                         where b.id = :boardId
                         group by b, u, c
                         """, Object[].class)
                 .setParameter("boardId", boardId)
-                .setParameter("userId", userId)
                 .getResultList();
 
         return rows.stream().findFirst().map(result ->
@@ -63,6 +61,15 @@ public class BoardRepository {
      */
     public List<BoardResponse.DTO> findAll(String orderBy, Integer firstIndex, Integer maxResult) {
         String jpql = getBaseJpql(null, orderBy);
+        return mapping(
+                em.createQuery(jpql, Object[].class)
+                        .setFirstResult(firstIndex)
+                        .setMaxResults(maxResult)
+                        .getResultList());
+    }
+
+    public List<BoardResponse.DTO> findAll(String whereClause, String orderBy, Integer firstIndex, Integer maxResult) {
+        String jpql = getBaseJpql(whereClause, orderBy);
         return mapping(
                 em.createQuery(jpql, Object[].class)
                         .setFirstResult(firstIndex)
