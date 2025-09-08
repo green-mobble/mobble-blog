@@ -42,8 +42,8 @@ public class BoardController {
 
     // 모든 게시물 목록 찾기
     @GetMapping
-    public String getBoardsList(HttpServletRequest request, @RequestParam(defaultValue = "1") Integer page) {
-        List<BoardResponse.DTO> boardDTOList = boardService.getList(getFirstIndex(page), PER_PAGE + 1);
+    public String getBoardsList(HttpServletRequest request, @RequestParam(defaultValue = "1") Integer page, @RequestParam(defaultValue = "CREATED_AT_DESC") String order) {
+        List<BoardResponse.DTO> boardDTOList = boardService.getList(getFirstIndex(page), PER_PAGE + 1, safeOrder(order));
         boardDTOList = applyPagingFlags(request, boardDTOList, page);
         BoardResponse.mainListDTO resDTO = getMainList(boardDTOList,null);
         request.setAttribute("model", resDTO);
@@ -52,6 +52,7 @@ public class BoardController {
 
     @GetMapping("/{id}")
     public String getBoard(HttpServletRequest request, @PathVariable(name = "id") Integer boardId) {
+        User user = (User) session.getAttribute("user");
         BoardResponse.DetailDTO model = boardService.getBoardDetail(boardId);
         request.setAttribute("model", model);
         return "board/detail-page";
@@ -104,7 +105,7 @@ public class BoardController {
      * ----------------------------------------------------------------------------------
      */
     @GetMapping("/search")
-    public String findList(HttpServletRequest request, @RequestParam String keyword, @RequestParam(defaultValue = "CREATED_AT_ASC") String order, @RequestParam(defaultValue = "1") Integer page) {
+    public String findList(HttpServletRequest request, @RequestParam String keyword, @RequestParam(defaultValue = "CREATED_AT_DESC") String order, @RequestParam(defaultValue = "1") Integer page) {
         List<BoardResponse.DTO> boardDTOList = boardService.findBy(keyword, safeOrder(order), getFirstIndex(page), PER_PAGE + 1);
         boardDTOList = applyPagingFlags(request, boardDTOList, page);
         BoardResponse.mainListDTO resDTO = getMainList(boardDTOList,null);
@@ -147,8 +148,10 @@ public class BoardController {
         return rows;
     }
 
-    private BoardResponse.mainListDTO getMainList(List<BoardResponse.DTO> boardDTOList,User user) {
-        List<String> categoryList;
+    private BoardResponse.mainListDTO getMainList(List<BoardResponse.DTO> boardDTOList , User user) {
+        int getSize = 3;
+
+        List<BoardResponse.DTO> popularList = boardService.getPopularList(getSize);List<String> categoryList;
         if (user == null) {
             categoryList = categoryService.getPopularList(3);
         } else {
@@ -157,8 +160,8 @@ public class BoardController {
         return BoardResponse.mainListDTO
                 .builder()
                 .boardList(boardDTOList)
+                .popularList(popularList)
                 .categoryList(categoryList)
                 .build();
     }
-
 }

@@ -1,8 +1,10 @@
 package org.example.mobble.board.controller;
 
+import org.example.mobble.board.dto.BoardResponse;
 import org.example.mobble.board.TestUtils;
 import org.example.mobble.user.domain.User;
 import org.example.mobble.user.domain.UserRepository;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -10,12 +12,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.web.MockHttpSession;
-import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.jdbc.Sql;
+
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
-import java.util.Collections;
 
 import static org.hamcrest.Matchers.matchesPattern;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -94,7 +94,7 @@ class BoardControllerTest {
     @Test
     @DisplayName("저장: 리다이렉트 OK")
     void save_redirect_ok() throws Exception {
-        mockMvc.perform(post("/boards")
+        MvcResult result = mockMvc.perform(post("/boards")
                                 .param("title", "새 제목")
                                 .param("content", "새 내용")
                                 .param("category", "temp-cat")
@@ -102,29 +102,33 @@ class BoardControllerTest {
                         // .with(csrf()) // Spring Security CSRF 활성 시 주석 해제
                 )
                 .andExpect(status().is3xxRedirection())
-                .andExpect(header().string("Location", matchesPattern(".*/boards/\\d+")));
+                .andExpect(header().string("Location", matchesPattern(".*/boards/\\d+")))
+                .andReturn();
+
+        int status = result.getResponse().getStatus();
+        System.out.println(status);
     }
 
     @Test
     @DisplayName("수정: 소유자 수정 리다이렉트 OK")
     void update_redirect_ok() throws Exception {
-        // 더미에서 id=1 게시글의 userId가 1이라고 가정(세션 유저와 동일)
-        mockMvc.perform(post("/boards/{id}/update", 1)
-                                .param("id", "1")
+        Integer targetId = 4;
+        mockMvc.perform(post("/boards/{id}/update", targetId)
+                                .param("id", targetId.toString())
                                 .param("title", "제목1-수정")
                                 .param("content", "내용1-수정")
                                 .session(session)
                         // .with(csrf())
                 )
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/boards/1"));
+                .andExpect(redirectedUrl("/boards/" + targetId.toString()));
     }
 
     @Test
     @DisplayName("신고: 리다이렉트 OK")
     void report_redirect_ok() throws Exception {
         mockMvc.perform(post("/boards/{id}/report", 1)
-                                .param("result", "SPAM")        // ReportCase 값 중 하나
+                                .param("result", "부적절한 작성자명")        // ReportCase 값 중 하나
                                 .param("content", "스팸 신고")    // 신고 내용
                                 .session(session)
                         // .with(csrf())
