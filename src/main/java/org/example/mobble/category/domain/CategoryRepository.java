@@ -2,6 +2,7 @@ package org.example.mobble.category.domain;
 
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
+import org.example.mobble.user.domain.User;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -73,4 +74,11 @@ public class CategoryRepository {
                 .executeUpdate();
     }
 
+    public List<String> getMyFeedPopularList(Integer maxResult, User user) {
+        return em.createQuery("select c.category from Category c where c.user.id = : userId group by c.category order by count(c) desc", String.class)
+                .setParameter("userId", user.getId())
+                .setFirstResult(0)
+                .setMaxResults(maxResult)
+                .getResultList();
+    }
 }

@@ -1,5 +1,6 @@
 package org.example.mobble.board.controller;
 
+import org.example.mobble.board.TestUtils;
 import org.example.mobble.user.domain.User;
 import org.example.mobble.user.domain.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,28 +13,18 @@ import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
+
+import java.util.Collections;
 
 import static org.hamcrest.Matchers.matchesPattern;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@TestPropertySource(properties = {
-        // H2 인메모리 + MySQL 호환 모드 (DATE_SUB 등 사용 가능)
-        "spring.datasource.url=jdbc:h2:mem:test;MODE=MySQL;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE",
-        "spring.datasource.driver-class-name=org.h2.Driver",
-        "spring.datasource.username=sa",
-        "spring.datasource.password=",
-        "spring.jpa.hibernate.ddl-auto=create",
-        "spring.jpa.show-sql=true",
-        "spring.jpa.properties.hibernate.format_sql=true",
-        "spring.jpa.open-in-view=false"
-})
-// 더미 주입: FK 고려해서 카테고리 → 유저 → 보드 순서
-@Sql(value = {"/db/category-data.sql", "/db/user-data.sql", "/db/board-data.sql"},
-        executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 class BoardControllerTest {
 
     @Autowired
@@ -55,35 +46,49 @@ class BoardControllerTest {
     @Test
     @DisplayName("목록: 첫 페이지 OK")
     void list_ok() throws Exception {
-        mockMvc.perform(get("/boards").session(session))
+
+        // when
+        MvcResult result = mockMvc.perform(get("/boards").session(session))
                 .andExpect(status().isOk())
                 .andExpect(view().name("board/list-page"))
-                .andExpect(request().attribute("model", new Object()))
-                .andExpect(request().attribute("isFirst", true));
+                .andExpect(request().attribute("isFirst", true))
+                .andReturn();
+
+        // then
+        TestUtils.printRequestAttributesAsJson(result);
+
         // isLast는 더미 개수/ PER_PAGE에 따라 달라짐 → 고정 검증은 생략
     }
 
     @Test
     @DisplayName("상세: 존재하는 게시글 OK")
     void detail_ok() throws Exception {
-        // 더미에 id=1 게시글이 있다고 가정
-        mockMvc.perform(get("/boards/{id}", 1).session(session))
+        // when
+        MvcResult result = mockMvc.perform(get("/boards/{id}", 1).session(session))
                 .andExpect(status().isOk())
                 .andExpect(view().name("board/detail-page"))
-                .andExpect(request().attribute("model", new Object()));
+                .andReturn();
+
+        // then
+        TestUtils.printRequestAttributesAsJson(result);
+
     }
 
     @Test
     @DisplayName("검색: 본문/제목 기본 검색 OK")
     void search_default_ok() throws Exception {
-        mockMvc.perform(get("/boards/search")
+        // when
+        MvcResult result = mockMvc.perform(get("/boards/search")
                         .param("keyword", "제목") // 기본 검색 (접두사 없이)
                         .param("order", "CREATED_AT_DESC")
                         .param("page", "1")
                         .session(session))
                 .andExpect(status().isOk())
                 .andExpect(view().name("board/list-page"))
-                .andExpect(request().attribute("model", new Object()));
+                .andReturn();
+
+        // then
+        TestUtils.printRequestAttributesAsJson(result);;
     }
 
     @Test
@@ -137,5 +142,23 @@ class BoardControllerTest {
                 )
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/boards"));
+    }
+
+    @Test
+    @DisplayName("myfeed 목록: 첫 페이지 OK")
+    void myfeed_list_ok() throws Exception {
+
+        //when
+        MvcResult result = mockMvc.perform(get("/boards/me")
+                        .param("order", "VIEW_COUNT_DESC")
+                        .param("page", "1")
+                        .session(session))
+                .andExpect(status().isOk())
+                .andExpect(view().name("board/myfeed-page"))
+                .andExpect(request().attribute("isFirst", true))
+                .andReturn();
+
+        // then
+        TestUtils.printRequestAttributesAsJson(result);
     }
 }

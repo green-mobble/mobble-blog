@@ -161,4 +161,10 @@ public class BoardService {
     }
 
 
+    //마이 피드 list
+    public List<BoardResponse.DTO> getMyFeedList(int firstIndex, int size, SearchOrderCase order, User user) {
+
+        String orderBy = orderByToString(order);
+        return boardRepository.findAllByUserId(orderBy, firstIndex, size, user);
+    }
 }
