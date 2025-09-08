@@ -26,9 +26,11 @@ public class UserController {
         return "auth/login-page";
     }
 
+
     @GetMapping("/join-form")
     public String joinForm() {
         return "auth/join-page";
+
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE, value = "/login")
@@ -87,6 +89,5 @@ public class UserController {
     @ResponseBody
     public Map<String, Boolean> checkUsername(@ModelAttribute UserRequest.UsernameDTO reqDTO) {
         return Map.of("duplicate", userService.isUsernameDuplicate(reqDTO));
-
     }
 }

@@ -81,7 +81,7 @@ public class CategoryService {
         }
 
         // 도메인 메서드가 없으므로 세터 사용 (@Data)
-        category.setCategory(normalized); // 더티체킹 반영
+        category.updateCategory(normalized); // 더티체킹 반영
         return category;
     }
 
@@ -120,5 +120,9 @@ public class CategoryService {
 
     public List<String> getPopularList(Integer count) {
         return categoryRepository.getPopularList(count);
+    }
+
+    public List<String> getMyFeedPopularList(Integer count ,User user) {
+        return categoryRepository.getMyFeedPopularList(count,user);
     }
 }
