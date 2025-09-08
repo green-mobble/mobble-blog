@@ -11,8 +11,8 @@ import org.example.mobble.board.domain.BoardRepository;
 import org.example.mobble.board.domain.SearchOrderCase;
 import org.example.mobble.board.dto.BoardRequest;
 import org.example.mobble.board.dto.BoardResponse;
-import org.example.mobble.category.Category;
-import org.example.mobble.category.CategoryRepository;
+import org.example.mobble.category.domain.Category;
+import org.example.mobble.category.domain.CategoryRepository;
 import org.example.mobble.report.domain.Report;
 import org.example.mobble.report.domain.ReportCase;
 import org.example.mobble.report.domain.ReportRepository;
@@ -21,6 +21,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+
+import static org.example.mobble._util.error.ErrorEnum.NOT_FOUND;
 
 @RequiredArgsConstructor
 @Service
@@ -93,19 +95,19 @@ public class BoardService {
     }
 
     @Transactional
-    public Report report(User user, Integer boardId, BoardRequest.BoardReportDTO reqDTO) {
+    public BoardResponse.ReportSaveDTO reportSave(User user, Integer boardId, BoardRequest.ReportSaveDTO reqDTO) {
         Board boardPS = findById(boardId);
-        ReportCase reportCase = ReportCase.valueOf(reqDTO.getResult());
         Report report =
                 Report.builder()
                         .user(user)
                         .board(boardPS)
                         .content(reqDTO.getContent())
-                        .result(reportCase)
+                        .result(reqDTO.getResult())
                         .build();
-        if (reportCase.equals(ReportCase.ETC)) report.updateResultEtc(reqDTO.getResultEtc());
+        if (reqDTO.getResult().equals(ReportCase.ETC)) report.updateResultEtc(reqDTO.getResultEtc());
         reportRepository.save(report);
-        return report;
+
+       return new BoardResponse.ReportSaveDTO(report);
 
     }
 
