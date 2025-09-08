@@ -3,7 +3,6 @@ package org.example.mobble.bookmark.controller;
 import org.example.mobble.board.domain.Board;
 import org.example.mobble.board.domain.BoardRepository;
 import org.example.mobble.board.dto.BoardResponse;
-import org.example.mobble.board.service.BoardService;
 import org.example.mobble.bookmark.domain.Bookmark;
 import org.example.mobble.bookmark.domain.BookmarkRepository;
 import org.example.mobble.bookmark.dto.BookmarkResponse;
