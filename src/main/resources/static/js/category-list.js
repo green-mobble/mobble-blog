@@ -6,14 +6,15 @@ document.addEventListener("DOMContentLoaded", () => {
   const confirmDeleteBtn = document.getElementById("confirmDeleteBtn");
 
   let deleteTarget = null;
+  let deleteTargetId = null;
 
   /* ---------- 생성 ---------- */
   createCategoryBtn.addEventListener("click", () => {
     const name = newCategoryInput.value.trim();
-    if (!name) return;
-    categoryList.appendChild(makeRow(name, "(0개 게시물)"));
-    newCategoryInput.value = "";
-  });
+    if (!name) { newCategoryInput.focus(); return; }
+    // 서버로 POST 전송 → 컨트롤러가 저장 후 같은 뷰 렌더링
+    newCategoryInput.form?.submit();
+    });
 
   /* ---------- 리스트 내 이벤트 위임 ---------- */
   categoryList.addEventListener("click", (e) => {
@@ -28,7 +29,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // 삭제 요청
     if (e.target.closest(".js-delete")) {
-      deleteTarget = row;
+      deleteTargetId = row.dataset.id; // ← 서버로 보낼 ID 저장
+      if (!deleteTargetId) return;
       deleteModal.classList.remove("is-hidden");
       return;
     }
@@ -55,9 +57,15 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   confirmDeleteBtn.addEventListener("click", () => {
-    if (deleteTarget) deleteTarget.remove();
-    deleteTarget = null;
-    deleteModal.classList.add("is-hidden");
+    if (!deleteTargetId) {
+      deleteModal.classList.add("is-hidden");
+      return;
+    }
+    const form = document.createElement("form");
+    form.method = "post";
+    form.action = `/mypage/categories/${deleteTargetId}/delete`;
+    document.body.appendChild(form);
+    form.submit(); // 서버 처리 후 같은 뷰 재렌더링
   });
 
   /* ================= helpers ================= */
