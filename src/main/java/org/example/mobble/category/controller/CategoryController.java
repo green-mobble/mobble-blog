@@ -25,7 +25,7 @@ public class CategoryController {
         User sessionUser = (User) session.getAttribute("user");
         if (sessionUser == null) throw new Exception401("로그인이 필요합니다.");
         request.setAttribute("model", categoryService.getCategoriesByUser(sessionUser.getId()));
-        return "mypage/category-page";
+        return "mypage/category/category-page";
     }
 
     // 카테고리 추가
@@ -34,7 +34,7 @@ public class CategoryController {
         User sessionUser = (User) session.getAttribute("user");
         if (sessionUser == null) throw new Exception401("로그인이 필요합니다.");
         categoryService.addCategory(sessionUser.getId(), req.getCategory()); // 빈값 금지(마이페이지 정책)
-        return "redirect:/mypage/categories";
+        return "mypage/category/category-page";
     }
 
     // 카테고리 이름 변경
@@ -43,7 +43,7 @@ public class CategoryController {
         User sessionUser = (User) session.getAttribute("user");
         if (sessionUser == null) throw new Exception401("로그인이 필요합니다.");
         categoryService.renameCategory(sessionUser.getId(), categoryId, req.getCategory());
-        return "redirect:/mypage/categories";
+        return "mypage/category/category-page";
     }
 
     // 카테고리 삭제 (폼 전송)
@@ -52,6 +52,6 @@ public class CategoryController {
         User sessionUser = (User) session.getAttribute("user");
         if (sessionUser == null) throw new Exception401("로그인이 필요합니다.");
         categoryService.deleteCategory(sessionUser.getId(), categoryId);
-        return "redirect:/mypage/categories";
+        return "mypage/category/category-page";
     }
 }
