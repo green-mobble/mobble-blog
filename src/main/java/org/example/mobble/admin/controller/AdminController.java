@@ -12,7 +12,10 @@ import org.example.mobble.report.dto.ReportRequest;
 import org.example.mobble.report.dto.ReportResponse;
 import org.example.mobble.report.service.ReportService;
 import org.example.mobble.user.domain.User;
+import org.example.mobble.user.dto.UserRequest;
+import org.example.mobble.user.service.UserService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -49,9 +52,22 @@ public class AdminController {
     }
 
     // 관리자 로그인
-    @PostMapping("/admin/login-form")
+    @GetMapping("/admin/login-form")
     public String loginForm() {
-        return "admin/admin-login-page";
+        return "admin/main";
+    }
+
+    @PostMapping("/admin/login")
+    public String adminLogin(AdminRequest.LoginDTO reqDTO) {
+        User user = adminService.findUsername(reqDTO);
+        session.setAttribute("user", user);
+        return "admin/report-page";
+    }
+
+    @GetMapping("/admin/logout")
+    public String logout() {
+        session.invalidate();
+        return "redirect:/admin/login-form";
     }
 
 }
