@@ -1,5 +1,7 @@
 package org.example.mobble.report.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.example.mobble._util.error.ex.Exception401;
@@ -37,11 +39,14 @@ public class ReportController {
 
     //내 신고 리스트
     @GetMapping ("/reports")
-    public String getReportList(Model model) {
+    public String getReportList(Model model) throws JsonProcessingException {
         User user = getLoginUser();
         //조회
         List<ReportResponse.ReportDTO> resDTO = reportService.getList(user);
-        model.addAttribute("model",resDTO);
+
+        model.addAttribute("reportsJson", new ObjectMapper().writeValueAsString(resDTO));
+
+       // model.addAttribute("model",resDTO);
         return "mypage/report/list-page";
     }
 

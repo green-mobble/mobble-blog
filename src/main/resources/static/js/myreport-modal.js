@@ -19,78 +19,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const confirmBtn = document.getElementById("rptsConfirmDeleteBtn");
 
   // 상태
-  let reports = [
-    {
-      id: 10,
-      title: "asdfsdfasdfasdfasdf...",
-      reportReason: "부적절한 내용",
-      content: "신고 상세 10",
-      status: "대기 중",
-    },
-    {
-      id: 9,
-      title: "asdfsdfasdfasdfasdf...",
-      reasonCode: "INAPPROPRIATE",
-      content: "신고 상세 9",
-      status: "대기 중",
-    },
-    {
-      id: 8,
-      title: "asdfsdfasdfasdfasdf...",
-      reason: "부적절한 내용",
-      content: "신고 상세 8",
-      status: "대기 중",
-    },
-    {
-      id: 7,
-      title: "asdfsdfasdfasdfasdf...",
-      reasonCode: "INAPPROPRIATE",
-      content: "신고 상세 7",
-      status: "대기 중",
-    },
-    {
-      id: 6,
-      title: "asdfsdfasdfasdfasdf...",
-      reason: "부적절한 내용",
-      content: "신고 상세 6",
-      status: "처리 중",
-    },
-    {
-      id: 5,
-      title: "asdfsdfasdfasdfasdf...",
-      reason: "부적절한 내용",
-      content: "신고 상세 5",
-      status: "대기 중",
-    },
-    {
-      id: 4,
-      title: "asdfsdfasdfasdfasdf...",
-      reasonCode: "ETC",
-      content: "신고 상세 4",
-      status: "처리 완료",
-    },
-    {
-      id: 3,
-      title: "asdfsdfasdfasdfasdf...",
-      reason: "부적절한 내용",
-      content: "신고 상세 3",
-      status: "대기 중",
-    },
-    {
-      id: 2,
-      title: "asdfsdfasdfasdfasdf...",
-      reasonCode: "SPAM",
-      content: "신고 상세 2",
-      status: "대기 중",
-    },
-    {
-      id: 1,
-      title: "asdfsdfasdfasdfasdf...",
-      reason: "부적절한 내용",
-      content: "신고 상세 1",
-      status: "대기 중",
-    },
-  ];
+  const dataEl = document.getElementById("reports-data");
+  let reports = JSON.parse(dataEl.dataset.json);
+  console.log(reports);
 
   let currentId = null;
   let original = null; // { reason, content }
@@ -98,56 +29,35 @@ document.addEventListener("DOMContentLoaded", () => {
 
   /* ---------- reason 매핑 ---------- */
   const REASON_MAP = {
-    INAPPROPRIATE: "부적절한 내용",
-    SPAM: "스팸/광고",
-    ABUSE: "욕설/혐오 표현",
+    INAPPROPRIATE_AUTHOR_NAME: "부적절한 작성자명",
+    INAPPROPRIATE_BOARD_CONTENT: "부적절한 글 내용",
+    ADVERTISING_BOARD_CONTENT: "광고성 글 내용",
+    COPYRIGHT_VIOLATION: "저작권 침해",
+    PERSONAL_INFORMATION: "개인정보 노출",
+    ABUSIVE_LANGUAGE: "욕설/비방",
+    SPAM: "도배/스팸",
     ETC: "기타",
   };
 
   function pickReasonText(r) {
-    const v =
-      r.reason ??
-      r.reportReason ??
-      r.reasonLabel ??
-      r.reason_text ??
-      r.category ??
-      r.type ??
-      r.reasonCode ??
-      "";
-
-    const raw = typeof v === "string" ? v : v?.toString?.() ?? "";
+    const raw = r.result ?? "";
     return REASON_MAP[raw] ?? raw;
   }
 
-  // 저장 시 원래 구조와 동기화
   function setReasonBack(r, newReasonText) {
     const code =
-      Object.entries(REASON_MAP).find(
-        ([, label]) => label === newReasonText
-      )?.[0] ?? newReasonText;
-    if ("reason" in r) r.reason = newReasonText;
-    if ("reportReason" in r) r.reportReason = newReasonText;
-    if ("reasonLabel" in r) r.reasonLabel = newReasonText;
-    if ("reason_text" in r) r.reason_text = newReasonText;
-    if ("reasonCode" in r) r.reasonCode = code;
-    if (
-      !(
-        "reason" in r ||
-        "reportReason" in r ||
-        "reasonLabel" in r ||
-        "reason_text" in r ||
-        "reasonCode" in r
-      )
-    ) {
-      r.reason = newReasonText;
-    }
+        Object.entries(REASON_MAP).find(
+            ([, label]) => label === newReasonText
+        )?.[0] ?? newReasonText;
+
+    r.result = code; // 핵심 필드 하나만 갱신
   }
 
   /* ---------- 렌더링 ---------- */
   const statusClass = (s) =>
-    s === "처리 완료"
+    s === "COMPLETED"
       ? "rpts-status rpts-status--done"
-      : s === "처리 중"
+      : s === "PROCESSING"
       ? "rpts-status rpts-status--prog"
       : "rpts-status rpts-status--wait";
 
@@ -158,8 +68,8 @@ document.addEventListener("DOMContentLoaded", () => {
         return `
           <tr data-id="${r.id}" tabindex="0">
             <td>${r.id}</td>
-            <td title="${escapeHtml(r.title ?? "")}">${escapeHtml(
-          r.title ?? ""
+            <td title="${escapeHtml(r.boardTitle  ?? "")}">${escapeHtml(
+          r.boardTitle ?? ""
         )}</td>
             <td title="${escapeHtml(reasonTxt)}">${escapeHtml(
           reasonTxt || "-"
@@ -198,7 +108,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!item) return;
 
     currentId = id;
-    titleEl.value = item.title ?? ""; // readOnly
+    titleEl.value = item.boardTitle ?? ""; // readOnly
 
     const reasonTxt = pickReasonText(item);
     ensureOption(reasonEl, reasonTxt || "기타");

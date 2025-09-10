@@ -43,7 +43,7 @@
                     </tr>
                     </thead>
                     <tbody id="rptsTbody">
-                    <!-- JS에서 렌더링 -->
+
                     </tbody>
                 </table>
             </div>
@@ -69,10 +69,14 @@
 
             <label class="rpts-label" for="rptsReason">신고 사유</label>
             <select id="rptsReason" class="rpts-input">
-                <option value="부적절한 내용">부적절한 내용</option>
-                <option value="스팸/광고">스팸/광고</option>
-                <option value="욕설/혐오 표현">욕설/혐오 표현</option>
-                <option value="기타">기타</option>
+                <option value="INAPPROPRIATE_AUTHOR_NAME">부적절한 작성자명</option>
+                <option value="INAPPROPRIATE_BOARD_CONTENT">부적절한 글 내용</option>
+                <option value="ADVERTISING_BOARD_CONTENT">광고성 글 내용</option>
+                <option value="COPYRIGHT_VIOLATION">저작권 침해</option>
+                <option value="PERSONAL_INFORMATION">개인정보 노출</option>
+                <option value="ABUSIVE_LANGUAGE">욕설/비방</option>
+                <option value="SPAM">도배/스팸</option>
+                <option value="ETC">기타</option>
             </select>
 
             <!-- 선택된 사유를 텍스트로 표시만 하고 싶다면 아래 disabled 입력을 쓰세요.
@@ -151,6 +155,7 @@
 </div>
 
 <!-- 전용 JS -->
+<div id="reports-data" data-json='{{{reportsJson}}}'></div>
 <script src="/assets/js/reports.js"></script>
 
 {{> layout/footer}}
@@ -159,5 +164,8 @@
 <script src="/js/sidebar.js" defer></script>
 <script src="/js/search-clear.js" defer></script>
 <script src="/js/myreport-modal.js" defer></script>
+
+
+
 </body>
 </html>

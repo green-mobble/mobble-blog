@@ -27,6 +27,15 @@ public class ReportResponse {
             this.content = report.getContent();
             this.boardTitle =report.getBoard().getTitle();
         }
+
+        // 뷰 전용 상태 클래스
+        public String getStatusClass() {
+            return switch (status) {
+                case COMPLETED -> "rpts-status rpts-status--done";
+                case PROCESSING -> "rpts-status rpts-status--prog";
+                default -> "rpts-status rpts-status--wait";
+            };
+        }
     }
 
     //업데이트 확인용
