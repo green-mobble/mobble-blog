@@ -44,14 +44,10 @@
                     </div>
                     <!-- 액션 영역 -->
                     <div class="catmg-actions">
-                        <!-- 이름변경 -->
-                        <form action="/mypage/categories/{{id}}/rename" method="post" style="display:inline-flex; gap:8px; align-items:center;">
                         <!-- 수정 아이콘 버튼 -->
-                            <button class="catmg-icon-btn js-edit" aria-label="수정">
-                                <i class="fa-solid fa-pen"></i>
-                            </button>
-                        </form>
-
+                        <button class="catmg-icon-btn js-edit" type="button" aria-label="수정" title="수정">
+                            <i class="fa-solid fa-pen"></i>
+                        </button>
                         <!-- 삭제 아이콘 버튼 -->
                         <button class="catmg-icon-btn js-delete" type="button" data-id="{{id}}" aria-label="삭제" title="삭제">
                             <i class="fa-solid fa-trash"></i>
