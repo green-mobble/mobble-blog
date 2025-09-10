@@ -48,5 +48,10 @@ public class AdminController {
         return Resp.ok(resDTO);
     }
 
+    // 관리자 로그인
+    @PostMapping("/admin/login-form")
+    public String loginForm() {
+        return "admin/admin-login-page";
+    }
 
 }
