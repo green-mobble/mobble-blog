@@ -192,9 +192,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const idx = reports.findIndex((r) => r.id === currentId);
     if (idx >= 0) {
-      const newReasonText = reasonEl.value;
+      const newReason = reasonEl.value;
       const newContent = contentEl.value.trim();
-      setReasonBack(reports[idx], newReasonText);
+
+      reports[idx].result = newReason;
       reports[idx].content = newContent;
       render();
     }
