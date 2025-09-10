@@ -7,9 +7,11 @@ import org.example.mobble._util.error.ex.Exception401;
 import org.example.mobble.category.dto.CategoryRequest;
 import org.example.mobble.category.service.CategoryService;
 import org.example.mobble.user.domain.User;
-import org.example.mobble.user.service.UserService;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 @RequiredArgsConstructor
 @Controller
