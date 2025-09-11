@@ -37,7 +37,8 @@ public class UserController {
     public String login(@ModelAttribute UserRequest.LoginDTO reqDTO) {
         User user = userService.findByUser(reqDTO);
         session.setAttribute("user", user);
-        return "redirect:/boards/1";
+        System.out.println("[LOGIN] sessionId=" + session.getId() + ", user=" + user.getUsername());
+        return "redirect:/boards";
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE, value = "/join")
