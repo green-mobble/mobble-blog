@@ -9,6 +9,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const detailModal = document.getElementById("rptsDetailModal");
   const titleEl = document.getElementById("rptsTitle"); // readOnly
   const reasonEl = document.getElementById("rptsReason");
+  const reasonEtcEl = document.getElementById("reportReasonEtc");
   const contentEl = document.getElementById("rptsContent");
   const saveBtn = document.getElementById("rptsSaveBtn");
   const deleteBtn = document.getElementById("rptsDeleteBtn");
@@ -17,6 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // 삭제 확인 모달
   const confirmModal = document.getElementById("rptsConfirmModal");
   const confirmBtn = document.getElementById("rptsConfirmDeleteBtn");
+  const lockedModal = document.getElementById("rptsLockedModal");
 
   // 상태
   const dataEl = document.getElementById("reports-data");
@@ -27,7 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let original = null; // { reason, content }
   let detailLocked = false; // 처리 완료 잠금 플래그
 
-  /* ---------- reason 매핑 ---------- */
+  /* ---------- reason,status 매핑 ---------- */
   const REASON_MAP = {
     INAPPROPRIATE_AUTHOR_NAME: "부적절한 작성자명",
     INAPPROPRIATE_BOARD_CONTENT: "부적절한 글 내용",
@@ -37,6 +39,12 @@ document.addEventListener("DOMContentLoaded", () => {
     ABUSIVE_LANGUAGE: "욕설/비방",
     SPAM: "도배/스팸",
     ETC: "기타",
+  };
+
+  const STATUS_LABELS = {
+    PENDING: "처리 전",
+    PROCESSING: "처리 중",
+    COMPLETED: "처리 완료",
   };
 
   function pickReasonText(r) {
@@ -50,10 +58,11 @@ document.addEventListener("DOMContentLoaded", () => {
             ([, label]) => label === newReasonText
         )?.[0] ?? newReasonText;
 
-    r.result = code; // 핵심 필드 하나만 갱신
+    r.result = code;
+    return code;// 핵심 필드 하나만 갱신
   }
 
-  /* ---------- 렌더링 ---------- */
+  /* ---------- 색 렌더링 ---------- */
   const statusClass = (s) =>
     s === "COMPLETED"
       ? "rpts-status rpts-status--done"
@@ -65,6 +74,8 @@ document.addEventListener("DOMContentLoaded", () => {
     tbody.innerHTML = reports
       .map((r) => {
         const reasonTxt = pickReasonText(r);
+        const statusCode = r.status ?? "처리 전";  // Enum 값 (영어)
+        const statusText = STATUS_LABELS[statusCode] ?? statusCode; // 한글 변환
         return `
           <tr data-id="${r.id}" tabindex="0">
             <td>${r.id}</td>
@@ -77,15 +88,33 @@ document.addEventListener("DOMContentLoaded", () => {
             <td title="${escapeHtml(r.content ?? "")}">${escapeHtml(
           r.content ?? ""
         )}</td>
-            <td><span class="${statusClass(
-              r.status ?? "대기 중"
-            )}">${escapeHtml(r.status ?? "대기 중")}</span></td>
+           <td><span class="${statusClass(statusCode)}">${escapeHtml(statusText)}</span></td>
           </tr>
         `;
       })
       .join("");
   }
   render();
+
+  // ‘기타’ 선택 시 입력 활성화
+  function syncEtcField() {
+    if (!reasonEl || !reasonEtcEl) return;
+
+    // 사용자가 select에서 ETC를 선택 → enable
+    if (reasonEl.value === "ETC") {
+      reasonEtcEl.disabled = false;
+
+    } else {
+
+      reasonEtcEl.disabled = true;
+      reasonEtcEl.value = "";
+
+    }
+  }
+
+// 초기 실행 + 이벤트 바인딩
+  reasonEl?.addEventListener("change", syncEtcField);
+  syncEtcField();
 
   /* ---------- 행 클릭/키보드로 상세 열기 ---------- */
   tbody.addEventListener("click", openFromEvent);
@@ -110,17 +139,22 @@ document.addEventListener("DOMContentLoaded", () => {
     currentId = id;
     titleEl.value = item.boardTitle ?? ""; // readOnly
 
-    const reasonTxt = pickReasonText(item);
-    ensureOption(reasonEl, reasonTxt || "기타");
-    reasonEl.value = reasonTxt || "기타";
+    const reasonCode = item.result ?? "ETC"; // Enum 코드
+    ensureOption(reasonEl, reasonCode);
+    reasonEl.value = reasonCode;
 
+// ETC라면 기존 입력값 넣어주기
+    if (reasonEl.value === "ETC" && reasonEtcEl) {
+      reasonEtcEl.disabled = false;
+      reasonEtcEl.value = item.resultEtc ?? "";
+    }
     contentEl.value = (item.content ?? "").toString();
 
     original = { reason: reasonEl.value, content: contentEl.value };
     saveBtn.disabled = true;
 
     // ── 완료 상태 잠금 처리 ──
-    detailLocked = item.status === "처리 완료";
+    detailLocked = item.status === "COMPLETED";
     if (detailLocked) {
       // 삭제/수정 영역은 숨기고
       actionsRight.style.display = "none";
@@ -186,21 +220,50 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // 저장(수정)
-  document.getElementById("rptsDetailForm").addEventListener("submit", (e) => {
+  document.getElementById("rptsDetailForm").addEventListener("submit", async (e) => {
     e.preventDefault();
     if (detailLocked || saveBtn.disabled || currentId == null) return;
 
-    const idx = reports.findIndex((r) => r.id === currentId);
-    if (idx >= 0) {
-      const newReason = reasonEl.value;
-      const newContent = contentEl.value.trim();
+    const idx = reports.findIndex((r) => r.id === currentId);;
 
-      reports[idx].result = newReason;
-      reports[idx].content = newContent;
-      render();
+    if (idx >= 0) {
+
+      const newReason = setReasonBack(reports[idx],reasonEl.value);
+
+      const newContent = contentEl.value.trim();
+      const newReasonEtc = (newReason === "ETC")
+          ? (reasonEtcEl.value.trim() || null)                // "기타"면 값 or null
+          : null;
+      console.log("newReasonEtc값 확인 : " + newReasonEtc);// ETC 아닐 때는 무조건 null
+
+      try {
+        const res = await fetch(`/reports/${currentId}/update`, {
+          method: "POST",
+          headers: {"Content-Type": "application/json"},
+          body: JSON.stringify({
+            result: newReason,
+            resultEtc: newReasonEtc,
+            content: newContent
+          })
+        });
+
+        if (!res.ok) throw new Error("서버 저장 실패");
+
+        // ✅ 성공 시 로컬 데이터 갱신
+        reports[idx].result = newReason;
+        reports[idx].resultEtc = newReasonEtc;
+        reports[idx].content = newContent;
+
+        render();
+        hide(detailModal);
+
+      } catch (err) {
+        alert("저장 중 오류 발생: " + err.message);
+      }
     }
-    hide(detailModal);
   });
+
+
 
   // 삭제 → 확인 모달 (완료 상태면 열지 않음)
   deleteBtn.addEventListener("click", () => {
@@ -210,12 +273,24 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // 확인 모달에서 삭제 확정
-  confirmBtn.addEventListener("click", () => {
+  confirmBtn.addEventListener("click", async () => {
     if (currentId == null) return;
-    reports = reports.filter((r) => r.id !== currentId);
-    render();
-    hide(confirmModal);
-    hide(detailModal);
+    try {
+      const res = await fetch(`/reports/${currentId}/delete`, {
+        method: "POST"
+      });
+
+      if (!res.ok) throw new Error("서버 삭제 실패");
+
+      // ✅ 서버에서 성공 응답 오면 프론트 데이터도 갱신
+      reports = reports.filter((r) => r.id !== currentId);
+      render();
+      hide(confirmModal);
+      hide(detailModal);
+
+    } catch (err) {
+      alert("삭제 중 오류 발생: " + err.message);
+    }
   });
 
   /* ---------- helpers ---------- */

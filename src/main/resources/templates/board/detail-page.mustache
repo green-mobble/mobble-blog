@@ -31,8 +31,7 @@
     <!-- 글 머리 -->
     <div class="post-head">
         <h1 class="post-title">
-            Lorem ipsum dolor sit amet consectetur. Vel volutpat rutrum phasellus
-            felis cursus quis non diam congue.
+            {{model.title}}
         </h1>
     </div>
 
@@ -40,10 +39,17 @@
     <div class="post-subbar" data-author="true">
         <div class="sub-left">
             <span class="avatar" aria-hidden="true">S</span>
-            <span class="name">ssar</span>
+            <span class="name">{{model.username}}</span>
         </div>
         <div class="sub-right">
             <!-- 초기 상태: 서버 값으로 true/false -->
+
+            <!--  카테고리-->
+            <div class="category-badge">{{model.category}}</div>
+            <!--  수정일 or 생성일 -->
+            <time datetime="{{model.displayDate}}">
+                {{model.displayDate}}
+            </time>
             <button
                     class="btn-bookmark"
                     type="button"
@@ -121,35 +127,11 @@
 
     <!-- 본문 -->
     <article class="post-body">
-        <h2>
-            Lorem ipsum dolor sit amet consectetur.<br/>Vel volutpat rutrum
-            phasellus felis cursus quis non diam congue.
-        </h2>
-
-        <p>
-            Lorem ipsum dolor sit amet consectetur. Metus facilisis et purus
-            luctus. A ac donec porta pulvinar ac. Lobortis sagittis magna risus
-            diam amet…
-        </p>
-
-        <div class="media wide" role="img" aria-label="본문 이미지 자리"></div>
-
-        <p>
-            A turpis lorem mi malesuada adipiscing. Tenor quis luctus pulvinar eu
-            orci a egestas neque…
-        </p>
-
-        <div class="media wide" role="img" aria-label="본문 이미지 자리"></div>
-
-        <p>
-            Tempus interdum aliquam accumsan eleifend dictum. Quis dui eu non
-            mauris pharetra sem pellentesque…
-        </p>
-
+        {{model.content}}
         <div class="post-reaction">
             <div class="counts">
-                <span>👁️ 3.8k</span>
-                <span>👍 106</span>
+                <span>👁️{{model.views}}</span>
+                <span>👍 {{model.bookmarkCount}}</span>
             </div>
         </div>
     </article>
@@ -203,7 +185,7 @@
     >
         <form
                 id="reportForm"
-                action="/boards/1/report"
+                action="/boards/{{model.id}}/report"
                 method="post"
                 novalidate
         >
@@ -217,9 +199,13 @@
                                 class="report-select"
                                 required
                         >
-                            <option value="INAPPROPRIATE" selected>부적절한 내용</option>
-                            <option value="SPAM">광고/스팸</option>
-                            <option value="COPYRIGHT">저작권 침해</option>
+                            <option value="INAPPROPRIATE_AUTHOR_NAME">부적절한 작성자명</option>
+                            <option value="INAPPROPRIATE_BOARD_CONTENT">부적절한 글 내용</option>
+                            <option value="ADVERTISING_BOARD_CONTENT">광고성 글 내용</option>
+                            <option value="COPYRIGHT_VIOLATION">저작권 침해</option>
+                            <option value="PERSONAL_INFORMATION">개인정보 노출</option>
+                            <option value="ABUSIVE_LANGUAGE">욕설/비방</option>
+                            <option value="SPAM">도배/스팸</option>
                             <option value="ETC">기타</option>
                         </select>
                         <span class="report-select-caret" aria-hidden="true">▾</span>
@@ -275,5 +261,6 @@
 <script src="/js/board-report-modal.js" defer></script>
 <script src="/js/livere.js" defer></script>
 <script src="/js/search-clear.js" defer></script>
+<script src="/js/footer.js" defer></script>
 </body>
 </html>

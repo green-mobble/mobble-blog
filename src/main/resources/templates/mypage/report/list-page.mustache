@@ -23,7 +23,7 @@
 <!-- Header -->
 {{> layout/header}}
 
-{{> layout/footer}}
+{{> layout/sidebar}}
 
 <!-- Reports List Page (공통 헤더/사이드바 아래 본문 영역) -->
 <main class="rpts-page" role="main" aria-labelledby="rptsHeading">
@@ -43,7 +43,7 @@
                     </tr>
                     </thead>
                     <tbody id="rptsTbody">
-
+                    <!-- JS에서 렌더링 -->
                     </tbody>
                 </table>
             </div>
@@ -79,9 +79,8 @@
                 <option value="ETC">기타</option>
             </select>
 
-            <!-- 선택된 사유를 텍스트로 표시만 하고 싶다면 아래 disabled 입력을 쓰세요.
-          <input class="rpts-input" type="text" value="부적절한 내용" disabled />
-          -->
+            <label class="rpts-label" for="reportReasonEtc">기타 사유</label>
+          <input class="rpts-input"  id="reportReasonEtc" type="text" value="" disabled />
 
             <label class="rpts-label" for="rptsContent">신고 내용</label>
             <textarea
@@ -154,9 +153,10 @@
     </div>
 </div>
 
+
+
 <!-- 전용 JS -->
 <div id="reports-data" data-json='{{{reportsJson}}}'></div>
-<script src="/assets/js/reports.js"></script>
 
 {{> layout/footer}}
 
@@ -164,8 +164,6 @@
 <script src="/js/sidebar.js" defer></script>
 <script src="/js/search-clear.js" defer></script>
 <script src="/js/myreport-modal.js" defer></script>
-
-
-
+<script src="/js/footer.js" defer></script>
 </body>
 </html>

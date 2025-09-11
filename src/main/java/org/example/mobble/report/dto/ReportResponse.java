@@ -16,6 +16,7 @@ public class ReportResponse {
     public static class ReportDTO {
         private Integer id; //신고 id
         private ReportCase result; //신고 유형
+        private String resultEtc; //신고 유형
         private ReportStatus status; //신고 처리 상태
         private String content; // 신고자
         private String boardTitle; //게시물 제목
@@ -26,16 +27,10 @@ public class ReportResponse {
             this.status = report.getStatus();
             this.content = report.getContent();
             this.boardTitle =report.getBoard().getTitle();
+            this.resultEtc = report.getResultEtc();
         }
 
-        // 뷰 전용 상태 클래스
-        public String getStatusClass() {
-            return switch (status) {
-                case COMPLETED -> "rpts-status rpts-status--done";
-                case PROCESSING -> "rpts-status rpts-status--prog";
-                default -> "rpts-status rpts-status--wait";
-            };
-        }
+
     }
 
     //업데이트 확인용
