@@ -37,11 +37,9 @@ public class BoardResponse {
                 this.isLast = isLast;
                 this.prev = !isFirst ? page - 1 : page;
                 this.next = !isLast ? page + 1 : page;
-                this.queryString = "/boards";
+                this.queryString = "/boards?order=" + order;
                 if (keyword != null && !keyword.equals("")) {
-                    this.queryString = "/search?order=" + order + "&keyword=" + keyword;
-                } else {
-                    this.queryString = "?order=" + order;
+                    this.queryString += "&keyword=" + keyword;
                 }
             }
         }
