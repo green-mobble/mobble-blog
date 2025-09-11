@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>내 카테고리 - Mobble</title>
+
+    <!-- 공통 CSS -->
+    <link
+            href="https://fonts.googleapis.com/css2?family=Quicksand&display=swap"
+            rel="stylesheet"
+    />
+    <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    />
+    <link rel="stylesheet" href="/css/common.css"/>
+    <link rel="stylesheet" href="/css/header.css"/>
+    <link rel="stylesheet" href="/css/footer.css"/>
+    <link rel="stylesheet" href="/css/sidebar.css"/>
+    <!-- 카테고리 관리 전용 CSS -->
+    <link rel="stylesheet" href="/css/category-list.css"/>
+</head>
+<body>
+<!-- 헤더 -->
+{{> layout/header}}
+
+{{> layout/sidebar}}
+
+<main class="catmg-page" role="main" aria-labelledby="categoryHeading">
+    <div class="catmg-wrap">
+        <!-- Pretendard 폰트가 적용된 제목 -->
+        <h2 id="categoryHeading" class="catmg-title">Category</h2>
+
+        <section class="catmg-card" aria-labelledby="categoryHeading">
+            <!-- 카테고리 리스트 -->
+            <div class="catmg-rows" id="categoryList">
+                {{#model}}
+                <!-- 예시 항목 (JS에서 동적 생성/렌더링) -->
+                <div class="catmg-row" data-id="{{id}}">
+                    <div class="catmg-left">
+                        <span class="catmg-chip">{{category}}</span>
+                        <span class="catmg-count">(2개 게시물)</span>
+                    </div>
+                    <!-- 액션 영역 -->
+                    <div class="catmg-actions">
+                        <!-- 수정 아이콘 버튼 -->
+                        <button class="catmg-icon-btn js-edit" type="button" aria-label="수정" title="수정">
+                            <i class="fa-solid fa-pen"></i>
+                        </button>
+                        <!-- 삭제 아이콘 버튼 -->
+                        <button class="catmg-icon-btn js-delete" type="button" data-id="{{id}}" aria-label="삭제" title="삭제">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+                {{/model}}
+            </div>
+            <!-- divider + 생성 영역 -->
+            <div class="catmg-divider" aria-hidden="true"></div>
+
+            <form class="catmg-create" action="/mypage/categories" method="post">
+                <input
+                        id="newCategoryInput"
+                        class="catmg-input"
+                        type="text"
+                        name="category"
+                        placeholder="새 카테고리 이름"
+                        maxlength="40"
+                />
+                <button id="createCategoryBtn" class="catmg-btn catmg-btn--primary" type="button">생성</button>
+            </form>
+        </section>
+    </div>
+</main>
+
+<!-- 삭제 확인 모달 -->
+<div
+        id="deleteModal"
+        class="catmg-modal is-hidden"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="deleteModalTitle"
+>
+    <div class="catmg-modal__backdrop" data-close="true"></div>
+    <div class="catmg-modal__panel" role="document">
+        <h3 id="deleteModalTitle" class="catmg-modal__title">카테고리 삭제</h3>
+        <p class="catmg-modal__desc">정말 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.</p>
+        <div class="catmg-modal__actions">
+            <button
+                    class="catmg-btn catmg-btn--ghost"
+                    type="button"
+                    data-close="true"
+            >
+                취소
+            </button>
+            <button
+                    id="confirmDeleteBtn"
+                    class="catmg-btn catmg-btn--danger"
+                    type="button"
+            >
+                삭제
+            </button>
+        </div>
+    </div>
+</div>
+
+<footer>
+    <div class="footer-inner">© Footer Content</div>
+    <form id="deleteForm" action="" method="post" style="display:none;"></form>
+</footer>
+
+<!-- JS -->
+<script src="/js/category-list.js"></script>
+<script src="/js/search-clear.js"></script>
+<script src="/js/sidebar.js"></script>
+<script src="/js/footer.js" defer></script>
+</body>
+</html>

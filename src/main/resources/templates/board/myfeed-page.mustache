@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8"/>
+    <title>피드 - Mobble</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+    <!-- 공통 CSS -->
+    <link rel="stylesheet" href="/css/common.css"/>
+    <link rel="stylesheet" href="/css/header.css"/>
+    <link rel="stylesheet" href="/css/footer.css"/>
+    <link rel="stylesheet" href="/css/sidebar.css"/>
+
+    <!-- 글 리스트 전용 CSS -->
+    <link rel="stylesheet" href="/css/board-list.css"/>
+    <link rel="stylesheet" href="/css/myfeed-list.css"/>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand&display=swap" rel="stylesheet">
+</head>
+<body>
+<!-- 헤더 -->
+{{> layout/header}}
+
+{{> layout/sidebar}}
+
+<!-- Main -->
+<main class="feed-container no-right">
+    <section class="feed-left">
+        <h2>내 피드</h2>
+        <div class="feed-sorting">
+            <a href="#">최신순</a> | <a href="#">조회수순</a> | <a href="#">북마크순</a>
+        </div>
+
+        <article class="post-card">
+            <a class="post-link" href="/boards/1">
+                <div class="thumb"></div>
+                <div class="post-body">
+                    <div class="tags">FREE</div>
+                    <h3 class="title">제목1</h3>
+                    <p class="excerpt">Lorem ipsum dolor sit amet consectetur…</p>
+                    <div class="meta">
+                        <time datetime="2025-08-28">2025. 08. 28</time>
+                        <span>· 3.2k</span>
+                        <span>· 108</span>
+                    </div>
+                </div>
+            </a>
+        </article>
+
+        <article class="post-card">
+            <a class="post-link" href="/boards/1">
+                <div class="thumb"></div>
+                <div class="post-body">
+                    <div class="tags">FREE</div>
+                    <h3 class="title">제목1</h3>
+                    <p class="excerpt">Lorem ipsum dolor sit amet consectetur…</p>
+                    <div class="meta">
+                        <time datetime="2025-08-28">2025. 08. 28</time>
+                        <span>· 3.2k</span>
+                        <span>· 108</span>
+                    </div>
+                </div>
+            </a>
+        </article>
+
+        <article class="post-card">
+            <a class="post-link" href="/boards/1">
+                <div class="thumb"></div>
+                <div class="post-body">
+                    <div class="tags">FREE</div>
+                    <h3 class="title">제목1</h3>
+                    <p class="excerpt">Lorem ipsum dolor sit amet consectetur…</p>
+                    <div class="meta">
+                        <time datetime="2025-08-28">2025. 08. 28</time>
+                        <span>· 3.2k</span>
+                        <span>· 108</span>
+                    </div>
+                </div>
+            </a>
+        </article>
+
+        <nav class="pagination" aria-label="페이지네이션">
+            <a href="#">prev</a>
+            <a href="#">next</a>
+        </nav>
+    </section>
+
+    <!-- ✅ 인기글 aside 완전 삭제 -->
+</main>
+
+<!-- 푸터 -->
+{{> layout/footer}}
+
+<script src="/js/sidebar.js" defer></script>
+<script src="/js/search-clear.js" defer></script>
+<script src="/js/footer.js" defer></script>
+</body>
+</html>

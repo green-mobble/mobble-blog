@@ -3,13 +3,12 @@ package org.example.mobble.bookmark.controller;
 import org.example.mobble.board.domain.Board;
 import org.example.mobble.board.domain.BoardRepository;
 import org.example.mobble.board.dto.BoardResponse;
-import org.example.mobble.board.service.BoardService;
 import org.example.mobble.bookmark.domain.Bookmark;
 import org.example.mobble.bookmark.domain.BookmarkRepository;
 import org.example.mobble.bookmark.dto.BookmarkResponse;
 import org.example.mobble.bookmark.service.BookmarkService;
-import org.example.mobble.category.Category;
-import org.example.mobble.category.CategoryRepository;
+import org.example.mobble.category.domain.Category;
+import org.example.mobble.category.domain.CategoryRepository;
 import org.example.mobble.user.domain.User;
 import org.example.mobble.user.domain.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -63,6 +62,7 @@ class BookmarkControllerTest {
                 .username("testuser")
                 .password("1234")
                 .email("test@test.com")
+                .role("user")
                 .build();
         userRepository.save(testUser);
 
@@ -181,7 +181,7 @@ class BookmarkControllerTest {
         mockMvc.perform(get("/bookmarks")
                         .sessionAttr("user", testUser))
                 .andExpect(status().isOk())
-                .andExpect(view().name("mypage/main"));
+                .andExpect(view().name("mypage/bookmark/list-page"));
 
         // 5. 서비스 레벨에서 DTO 변환 후 조회
         BookmarkResponse.BookmarkListDTO respDTO = bookmarkService.bookmarkList(testUser.getId());
@@ -221,7 +221,7 @@ class BookmarkControllerTest {
         mockMvc.perform(get("/bookmarks")
                         .sessionAttr("user", newUser))
                 .andExpect(status().isOk())
-                .andExpect(view().name("mypage/main"));
+                .andExpect(view().name("mypage/bookmark/list-page"));
 
         BookmarkResponse.BookmarkListDTO respDTO = bookmarkService.bookmarkList(newUser.getId());
         System.out.println(">>> 북마크 리스트 조회 확인 (빈 리스트): isList=" + respDTO.isList() +

@@ -37,6 +37,7 @@ public class UserController {
     public String login(@ModelAttribute UserRequest.LoginDTO reqDTO) {
         User user = userService.findByUser(reqDTO);
         session.setAttribute("user", user);
+        System.out.println("[LOGIN] sessionId=" + session.getId() + ", user=" + user.getUsername());
         return "redirect:/boards";
     }
 
@@ -89,6 +90,5 @@ public class UserController {
     @ResponseBody
     public Map<String, Boolean> checkUsername(@ModelAttribute UserRequest.UsernameDTO reqDTO) {
         return Map.of("duplicate", userService.isUsernameDuplicate(reqDTO));
-
     }
 }

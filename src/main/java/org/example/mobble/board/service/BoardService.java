@@ -6,6 +6,7 @@ import org.example.mobble._util.error.ErrorEnum;
 import org.example.mobble._util.error.ex.Exception400;
 import org.example.mobble._util.error.ex.Exception403;
 import org.example.mobble._util.error.ex.Exception404;
+import org.example.mobble._util.util.HtmlUtil;
 import org.example.mobble.board.domain.Board;
 import org.example.mobble.board.domain.BoardRepository;
 import org.example.mobble.board.domain.SearchOrderCase;
@@ -22,8 +23,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static org.example.mobble._util.error.ErrorEnum.NOT_FOUND;
-
 @RequiredArgsConstructor
 @Service
 public class BoardService {
@@ -32,8 +31,8 @@ public class BoardService {
     private final ReportRepository reportRepository;
 
     @Transactional(readOnly = true)
-    public List<BoardResponse.DTO> getList(int firstIndex, int size) {
-        String orderBy = orderByToString(SearchOrderCase.CREATED_AT_DESC);
+    public List<BoardResponse.DTO> getList(int firstIndex, int size, SearchOrderCase order) {
+        String orderBy = orderByToString(order);
         return boardRepository.findAll(orderBy, firstIndex, size);
     }
 
@@ -61,10 +60,12 @@ public class BoardService {
                             .build()
             );
         }
+
+        String safeHtml = HtmlUtil.HtmlSanitizer.sanitize(reqDTO.getContent());
         Board board =
                 Board.builder()
                         .title(reqDTO.getTitle())
-                        .content(reqDTO.getContent())
+                        .content(safeHtml)
                         .user(user)
                         .category(category)
                         .build();
@@ -107,7 +108,7 @@ public class BoardService {
         if (reqDTO.getResult().equals(ReportCase.ETC)) report.updateResultEtc(reqDTO.getResultEtc());
         reportRepository.save(report);
 
-       return new BoardResponse.ReportSaveDTO(report);
+        return new BoardResponse.ReportSaveDTO(report);
 
     }
 
@@ -160,5 +161,16 @@ public class BoardService {
         return orderColumn + " " + direction + ", b.id desc";
     }
 
+    @Transactional(readOnly = true)
+    public List<BoardResponse.DTO> getPopularList(int size) {
+        return getList(0, size, SearchOrderCase.VIEW_COUNT_DESC);
+    }
 
+
+    //마이 피드 list
+    public List<BoardResponse.DTO> getMyFeedList(int firstIndex, int size, SearchOrderCase order, User user) {
+
+        String orderBy = orderByToString(order);
+        return boardRepository.findAllByUserId(orderBy, firstIndex, size, user);
+    }
 }

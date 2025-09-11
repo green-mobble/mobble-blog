@@ -2,7 +2,7 @@ package org.example.mobble.user.domain;
 
 import jakarta.persistence.*;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.example.mobble.board.domain.Board;
 import org.example.mobble.bookmark.domain.Bookmark;
@@ -11,7 +11,7 @@ import org.example.mobble.report.domain.Report;
 
 import java.util.List;
 
-@Data
+@Getter
 @NoArgsConstructor
 @Entity
 @Table(name = "user_tb")
@@ -34,6 +34,9 @@ public class User {
 
     private String profileImage;
 
+    // 유저인지 관리자인지
+    private String role;
+
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     private List<Board> boards;
 
@@ -49,16 +52,13 @@ public class User {
     // reCAPTCHA 추가? : 봇 생성 방지용
 
     @Builder
-    public User(Integer id, String username, String password, String email, String profileImage, List<Board> boards, List<Bookmark> bookmarks, List<Report> reports, List<Category> categories) {
+    public User(Integer id, String username, String password, String email, String profileImage,String role) {
         this.id = id;
         this.username = username;
         this.password = password;
         this.email = email;
         this.profileImage = profileImage;
-        this.boards = boards;
-        this.bookmarks = bookmarks;
-        this.reports = reports;
-        this.categories = categories;
+        this.role = role;
     }
 
     public void updateProfileImage(String profileImage) {

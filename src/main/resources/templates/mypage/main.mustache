@@ -1,24 +1,180 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>My Profile | Mobble</title>
+
+    <!-- 공통: 로고 폰트 -->
+    <link
+            href="https://fonts.googleapis.com/css2?family=Quicksand&display=swap"
+            rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="/css/common.css"/>
+    <link rel="stylesheet" href="/css/header.css"/>
+    <link rel="stylesheet" href="/css/footer.css"/>
+    <link rel="stylesheet" href="/css/sidebar.css"/>
+    <!-- 마이페이지 전용 CSS -->
+    <link rel="stylesheet" href="/css/myprofile.css"/>
 </head>
 <body>
-{{#model.bookmarksList}}
-    <div>
-        <p>BookmarkId: {{bookId}}</p>
-        <p>BoardId: {{board.id}}</p>
-        <p>Board Title: {{board.title}}</p>
-        <p>Board Content: {{board.content}}</p>
-        <p>Board Views: {{board.views}}</p>
-        <p>Bookmark Count: {{board.bookmarkCount}}</p>
-        <p>Board Category: {{board.category}}</p>
-        <p>Board CreatedAt: {{board.createAt}}</p>
-        <p>Board Username: {{board.username}}</p>
-        <hr/>
-    </div>
-{{/model.bookmarksList}}
+<!-- 헤더 -->
+{{> layout/header}}
 
+{{> layout/sidebar}}
+<!-- ===== 본문 ===== -->
+<main class="mp-container" role="main">
+    <h1 class="mp-title">My Profile</h1>
+
+    <!-- 비밀번호 재설정 카드 -->
+    <section class="mp-card">
+        <h2 class="mp-card__title">비밀번호 설정</h2>
+        <div class="mp-card__body">
+            <button type="button" class="mp-btn mp-btn--dark" id="openPwdModal">
+                비밀번호 재설정
+            </button>
+        </div>
+    </section>
+
+    <!-- 내 이미지 카드 -->
+    <section class="mp-card">
+        <h2 class="mp-card__title">내 이미지</h2>
+        <div class="mp-card__body mp-avatar-wrap">
+            <label class="mp-avatar" for="avatarInput" title="이미지 변경">
+                <img id="avatarPreview" alt="내 프로필 이미지"/>
+            </label>
+            <input type="file" id="avatarInput" accept="image/*" hidden/>
+            <p class="mp-help">클릭하여 이미지를 변경할 수 있습니다.</p>
+        </div>
+    </section>
+
+    <!-- 로그아웃 카드 -->
+    <section class="mp-card">
+        <h2 class="mp-card__title">로그아웃</h2>
+        <div class="mp-card__body">
+            <button
+                    type="button"
+                    class="mp-btn mp-btn--dark"
+                    id="openLogoutModal"
+            >
+                계정 로그아웃
+            </button>
+        </div>
+    </section>
+</main>
+
+<!-- ===== 비밀번호 재설정 모달 ===== -->
+<div
+        class="mp-modal"
+        id="pwdModal"
+        aria-hidden="true"
+        style="display: none"
+>
+    <div class="mp-modal__backdrop" id="pwdBackdrop"></div>
+    <div
+            class="mp-modal__dialog"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="pwdTitle"
+    >
+        <form id="pwdForm" method="post" action="/users/password">
+            <div class="mp-modal__body">
+                <h3 id="pwdTitle" class="mp-modal__title">비밀번호 재설정</h3>
+                <p class="mp-modal__desc">새로운 비밀번호를 설정합니다.</p>
+
+                <label class="mp-field">
+                    <span class="mp-label">새로운 비밀번호</span>
+                    <input
+                            type="password"
+                            id="newPwd"
+                            name="password"
+                            class="mp-input"
+                            placeholder="비밀번호 입력"
+                            required
+                    />
+                </label>
+
+                <label class="mp-field">
+                    <span class="mp-label">새로운 비밀번호 확인</span>
+                    <input
+                            type="password"
+                            id="newPwd2"
+                            name="passwordConfirm"
+                            class="mp-input"
+                            placeholder="비밀번호 재입력"
+                            required
+                    />
+                </label>
+            </div>
+
+            <div class="mp-modal__footer">
+                <div class="mp-footer-left">
+                    <button
+                            type="button"
+                            class="mp-btn mp-btn--ghost"
+                            data-close="pwd"
+                    >
+                        취소
+                    </button>
+                </div>
+                <div class="mp-footer-right">
+                    <!-- 🔵 하늘색 '변경' 버튼 -->
+                    <button type="submit" class="mp-btn mp-btn--primary">변경</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- ===== 로그아웃 모달 ===== -->
+<div
+        class="mp-modal"
+        id="logoutModal"
+        aria-hidden="true"
+        style="display: none"
+>
+    <div class="mp-modal__backdrop" id="logoutBackdrop"></div>
+    <div
+            class="mp-modal__dialog"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="logoutTitle"
+    >
+        <form id="logoutForm" method="post" action="/logout">
+            <div class="mp-modal__body">
+                <h3 id="logoutTitle" class="mp-modal__title">로그아웃</h3>
+                <p class="mp-modal__desc">계정 로그아웃을 하시겠습니까?</p>
+            </div>
+
+            <div class="mp-modal__footer">
+                <div class="mp-footer-left">
+                    <button
+                            type="button"
+                            class="mp-btn mp-btn--ghost"
+                            data-close="logout"
+                    >
+                        취소
+                    </button>
+                </div>
+                <div class="mp-footer-right">
+                    <button type="submit" class="mp-btn mp-btn--accent">
+                        로그아웃
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- 푸터 -->
+{{> layout/footer}}
+
+<!-- 공통 스크립트 -->
+<script src="/js/sidebar.js" defer></script>
+<script src="/js/search-clear.js" defer></script>
+<script src="/js/footer.js" defer></script>
+<!-- 마이페이지 전용 스크립트 -->
+<script src="/js/myprofile.js" defer></script>
 </body>
 </html>

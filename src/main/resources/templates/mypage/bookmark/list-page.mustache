@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="utf-8"/>
+    <title>북마크 - Mobble</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+    <!-- 로고 폰트 -->
+    <link
+            href="https://fonts.googleapis.com/css2?family=Quicksand&display=swap"
+            rel="stylesheet"
+    />
+
+    <!-- 공통 CSS -->
+    <link rel="stylesheet" href="/css/common.css"/>
+    <link rel="stylesheet" href="/css/header.css"/>
+    <link rel="stylesheet" href="/css/footer.css"/>
+    <link rel="stylesheet" href="/css/board-list.css"/>
+    <link rel="stylesheet" href="/css/sidebar.css"/>
+    <link rel="stylesheet" href="/css/mybookmark-list.css"/>
+</head>
+<body>
+<!-- Header -->
+{{> layout/header}}
+
+{{> layout/sidebar}}
+
+<!-- Main -->
+<main class="feed-container no-right">
+    <!-- 좌측 리스트 -->
+    <section class="feed-left">
+        <h2>북마크</h2>
+
+        <!-- 정렬 -->
+        <div class="feed-sorting">
+            <a href="#">최신순</a> | <a href="#">조회수순</a> | <a href="#">북마크순</a>
+        </div>
+
+        <!-- 카드 1 -->
+        <article class="post-card">
+            <a class="post-link" href="/boards/10">
+                <div class="thumb"></div>
+                <div class="post-body">
+                    <div class="tags">FREE</div>
+                    <h3 class="title">북마크 글 제목1</h3>
+                    <p class="excerpt">
+                        Lorem ipsum dolor sit amet consectetur. Vel volutpat rutrum…
+                    </p>
+                    <div class="meta">
+                        <time datetime="2025-09-08">2025. 09. 08</time>
+                        <span>· 2.1k</span>
+                        <span>· 87</span>
+                    </div>
+                </div>
+            </a>
+        </article>
+
+        <!-- 카드 2 -->
+        <article class="post-card">
+            <a class="post-link" href="/boards/11">
+                <div class="thumb"></div>
+                <div class="post-body">
+                    <div class="tags">FREE</div>
+                    <h3 class="title">북마크 글 제목2</h3>
+                    <p class="excerpt">
+                        Lorem ipsum dolor sit amet consectetur. Vel volutpat rutrum…
+                    </p>
+                    <div class="meta">
+                        <time datetime="2025-09-07">2025. 09. 07</time>
+                        <span>· 1.5k</span>
+                        <span>· 63</span>
+                    </div>
+                </div>
+            </a>
+        </article>
+
+        <!-- 페이징 -->
+        <nav class="pagination" aria-label="페이지네이션">
+            <a href="#">prev</a>
+            <a href="#">next</a>
+        </nav>
+    </section>
+</main>
+
+<!-- Footer -->
+{{> layout/footer}}
+
+<!-- Script -->
+<script src="/js/sidebar.js" defer></script>
+<script src="/js/search-clear.js" defer></script>
+<script src="/js/footer.js" defer></script>
+</body>
+</html>
