@@ -38,7 +38,7 @@ public class BoardService {
 
     @Transactional(readOnly = true)
     public BoardResponse.DetailDTO getBoardDetail(Integer boardId,User user) {
-        return boardRepository.findByIdDetail(boardId, user.getId()).orElseThrow(
+        return boardRepository.findByIdDetail(boardId,user.getId()).orElseThrow(
                 () -> new Exception404(ErrorEnum.NOT_FOUND_BOARD)
         );
     }

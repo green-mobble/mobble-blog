@@ -86,5 +86,4 @@ public class BookmarkService {
         return new BookmarkResponse.BookmarkListDTO(bookmarkList);
     }
 
-
 }
