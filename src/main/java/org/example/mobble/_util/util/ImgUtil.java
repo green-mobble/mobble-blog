@@ -37,7 +37,7 @@ public class ImgUtil {
         };
     }
 
-    public static void deleteAllImagesForPost(String username, Long boardId) {
+    public static void deleteAllImagesForPost(String username, Integer boardId) {
         try {
             if (!Files.exists(STATIC_IMG_DIR)) return;
             try (var files = Files.list(STATIC_IMG_DIR)) {
@@ -56,7 +56,7 @@ public class ImgUtil {
 
     public static Result replaceDataUrlsWithSavedFiles(String sanitizedHtml,
                                                        String username,
-                                                       Long boardId,
+                                                       Integer boardId,
                                                        LocalDateTime createdAt) throws IOException {
         Document doc = Jsoup.parseBodyFragment(sanitizedHtml);
         Elements imgs = doc.select("img[src^=data:image]");
