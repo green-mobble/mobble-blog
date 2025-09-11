@@ -7,6 +7,7 @@ import org.example.mobble.bookmark.domain.Bookmark;
 import org.example.mobble.user.domain.User;
 
 import java.sql.Timestamp;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,23 +32,28 @@ public class BookmarkResponse {
         private Integer bookId;
         private BoardResponse.DTO board;
         private Boolean isBookmark;
-        private Timestamp createAt;
+        private String createAt;  // Timestamp → String으로 변경
 
-        public BookmarkDTO(Bookmark  bookmark) {
+        public BookmarkDTO(Bookmark bookmark) {
             Board temp = bookmark.getBoard();
             this.bookId = bookmark.getId();
-            this.board =
-                    BoardResponse.DTO.builder()
-                            .board(temp)
-                            .bookmarkCount(temp.getBookmarks().size())
-                            .image(null)
-                            .category(temp.getCategory())
-                            .user(temp.getUser())
-                            .build();
+            this.board = BoardResponse.DTO.builder()
+                    .board(temp)
+                    .bookmarkCount(temp.getBookmarks().size())
+                    .image(null)
+                    .category(temp.getCategory())
+                    .user(temp.getUser())
+                    .build();
             this.isBookmark = true;
-            this.createAt = bookmark.getCreatedAt();
+
+            // Timestamp → yyyy-MM-dd 문자열 포맷
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            this.createAt = bookmark.getCreatedAt()
+                    .toLocalDateTime()
+                    .format(formatter);
         }
     }
+
 
     @Data
     public static class BookmarkListDTO {

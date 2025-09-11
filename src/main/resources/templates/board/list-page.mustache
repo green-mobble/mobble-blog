@@ -34,12 +34,13 @@
         </div>
 
         <!-- 글 카드 1 -->
+        {{#model.boardList}}
         <article class="post-card">
-            <a class="post-link" href="/boards/1">
+            <a class="post-link" href="/boards/{{id}}">
                 <div class="thumb" aria-hidden="true"></div>
                 <div class="post-body">
                     <div class="tags">#태그 #태그 #태그</div>
-                    <h4 class="title">제목1</h4>
+                    <h4 class="title">{{title}}</h4>
                     <p class="excerpt">
                         Lorem ipsum dolor sit amet consectetur. Vel volutpat rutrum
                         phasellus felis cursus quis non diam congue.
@@ -52,26 +53,8 @@
                 </div>
             </a>
         </article>
+            {{/model.boardList}}
 
-        <!-- 글 카드 2 -->
-        <article class="post-card">
-            <a class="post-link" href="/boards/1">
-                <div class="thumb" aria-hidden="true"></div>
-                <div class="post-body">
-                    <div class="tags">#태그 #태그 #태그</div>
-                    <h4 class="title">제목2</h4>
-                    <p class="excerpt">
-                        Lorem ipsum dolor sit amet consectetur. Ut fermentum ut nunc
-                        sed.
-                    </p>
-                    <div class="meta">
-                        <span>2025.09.04</span>
-                        <span>💬 14</span>
-                        <span>👍 57</span>
-                    </div>
-                </div>
-            </a>
-        </article>
 
         <!-- 페이징 -->
         <div class="pagination">

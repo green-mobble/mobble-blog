@@ -40,7 +40,7 @@
     <div class="post-subbar" data-author="true">
         <div class="sub-left">
             <span class="avatar" aria-hidden="true">S</span>
-            <span class="name">ssar</span>
+            <span class="name">{{model.username}}</span>
         </div>
         <div class="sub-right">
             <!-- 초기 상태: 서버 값으로 true/false -->
@@ -49,10 +49,10 @@
                     type="button"
                     aria-label="북마크"
                     aria-pressed="false"
-                    data-bookmarked="false"
-                    data-board-id="1"
-                    data-create-url="/bookmark/1/save"
-                    data-delete-url="/bookmark/1/delete"
+                    data-bookmarked={{model.isBookmark}}
+                    data-board-id="{{model.id}}"
+                    data-create-url="/bookmark/{{model.id}}/save"
+                    data-delete-url="/bookmark/{{model.id}}/delete"
             >
                 <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
                     <path

@@ -37,42 +37,27 @@
         </div>
 
         <!-- 카드 1 -->
+        {{#model.bookmarksList}}
         <article class="post-card">
-            <a class="post-link" href="/boards/10">
+            <a class="post-link" href="/boards/{{board.id}}">
                 <div class="thumb"></div>
                 <div class="post-body">
-                    <div class="tags">FREE</div>
-                    <h3 class="title">북마크 글 제목1</h3>
+                    <div class="tags">{{board.category}}</div>
+                    <h3 class="title">{{board.title}}</h3>
                     <p class="excerpt">
-                        Lorem ipsum dolor sit amet consectetur. Vel volutpat rutrum…
+                        {{board.content}}
                     </p>
                     <div class="meta">
-                        <time datetime="2025-09-08">2025. 09. 08</time>
-                        <span>· 2.1k</span>
-                        <span>· 87</span>
+                        <time datetime="2025-09-08">{{createAt}}</time>
+                        <span>👁️ {{board.views}}</span>
+                        <span>👍 {{board.bookmarkCount}}</span>
                     </div>
                 </div>
             </a>
         </article>
+            {{/model.bookmarksList}}
 
-        <!-- 카드 2 -->
-        <article class="post-card">
-            <a class="post-link" href="/boards/11">
-                <div class="thumb"></div>
-                <div class="post-body">
-                    <div class="tags">FREE</div>
-                    <h3 class="title">북마크 글 제목2</h3>
-                    <p class="excerpt">
-                        Lorem ipsum dolor sit amet consectetur. Vel volutpat rutrum…
-                    </p>
-                    <div class="meta">
-                        <time datetime="2025-09-07">2025. 09. 07</time>
-                        <span>· 1.5k</span>
-                        <span>· 63</span>
-                    </div>
-                </div>
-            </a>
-        </article>
+
 
         <!-- 페이징 -->
         <nav class="pagination" aria-label="페이지네이션">

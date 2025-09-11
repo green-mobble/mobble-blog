@@ -38,7 +38,7 @@ class BoardControllerTest {
     void setUp() {
         // 로그인 세션 생성 (컨트롤러는 session "user"만 확인)
         // 더미에 user id=1이 존재한다고 가정
-        User login = userRepository.findById(1).orElseThrow();
+        User login = userRepository.findById(3).orElseThrow();
         session = new MockHttpSession();
         session.setAttribute("user", login);
     }
