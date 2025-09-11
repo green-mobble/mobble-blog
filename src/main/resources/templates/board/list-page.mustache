@@ -38,7 +38,8 @@
             <h2>피드</h2>
             <h3>HOT TOPIC</h3>
             <div class="feed-sorting">
-                <a href="/boards?order=CREATED_AT_DESC&page=1">최신순</a> | <a href="/boards?order=VIEW_COUNT_DESC&page=1">조회수순</a>
+                <a href="/boards?order=CREATED_AT_DESC&page=1">최신순</a> | <a
+                    href="/boards?order=VIEW_COUNT_DESC&page=1">조회수순</a>
                 | <a
                     href="/boards?order=BOOKMARK_COUNT_DESC&page=1">북마크순</a>
             </div>
@@ -90,10 +91,10 @@
             <div class="pagination">
                 {{#pageDTO}}
                     {{^isFirst}}
-                        <a href="{{queryString}}&page={{prev}}">&lt;prev</a>
+                        <a href="/boards{{queryString}}&page={{prev}}">&lt;prev</a>
                     {{/isFirst}}
                     {{^isLast}}
-                        <a href="{{queryString}}&page={{next}}">next&gt;</a>
+                        <a href="/barods{{queryString}}&page={{next}}">next&gt;</a>
                     {{/isLast}}
                 {{/pageDTO}}
             </div>
