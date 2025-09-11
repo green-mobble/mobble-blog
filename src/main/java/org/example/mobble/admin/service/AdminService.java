@@ -79,11 +79,11 @@ public class AdminService {
     @Transactional
     public User findUsername(AdminRequest.LoginDTO reqDTO) {
         // 유저있는지 조회
-       User foundUser = userRepository.findByUsername(reqDTO.getUsername()).orElseThrow(() -> new Exception403(NOT_FOUND_USER_TO_USERNAME));
+       User foundUser = userRepository.findByUsername(reqDTO.getAuthId()).orElseThrow(() -> new Exception403(NOT_FOUND_USER_TO_USERNAME));
 
        // 비밀번호 맞는지 확인
-        if (!bCryptPasswordEncoder.matches(reqDTO.getPassword(), foundUser.getPassword()))
-            throw new Exception401(ErrorEnum.FORBIDDEN_NO_MATCH_PASSWORD);
+        if (!bCryptPasswordEncoder.matches(reqDTO.getAuthPw(), foundUser.getPassword()))
+            throw new Exception403(ErrorEnum.FORBIDDEN_NO_MATCH_PASSWORD);
 
        // role가 admin인지 확인
         if (!foundUser.getRole().equals("admin")) { throw new Exception403(FORBIDDEN_NOT_ADMIN);}

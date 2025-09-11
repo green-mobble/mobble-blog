@@ -12,8 +12,8 @@ public class AdminRequest {
 
     @Data
     public class LoginDTO {
-        private String username;
-        private String password;
+        private String authId;
+        private String authPw;
     }
 
 }
