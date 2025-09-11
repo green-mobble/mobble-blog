@@ -10,6 +10,7 @@ import org.example.mobble.report.domain.ReportCase;
 import org.example.mobble.user.domain.User;
 
 import java.sql.Timestamp;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public class BoardResponse {
@@ -18,12 +19,38 @@ public class BoardResponse {
         List<DTO> boardList;
         List<DTO> popularList;
         List<String> categoryList;
+        PageDTO pageDTO;
+
+        @Data
+        public static class PageDTO {
+            Integer page;
+            Boolean isFirst;
+            Boolean isLast;
+            Integer prev;
+            Integer next;
+            String queryString;
+
+            @Builder
+            public PageDTO(Integer page, Boolean isFirst, Boolean isLast, String order) {
+                this.page = page;
+                this.isFirst = isFirst;
+                this.isLast = isLast;
+                this.prev = !isFirst ? page - 1 : page;
+                this.next = !isLast ? page + 1 : page;
+                if (order == null) {
+                    this.queryString = "";
+                } else {
+                    this.queryString = "&order=" + order;
+                }
+            }
+        }
 
         @Builder
-        public mainListDTO(List<DTO> boardList, List<DTO> popularList, List<String> categoryList) {
+        public mainListDTO(List<DTO> boardList, List<DTO> popularList, List<String> categoryList, PageDTO pageDTO) {
             this.boardList = boardList;
             this.popularList = popularList;
             this.categoryList = categoryList;
+            this.pageDTO = pageDTO;
         }
     }
 
@@ -37,8 +64,8 @@ public class BoardResponse {
         Integer views;
         Integer bookmarkCount;
         String category;
-        Timestamp createAt;
-        Timestamp updateAt;
+        String createAt;
+        String updateAt;
         String image;
 
         @Builder
@@ -50,8 +77,12 @@ public class BoardResponse {
             this.views = board.getViews();
             this.bookmarkCount = bookmarkCount;
             this.category = (category != null) ? category.getCategory() : null;
-            this.createAt = board.getCreatedAt();
-            this.updateAt = board.getUpdatedAt();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            Timestamp updatedAt = board.getUpdatedAt();
+            this.createAt = board.getCreatedAt().toLocalDateTime().format(formatter);
+            if (updatedAt != null) {
+                this.updateAt = updatedAt.toLocalDateTime().format(formatter);
+            }
             this.image = image;
         }
     }
@@ -70,6 +101,10 @@ public class BoardResponse {
         String profileImage;
         Boolean isBookmark;
 
+        // yyyy-mm-dd 변경 + 최종 표시할 날짜 (생성 or 수정)
+        // 수정 일이 있으면 수정 일자로 표기
+        String displayDate;
+
         @Builder
         public DetailDTO(Board board, User user, Category category, Integer bookmarkCount, Boolean isBookmark) {
             this.id = board.getId();
@@ -83,6 +118,10 @@ public class BoardResponse {
             this.updateAt = board.getUpdatedAt();
             this.profileImage = user.getProfileImage();
             this.isBookmark = isBookmark;
+
+            // ---- 날짜 처리 로직 ----
+            Timestamp base = (board.getUpdatedAt() != null) ? board.getUpdatedAt() : board.getCreatedAt();
+            this.displayDate = base.toLocalDateTime().toLocalDate().toString(); // yyyy-MM-dd
         }
     }
 
