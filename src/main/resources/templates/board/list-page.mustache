@@ -90,10 +90,10 @@
             <div class="pagination">
                 {{#pageDTO}}
                     {{^isFirst}}
-                        <a href={{queryString}}>&lt;prev</a>
+                        <a href="{{queryString}}&page={{prev}}">&lt;prev</a>
                     {{/isFirst}}
                     {{^isLast}}
-                        <a href={{queryString}}>next&gt;</a>
+                        <a href="{{queryString}}&page={{next}}">next&gt;</a>
                     {{/isLast}}
                 {{/pageDTO}}
             </div>

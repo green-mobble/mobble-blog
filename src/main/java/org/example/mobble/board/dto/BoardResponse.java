@@ -39,9 +39,9 @@ public class BoardResponse {
                 this.next = !isLast ? page + 1 : page;
                 this.queryString = "/boards";
                 if (keyword != null && !keyword.equals("")) {
-                    this.queryString = "/search?page=" + page + "&order=" + order + "&keyword=" + keyword;
+                    this.queryString = "/search?order=" + order + "&keyword=" + keyword;
                 } else {
-                    this.queryString = "?page=" + page + "&order=" + order;
+                    this.queryString = "?order=" + order;
                 }
             }
         }
