@@ -48,6 +48,7 @@ public class BoardRepository {
                         .category((Category) result[2])
                         .bookmarkCount(((Number) result[3]).intValue())
                         .isBookmark(((Number) result[4]).intValue() > 0)
+                        .loginUserId(user.getId())
                         .build()
         );
     }

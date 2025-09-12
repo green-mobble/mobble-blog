@@ -100,13 +100,14 @@ public class BoardResponse {
         Timestamp updateAt;
         String profileImage;
         Boolean isBookmark;
+        Boolean isOwner;
 
         // yyyy-mm-dd 변경 + 최종 표시할 날짜 (생성 or 수정)
         // 수정 일이 있으면 수정 일자로 표기
         String displayDate;
 
         @Builder
-        public DetailDTO(Board board, User user, Category category, Integer bookmarkCount, Boolean isBookmark) {
+        public DetailDTO(Board board, User user, Category category, Integer bookmarkCount, Boolean isBookmark, Integer loginUserId) {
             this.id = board.getId();
             this.username = user.getUsername();
             this.title = board.getTitle();
@@ -118,6 +119,8 @@ public class BoardResponse {
             this.updateAt = board.getUpdatedAt();
             this.profileImage = user.getProfileImage();
             this.isBookmark = isBookmark;
+            //현재 User는 board 작성자의 유저 정보이기때문에 로그인한 유저의 아이디를 새로 받아서 확인 로직을 구현 했음
+            this.isOwner = board.getUser().getId().equals(loginUserId);
 
             // ---- 날짜 처리 로직 ----
             Timestamp base = (board.getUpdatedAt() != null) ? board.getUpdatedAt() : board.getCreatedAt();
