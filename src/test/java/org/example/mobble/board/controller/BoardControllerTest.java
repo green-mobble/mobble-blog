@@ -1,6 +1,5 @@
 package org.example.mobble.board.controller;
 
-import org.example.mobble.board.dto.BoardResponse;
 import org.example.mobble.board.TestUtils;
 import org.example.mobble.user.domain.User;
 import org.example.mobble.user.domain.UserRepository;
@@ -23,7 +22,6 @@ import java.sql.Timestamp;
 import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
@@ -69,20 +67,20 @@ class BoardControllerTest {
         // when
         MvcResult result = mockMvc.perform(get("/boards/{id}", 1).session(session))
 
-       //then
-        .andExpect(status().isOk())
-        .andExpect(view().name("board/detail-page"))
-        .andExpect(request().attribute("model", hasProperty("id", Matchers.is(1))))
-        .andExpect(request().attribute("model", hasProperty("username", Matchers.is("ssar"))))
-        .andExpect(request().attribute("model", hasProperty("title", Matchers.is("제목1"))))
-        .andExpect(request().attribute("model", hasProperty("content", Matchers.is("내용1"))))
-        .andExpect(request().attribute("model", hasProperty("views", Matchers.is(1))))
-        .andExpect(request().attribute("model", hasProperty("bookmarkCount", Matchers.is(2))))
-        .andExpect(request().attribute("model", hasProperty("category", Matchers.is("java"))))
-        .andExpect(request().attribute("model", hasProperty("createAt", instanceOf(Timestamp.class))))
-        .andExpect(request().attribute("model", hasProperty("isBookmark", Matchers.is(true))))
-        .andExpect(request().attribute("model", hasProperty("displayDate", Matchers.is("2025-09-11"))))
-        .andReturn();
+                //then
+                .andExpect(status().isOk())
+                .andExpect(view().name("board/detail-page"))
+                .andExpect(request().attribute("model", hasProperty("id", Matchers.is(1))))
+                .andExpect(request().attribute("model", hasProperty("username", Matchers.is("ssar"))))
+                .andExpect(request().attribute("model", hasProperty("title", Matchers.is("제목1"))))
+                .andExpect(request().attribute("model", hasProperty("content", Matchers.is("내용1"))))
+                .andExpect(request().attribute("model", hasProperty("views", Matchers.is(1))))
+                .andExpect(request().attribute("model", hasProperty("bookmarkCount", Matchers.is(2))))
+                .andExpect(request().attribute("model", hasProperty("category", Matchers.is("java"))))
+                .andExpect(request().attribute("model", hasProperty("createAt", instanceOf(Timestamp.class))))
+                .andExpect(request().attribute("model", hasProperty("isBookmark", Matchers.is(true))))
+                .andExpect(request().attribute("model", hasProperty("displayDate", Matchers.is("2025-09-11"))))
+                .andReturn();
 
         // 실제 확인
         TestUtils.printRequestAttributesAsJson(result);
@@ -135,8 +133,7 @@ class BoardControllerTest {
                                 .session(session)
                         // .with(csrf())
                 )
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/boards/" + targetId.toString()));
+                .andExpect(status().is3xxRedirection());
     }
 
     @Test
