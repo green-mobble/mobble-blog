@@ -24,7 +24,7 @@ public class BoardRepository {
         return Optional.ofNullable(em.find(Board.class, boardId));
     }
 
-    public Optional<BoardResponse.DetailDTO> findByIdDetail(Integer boardId) {
+    public Optional<BoardResponse.DetailDTO> findByIdDetail(Integer userId, Integer boardId) {
         List<Object[]> rows = em.createQuery("""
                         select b, u, c,
                                count(distinct bm),
@@ -38,6 +38,7 @@ public class BoardRepository {
                         group by b, u, c
                         """, Object[].class)
                 .setParameter("boardId", boardId)
+                .setParameter("userId", userId)
                 .getResultList();
 
         return rows.stream().findFirst().map(result ->
@@ -78,7 +79,10 @@ public class BoardRepository {
     }
 
     public List<BoardResponse.DTO> findByTitleAndContent(String keyword, String orderBy, Integer firstIndex, Integer maxResult) {
-        String jpql = getBaseJpql(" where (lower(b.title) like :q or lower(b.content) like :q) ", orderBy);
+        String where = " where ( lower(b.title) like :q " +
+                " or lower(cast(b.content as string)) like :q ) ";
+
+        String jpql = getBaseJpql(where, orderBy);
 
         return mapping(getObjArrListWithParam(keyword, jpql, firstIndex, maxResult));
     }
