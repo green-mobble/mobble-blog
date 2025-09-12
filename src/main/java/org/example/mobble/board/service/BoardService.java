@@ -68,6 +68,7 @@ public class BoardService {
                         .content(safeHtml)
                         .user(user)
                         .category(category)
+                        .views(0)
                         .build();
         return boardRepository.save(board);
     }
