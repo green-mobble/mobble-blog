@@ -4,6 +4,8 @@ package org.example.mobble.board.controller;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.example.mobble._util.error.ErrorEnum;
+import org.example.mobble._util.error.ex.Exception401;
 import org.example.mobble.board.domain.Board;
 import org.example.mobble.board.domain.SearchOrderCase;
 import org.example.mobble.board.dto.BoardRequest;
@@ -34,7 +36,7 @@ public class BoardController {
 
     @GetMapping("/{id}/update-form")
     public String boardUpdateForm(@PathVariable(name = "id") Integer boardId, HttpServletRequest request) {
-        User user = (User) session.getAttribute("user");
+        User user = getSessionUser();
         BoardResponse.DetailDTO model = boardService.getUpdateBoardDetail(boardId, user);
         request.setAttribute("model", model);
         return "board/update-page";
@@ -43,25 +45,25 @@ public class BoardController {
     // 모든 게시물 목록 찾기
     @GetMapping
     public String getBoardsList(HttpServletRequest request, @RequestParam(defaultValue = "1") Integer page, @RequestParam(defaultValue = "CREATED_AT_DESC") String order) {
-        User user = (User) session.getAttribute("user");
+        User user = getSessionUser();
         System.out.println("[LOGIN] sessionId=" + session.getId() + ", user=" + user.getUsername());
-        List<BoardResponse.DTO> boardDTOList = boardService.getList(getFirstIndex(page), PER_PAGE + 1, safeOrder(order));
-        BoardResponse.mainListDTO resDTO = getMainList(boardDTOList, page, order, null);
+        List<BoardResponse.DTO> boardDTOList = boardService.getList(user, getFirstIndex(page), PER_PAGE + 1, safeOrder(order));
+        BoardResponse.mainListDTO resDTO = getMainList(boardDTOList, page, order, null, null);
         request.setAttribute("model", resDTO);
         return "board/list-page";
     }
 
     @GetMapping("/{id}")
     public String getBoard(HttpServletRequest request, @PathVariable(name = "id") Integer boardId) {
-        User user = (User) session.getAttribute("user");
-        BoardResponse.DetailDTO model = boardService.getBoardDetail(boardId,user);
+        User user = getSessionUser();
+        BoardResponse.DetailDTO model = boardService.getBoardDetail(boardId, user);
         request.setAttribute("model", model);
         return "board/detail-page";
     }
 
     @PostMapping("/{id}/update")
     public String update(@PathVariable(name = "id") Integer boardId, BoardRequest.BoardUpdateDTO reqDTO, HttpServletRequest request) {
-        User user = (User) session.getAttribute("user");
+        User user = getSessionUser();
         boardService.update(boardId, reqDTO, user);
         return "redirect:/boards/" + boardId;
     }
@@ -69,14 +71,14 @@ public class BoardController {
     // 게시글 저장하기
     @PostMapping
     public String save(BoardRequest.BoardSaveDTO reqDTO) {
-        User user = (User) session.getAttribute("user");
+        User user = getSessionUser();
         Board board = boardService.save(reqDTO, user);
         return "redirect:/boards/" + board.getId();
     }
 
     @PostMapping("/{id}/delete")
     public String delete(@PathVariable(name = "id") Integer boardId) {
-        User user = (User) session.getAttribute("user");
+        User user = getSessionUser();
         boardService.delete(boardId, user);
         return "redirect:/boards";
     }
@@ -84,7 +86,7 @@ public class BoardController {
 
     @PostMapping("/{id}/report")
     public String reportSave(@PathVariable(name = "id") Integer boardId, BoardRequest.ReportSaveDTO reqDTO) {
-        User user = (User) session.getAttribute("user");
+        User user = getSessionUser();
         BoardResponse.ReportSaveDTO resDTO = boardService.reportSave(user, boardId, reqDTO);
         return "redirect:/boards/" + boardId;
     }
@@ -93,9 +95,9 @@ public class BoardController {
     // 모든 게시물 목록 찾기
     @GetMapping("/me")
     public String getMyFeedList(HttpServletRequest request, BoardRequest.MyFeedDTO reqDTO) {
-        User user = (User) session.getAttribute("user");
+        User user = getSessionUser();
         List<BoardResponse.DTO> boardDTOList = boardService.getMyFeedList(getFirstIndex(reqDTO.getPage()), PER_PAGE + 1, safeOrder(reqDTO.getOrder()), user);
-        BoardResponse.mainListDTO resDTO = getMainList(boardDTOList, reqDTO.getPage(), reqDTO.getOrder(), user);
+        BoardResponse.mainListDTO resDTO = getMainList(boardDTOList, reqDTO.getPage(), reqDTO.getOrder(), null, user);
         request.setAttribute("model", resDTO);
         return "board/myfeed-page";
     }
@@ -106,8 +108,9 @@ public class BoardController {
      */
     @GetMapping("/search")
     public String findList(HttpServletRequest request, @RequestParam String keyword, @RequestParam(defaultValue = "CREATED_AT_DESC") String order, @RequestParam(defaultValue = "1") Integer page) {
-        List<BoardResponse.DTO> boardDTOList = boardService.findBy(keyword, safeOrder(order), getFirstIndex(page), PER_PAGE + 1);
-        BoardResponse.mainListDTO resDTO = getMainList(boardDTOList, page, order, null);
+        User user = getSessionUser();
+        List<BoardResponse.DTO> boardDTOList = boardService.findBy(user, keyword, safeOrder(order), getFirstIndex(page), PER_PAGE + 1);
+        BoardResponse.mainListDTO resDTO = getMainList(boardDTOList, page, order, keyword, null);
         request.setAttribute("model", resDTO);
         return "board/list-page";
     }
@@ -139,16 +142,17 @@ public class BoardController {
      * request에 page, nextPage, prevPage도 함께 심습니다.
      */
 
-    private BoardResponse.mainListDTO getMainList(List<BoardResponse.DTO> boardDTOList, Integer page, String order, User user) {
+    private BoardResponse.mainListDTO getMainList(List<BoardResponse.DTO> boardDTOList, Integer page, String order, String keyword, User user) {
+        User sessionUser = getSessionUser();
         int getSize = 3;
-        List<BoardResponse.DTO> popularList = boardService.getPopularList(getSize);
+        List<BoardResponse.DTO> popularList = boardService.getPopularList(sessionUser, getSize);
         List<String> categoryList;
         if (user == null) {
             categoryList = categoryService.getPopularList(3);
         } else {
             categoryList = categoryService.getMyFeedPopularList(3, user);
         }
-        BoardResponse.mainListDTO.PageDTO pageDTO = getPageDTO(boardDTOList, page, order);
+        BoardResponse.mainListDTO.PageDTO pageDTO = getPageDTO(boardDTOList, page, order, keyword);
         boardDTOList = !pageDTO.getIsLast() ? boardDTOList.subList(0, PER_PAGE) : boardDTOList;
         return BoardResponse.mainListDTO
                 .builder()
@@ -159,14 +163,21 @@ public class BoardController {
                 .build();
     }
 
-    private BoardResponse.mainListDTO.PageDTO getPageDTO(List<BoardResponse.DTO> boardDTOList, Integer page, String order) {
+    private BoardResponse.mainListDTO.PageDTO getPageDTO(List<BoardResponse.DTO> boardDTOList, Integer page, String order, String keyword) {
         boolean isFirst = page <= 1;
         boolean isLast = boardDTOList.size() <= PER_PAGE;
         return BoardResponse.mainListDTO.PageDTO.builder()
                 .isFirst(isFirst)
                 .isLast(isLast)
                 .page(page)
+                .keyword(keyword)
                 .order(safeOrder(order).name())
                 .build();
+    }
+
+    private User getSessionUser() {
+        User user = (User) session.getAttribute("user");
+        if (user == null) throw new Exception401(ErrorEnum.UNAUTHORIZED_NO_EXISTS_USER_INFO);
+        else return user;
     }
 }
