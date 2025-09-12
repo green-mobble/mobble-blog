@@ -31,16 +31,15 @@ public class BoardResponse {
             String queryString;
 
             @Builder
-            public PageDTO(Integer page, Boolean isFirst, Boolean isLast, String order) {
+            public PageDTO(Integer page, Boolean isFirst, Boolean isLast, String order, String keyword) {
                 this.page = page;
                 this.isFirst = isFirst;
                 this.isLast = isLast;
                 this.prev = !isFirst ? page - 1 : page;
                 this.next = !isLast ? page + 1 : page;
-                if (order == null) {
-                    this.queryString = "";
-                } else {
-                    this.queryString = "&order=" + order;
+                this.queryString = "?order=" + order;
+                if (keyword != null && !keyword.equals("")) {
+                    this.queryString = "/search" + this.queryString + "&keyword=" + keyword;
                 }
             }
         }
@@ -100,6 +99,7 @@ public class BoardResponse {
         Timestamp updateAt;
         String profileImage;
         Boolean isBookmark;
+        Boolean isOwner;
 
         // yyyy-mm-dd 변경 + 최종 표시할 날짜 (생성 or 수정)
         // 수정 일이 있으면 수정 일자로 표기
@@ -118,6 +118,7 @@ public class BoardResponse {
             this.updateAt = board.getUpdatedAt();
             this.profileImage = user.getProfileImage();
             this.isBookmark = isBookmark;
+            this.isOwner = board.getUser().getId().equals(user.getId());
 
             // ---- 날짜 처리 로직 ----
             Timestamp base = (board.getUpdatedAt() != null) ? board.getUpdatedAt() : board.getCreatedAt();
