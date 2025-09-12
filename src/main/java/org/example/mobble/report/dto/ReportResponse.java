@@ -29,8 +29,6 @@ public class ReportResponse {
             this.boardTitle =report.getBoard().getTitle();
             this.resultEtc = report.getResultEtc();
         }
-
-
     }
 
     //업데이트 확인용
