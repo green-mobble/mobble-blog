@@ -21,6 +21,23 @@ public class UserRepository {
         }
     }
 
+    public Optional<User> findActiveByUsername(String username) {
+        try {
+            return Optional.ofNullable(
+                    em.createQuery(
+                                    "select u from User u where u.username = :username and u.status <> :deleted",
+                                    User.class
+                            )
+                            .setParameter("username", username)
+                            .setParameter("deleted", UserStatus.DELETED)
+                            .getSingleResult()
+            );
+        } catch (Exception e) {
+            return Optional.empty();
+        }
+    }
+
+
     public void save(User user) {
         em.persist(user);
     }

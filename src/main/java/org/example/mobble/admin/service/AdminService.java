@@ -14,6 +14,7 @@ import org.example.mobble.report.domain.ReportRepository;
 import org.example.mobble.report.domain.ReportStatus;
 import org.example.mobble.user.domain.User;
 import org.example.mobble.user.domain.UserRepository;
+import org.example.mobble.user.domain.UserStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -100,13 +101,16 @@ public class AdminService {
     @Transactional
     public void forceDeleteUser(Integer userId) {
         User user = userRepository.findById(userId).orElseThrow(() ->  new Exception404(NOT_FOUND_USER_TO_USERID));
-        userRepository.delete(userId);
+
+        if (user.getStatus() == UserStatus.DELETED) return;
+        user.delete();
     }
 
     @Transactional
     public User findUsername(AdminRequest.LoginDTO reqDTO) {
         // 유저있는지 조회
-        User foundUser = userRepository.findByUsername(reqDTO.getAuthId()).orElseThrow(() -> new Exception403(NOT_FOUND_USER_TO_USERNAME));
+        User foundUser = userRepository.findActiveByUsername(reqDTO.getAuthId())
+                .orElseThrow(() -> new Exception403(NOT_FOUND_USER_TO_USERNAME));
 
         // 비밀번호 맞는지 확인
         if (!bCryptPasswordEncoder.matches(reqDTO.getAuthPw(), foundUser.getPassword()))
