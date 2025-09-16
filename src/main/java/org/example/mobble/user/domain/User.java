@@ -68,5 +68,10 @@ public class User {
     public void updatePassword(String password) {
         this.password = password;
     }
+
+    // username 변경 도메인 메서드
+    public void updateUsername(String newUsername) {
+        this.username = newUsername;
+    }
 }
 

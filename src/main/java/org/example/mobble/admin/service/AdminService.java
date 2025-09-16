@@ -73,6 +73,36 @@ public class AdminService {
         return new AdminResponse.ReportDetailDTO(reportPS);
     }
 
+    // 닉네임 수정
+    @Transactional
+    public String updateUsername(Integer userId, AdminRequest.UsernameUpdateDTO reqDTO) {
+        if (reqDTO == null || reqDTO.getNickname() == null) {
+            throw new Exception400(BAD_REQUEST);
+        }
+        String newNickname = reqDTO.getNickname().trim();
+        if (newNickname.isEmpty()) throw new Exception400(BAD_REQUEST);
+
+        User user = userRepository.findById(userId).orElseThrow(() ->  new Exception404(NOT_FOUND_USER_TO_USERID));
+
+        // 동일 값이면 패스
+        if(!newNickname.equals(user.getUsername())) {
+            // 중복 체크
+            if (userRepository.existsByUsername(newNickname)) {
+                throw new Exception400(BAD_REQUEST);  // 이미 존재하는 닉네임
+            }
+            // 실제 변경 (username을 닉네임으로 사용 중이라고 가정)
+            user.updateUsername(newNickname);
+        }
+        return user.getUsername();
+    }
+
+    // 강제 탈퇴
+    @Transactional
+    public void forceDeleteUser(Integer userId) {
+        User user = userRepository.findById(userId).orElseThrow(() ->  new Exception404(NOT_FOUND_USER_TO_USERID));
+        userRepository.delete(userId);
+    }
+
     @Transactional
     public User findUsername(AdminRequest.LoginDTO reqDTO) {
         // 유저있는지 조회
