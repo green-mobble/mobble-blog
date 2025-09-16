@@ -4,6 +4,7 @@ import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -37,6 +38,10 @@ public class UserRepository {
         }
     }
 
+    public List<User> findAll() {
+        return em.createQuery("select u from User u order by u.id", User.class)
+                .getResultList();
+    }
 
     public void save(User user) {
         em.persist(user);

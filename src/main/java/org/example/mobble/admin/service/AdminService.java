@@ -50,11 +50,15 @@ public class AdminService {
         );
     }
 
-    //user 조회
-    private User getUser(Integer userId) {
-        return userRepository.findById(userId).orElseThrow(
-                () -> new Exception404(NOT_FOUND_USER_TO_USERID)
-        );
+    // User 조회
+    @Transactional(readOnly = true)
+    public List<AdminResponse.UserDTO> getUser() {
+        List<User> userList = userRepository.findAll();
+        List<AdminResponse.UserDTO> resDTO = new ArrayList<>();
+        for (User u : userList) {
+            resDTO.add(new AdminResponse.UserDTO(u));
+        }
+        return resDTO;
     }
 
     //상태 변경
