@@ -30,21 +30,18 @@
 </header>
 <main class="rmg-page" role="main" aria-labelledby="rmgHeading">
     <div class="rmg-inner">
-        <h2 id="rmgHeading" class="rmg-title">신고글 관리</h2>
+        <h2 id="rmgHeading" class="rmg-title">게시글 관리</h2>
 
         <section class="rmg-card" aria-label="신고글 목록">
             <div class="rmg-table">
                 <table>
                     <thead>
                     <tr>
-                        <th style="width: 72px">Id</th>
                         <th style="width: 72px">게시물ID</th>
                         <th>글 제목</th>
                         <th style="width: 120px">게시자</th>
-                        <th style="width: 120px">신고자</th>
-                        <th style="width: 120px">신고 사유</th>
-                        <th style="width: 120px">신고 상태</th>
-                        <th style="width: 140px">신고일</th>
+                        <th style="width: 120px">글내용</th>
+                        <th style="width: 140px">작성일</th>
                     </tr>
                     </thead>
                     <tbody id="rmgTbody"></tbody>
@@ -72,6 +69,7 @@
             <label class="rmg-label" for="rmgTitle">신고 글 제목</label>
             <input id="rmgTitle" class="rmg-input" type="text" readonly/>
 
+
             <label class="rmg-label" for="rmgReportedAt">신고일</label>
             <input id="rmgReportedAt" class="rmg-input" type="date"/>
 
@@ -98,10 +96,9 @@
             <textarea
                     id="rmgReasonExtra"
                     class="rmg-textarea"
-                    rows="4"
             ></textarea>
 
-            <label class="rmg-label" for="rmgContent">신고 내용</label>
+            <label class="rmg-label" for="rmgContent">게시글 내용</label>
             <textarea
                     id="rmgContent"
                     class="rmg-textarea"
@@ -122,7 +119,7 @@
                         class="rmg-btn rmg-btn--ghost"
                         data-close="true"
                 >
-                    취소
+                    닫기
                 </button>
                 <button
                         type="submit"
@@ -131,6 +128,13 @@
                         disabled
                 >
                     적용
+                </button>
+                <button
+                        type="button"
+                        id="rmgDeleteBtn"
+                        class="rmg-btn rmg-btn--danger"
+                >
+                    삭제
                 </button>
             </div>
         </form>
@@ -141,7 +145,7 @@
 {{> layout/footer}}
 
 <script src="/js/footer.js" defer></script>
-<script src="/js/admin-report-modal.js"></script>
+<script src="/js/admin-boards-modal.js"></script>
 <script src="/js/admin-logout.js"></script>
 </body>
 </html>
