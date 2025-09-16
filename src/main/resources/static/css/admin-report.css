@@ -15,12 +15,14 @@
 /* 네비게이션 (좌측 메뉴) */
 .rmg-header__left {
   display: flex;
-  align-items: center;   /* 세로 가운데 */
-  height: 100%;          /* 헤더 높이에 맞춤 */
-  gap: 28px;             /* a 태그 사이 간격 */
-  padding-left: 20px;    /* 너무 왼쪽에 붙지 않게 여백 */
-  font-size: 16px;   /* 글씨 크기 */
-  font-weight: 700;  /* 굵게 */
+  align-items: center; /* 세로 가운데 */
+  height: 100%;        /* 헤더 높이에 맞춤 */
+  gap: 28px;           /* a 태그 사이 간격 */
+  padding-left: 0;     /* 좌측 끝에 붙임 */
+  padding-right: 800px;
+  margin-left: 0;      /* 혹시 남아있는 마진 제거 */
+  font-size: 16px;
+  font-weight: 700;
   color: #111;
   text-decoration: none;
 }
