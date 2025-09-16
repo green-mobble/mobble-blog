@@ -20,8 +20,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const reasonExtraEl = document.getElementById("rmgReasonExtra");
   const contentEl = document.getElementById("rmgContent");
   const statusEl = document.getElementById("rmgStatus");
-  const applyBtn = document.getElementById("rmgApplyBtn");
-
+  document.getElementById("rmgDeleteBtn");
   let currentId = null;
   let original = null;
 
@@ -178,8 +177,6 @@ document.addEventListener("DOMContentLoaded", () => {
     statusEl.classList.remove("rmg-readonly");
     statusEl.removeAttribute("aria-readonly");
 
-    original = { status: statusEl.value };
-    applyBtn.disabled = true;
 
     show(modal);
     focusTrap(modal);
@@ -202,39 +199,7 @@ document.addEventListener("DOMContentLoaded", () => {
       hide(modal);
   });
 
-// 적용(상태만 저장)
-  form.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    if (applyBtn.disabled || currentId == null) return;
 
-    const idx = rows.findIndex((r) => r.id === currentId);
-    if (idx < 0) return;
-
-    const newStatus = statusEl.value;
-
-    try {
-      // ✅ REST API 호출 (예: /admin/reports/{id}/status)
-      const res = await fetch(`/admin/reports/${currentId}/update`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ status: newStatus }),
-      });
-
-      if (!res.ok) {
-        throw new Error("서버 상태 업데이트 실패");
-      }
-      const updated = await res.json();
-      console.log("updated : "+updated)
-      // 성공 시 프론트 데이터 갱신
-      rows[idx].status = newStatus;
-      render();
-      hide(modal);
-    } catch (err) {
-      alert("상태 저장 중 오류: " + err.message);
-    }
-  });
 
   // 삭제 요청
   const deleteBtn = document.getElementById("rmgDeleteBtn");
