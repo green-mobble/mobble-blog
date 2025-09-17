@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="/css/sidebar.css"/>
     <link rel="stylesheet" href="/css/footer.css"/>
     <!-- 전용 -->
-    <link rel="stylesheet" href="/css/admin-report.css"/>
+    <link rel="stylesheet" href="/css/admin-board.css"/>
 </head>
 <body>
 <!-- 상단 헤더 -->
@@ -38,9 +38,9 @@
                     <thead>
                     <tr>
                         <th style="width: 72px">게시물ID</th>
-                        <th>글 제목</th>
+                        <th style="width: 100px">글 제목</th>
                         <th style="width: 120px">게시자</th>
-                        <th style="width: 120px">글내용</th>
+                        <th style="width: 300px">글내용</th>
                         <th style="width: 140px">작성일</th>
                     </tr>
                     </thead>
@@ -63,12 +63,21 @@
     <div class="rmg-modal__backdrop" data-close="true"></div>
 
     <div class="rmg-modal__panel" role="document">
-        <h3 id="rmgModalTitle" class="rmg-modal__title">신고글 관리</h3>
+        <h3 id="rmgModalTitle" class="rmg-modal__title">게시글 관리</h3>
 
         <form id="rmgForm" class="rmg-form" onsubmit="return false">
-            <label class="rmg-label" for="rmgTitle">신고 글 제목</label>
+            <label class="rmg-label" for="rmgTitle">게시글 제목</label>
             <input id="rmgTitle" class="rmg-input" type="text" readonly/>
 
+            <label class="rmg-label" for="rmgCategory">카테고리</label>
+            <input id="rmgCategory" class="rmg-input" type="text" readonly/>
+
+
+            <label class="rmg-label" for="rmgId">게시글 id</label>
+            <input id="rmgId" class="rmg-input" type="number" readonly/>
+
+            <label class="rmg-label" for="rmgViews">조회수</label>
+            <input id="rmgViews" class="rmg-input" type="text" readonly/>
 
             <label class="rmg-label" for="rmgReportedAt">신고일</label>
             <input id="rmgReportedAt" class="rmg-input" type="date"/>
@@ -76,27 +85,7 @@
             <label class="rmg-label" for="rmgAuthor">글 게시자</label>
             <input id="rmgAuthor" class="rmg-input" type="text"/>
 
-            <label class="rmg-label" for="rmgReporter">신고자</label>
-            <input id="rmgReporter" class="rmg-input" type="text"/>
 
-            <label class="rmg-label" for="rmgReason">신고 사유</label>
-            <select id="rmgReason" class="rmg-input">
-                <option value="INAPPROPRIATE_AUTHOR_NAME">부적절한 작성자명</option>
-                <option value="INAPPROPRIATE_BOARD_CONTENT">부적절한 글 내용</option>
-                <option value="ADVERTISING_BOARD_CONTENT">광고성 글 내용</option>
-                <option value="COPYRIGHT_VIOLATION">저작권 침해</option>
-                <option value="PERSONAL_INFORMATION">개인정보 노출</option>
-                <option value="ABUSIVE_LANGUAGE">욕설/비방</option>
-                <option value="SPAM">도배/스팸</option>
-                <option value="ETC">기타</option>
-            </select>
-
-            <!-- 신규: 기타 사유 입력 (선택) -->
-            <label class="rmg-label" for="rmgReasonExtra">기타 사유</label>
-            <textarea
-                    id="rmgReasonExtra"
-                    class="rmg-textarea"
-            ></textarea>
 
             <label class="rmg-label" for="rmgContent">게시글 내용</label>
             <textarea
@@ -106,12 +95,6 @@
                     placeholder="상세 내용을 입력하세요."
             ></textarea>
 
-            <label class="rmg-label" for="rmgStatus">신고 상태</label>
-            <select id="rmgStatus" class="rmg-input">
-                <option value="PENDING">처리대기</option>
-                <option value="COMPLETED">처리완료</option>
-                <option value="REJECTED">신고반려</option>
-            </select>
 
             <div class="rmg-actions">
                 <button

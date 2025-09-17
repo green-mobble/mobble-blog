@@ -1,7 +1,7 @@
 INSERT INTO board_tb(title, content, user_id, views, category_id, created_at, updated_at)
 VALUES
 -- user 1 (categories 1~5: java, python, c, docker, ai)
-('user1-post1', 'user1 content1asdasdsadasdasdasd', 1, 10, 1, DATEADD('HOUR', -1, NOW()), now()),
+('user1-post1', 'user1 content1asdasdsadasdasdasadasdaifhepkednuhdvpcnaskacd;xcnsodssldfjdiriejddfjfdkdfjfdkreofjsfkfskfsfjsd', 1, 10, 1, DATEADD('HOUR', -1, NOW()), now()),
 ('user1-post2', 'user1 content2dsadsadasdasdasd', 1, 20, 1, DATEADD('HOUR', -2, NOW()), now()),
 ('user1-post3', 'user1 content3sdsdasdsdsdasdsdasd', 1, 30, 2, DATEADD('HOUR', -3, NOW()), now()),
 ('user1-post4', 'user1 content4', 1, 40, 2, DATEADD('HOUR', -4, NOW()), now()),

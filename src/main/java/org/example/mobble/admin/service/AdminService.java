@@ -90,6 +90,7 @@ public class AdminService {
         return foundUser;
     }
 
+    @Transactional
     public List<AdminResponse.BoardListDTO> getBoardList() {
         List<Board> foundBoardList = boardRepository.findboardList();
         List<AdminResponse.BoardListDTO> resDTO = new ArrayList<>();
