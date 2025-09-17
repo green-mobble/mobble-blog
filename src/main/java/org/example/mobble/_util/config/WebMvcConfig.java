@@ -22,10 +22,17 @@ public class WebMvcConfig implements WebMvcConfigurer {
                 .excludePathPatterns("/check-username-available/**");
     }
 
-    @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/**")
                 .addResourceLocations("classpath:/static/"); // static 아래 전부
+
+        registry.addResourceHandler("/profile/**")
+                .addResourceLocations("file:///C:/workspace/mobble-blog/src/main/resources/static/profile/")
+                .setCachePeriod(0);
+
+        registry.addResourceHandler("/img/**")
+                .addResourceLocations("file:///C:/workspace/mobble-blog/src/main/resources/static/img/")
+                .setCachePeriod(0);
     }
 
 }

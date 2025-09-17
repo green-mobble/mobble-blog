@@ -138,7 +138,7 @@ public class BoardRepository {
                             .excerpt(HtmlUtil.extractFirstParagraph(b.getContent(), 100))
                             .bookmarkCount(cnt != null ? cnt.intValue() : 0)
                             .isBookmark(myBookmark)
-                            .image(null)
+                            .image(b.getThumbnailUrl())
                             .build();
                 })
                 .toList();
@@ -164,5 +164,8 @@ public class BoardRepository {
                         .getResultList());
     }
 
-
+    // DB 즉시 반영
+    public void flush() {
+        em.flush();
+    }
 }
