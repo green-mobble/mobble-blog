@@ -1,7 +1,6 @@
 window.addEventListener("load", () => {
   const tbody = document.getElementById("rmgTbody");
   const modal = document.getElementById("rmgModal");
-  const form = document.getElementById("rmgForm");
 
   const titleEl = document.getElementById("rmgTitle");
   const reportedAtEl = document.getElementById("rmgReportedAt");
@@ -74,17 +73,16 @@ window.addEventListener("load", () => {
     if (!row) return;
     currentId = id;
 
-    if (titleEl) titleEl.value = row.title || "";
-    if (reportedAtEl) reportedAtEl.value = row.createdAt ? new Date(row.createdAt).toISOString().split("T")[0] : "";
-    if (authorEl) authorEl.value = row.username || "";
-    if (contentEl) contentEl.value = row.content || "";
-    // 새로 추가된 4개 필드
-    if (categoryEl) categoryEl.value = row.category || "";
-    if (idEl) idEl.value = row.id ?? "";
-    if (viewsEl) viewsEl.value = row.views ?? "0";
+    if (titleEl) titleEl.textContent = row.title || "";
+    if (reportedAtEl) reportedAtEl.textContent = row.createdAt ? new Date(row.createdAt).toISOString().split("T")[0] : "";
+    if (authorEl) authorEl.textContent = row.username || "";
+    if (contentEl) contentEl.textContent = row.content || "";
+    if (categoryEl) categoryEl.textContent = row.category || "";
+    if (idEl) idEl.textContent = row.id ?? "";
+    if (viewsEl) viewsEl.textContent = row.views ?? "0";
 
     // 읽기전용 스타일 적용
-    [titleEl, reportedAtEl, authorEl, contentEl,categoryEl,idEl,viewsEl].forEach(el => {
+    [contentEl].forEach(el => {
       if (!el) return;
       el.readOnly = true;
       el.classList.add("rmg-readonly");
