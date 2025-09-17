@@ -6,6 +6,7 @@ import org.example.mobble.board.dto.BoardResponse;
 import org.example.mobble.report.domain.Report;
 import org.example.mobble.report.domain.ReportCase;
 import org.example.mobble.report.domain.ReportStatus;
+import org.example.mobble.user.domain.User;
 
 import java.sql.Timestamp;
 
